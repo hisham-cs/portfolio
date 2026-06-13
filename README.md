@@ -83,4 +83,4 @@ npm run deploy
 - **Email**: [hasalmalki@outlook.com](mailto:hasalmalki@outlook.com)
 - **GitHub**: [https://github.com/hisham-cs](https://github.com/hisham-cs)
 - **LinkedIn**: [https://www.linkedin.com/in/hisham-almalki-5b618737a/](https://www.linkedin.com/in/hisham-almalki-5b618737a/)
-- **My website**: [https://www.linkedin.com/in/hisham-almalki-5b618737a/](https://hisham-cs.github.io/portfolio/)
+- **My website**: [https://hisham-cs.github.io/portfolio/](https://hisham-cs.github.io/portfolio/)
