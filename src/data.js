@@ -1,18 +1,10 @@
-// ─────────────────────────────────────────────────────────────
-// Edit this file to personalize your portfolio.
-// All sections read their content from here.
-// ─────────────────────────────────────────────────────────────
-
 export const profile = {
   name: 'Hisham Al-Malki',
   title: 'Computer Science Graduate | AI & Data Analysis',
-  intro:
-    'I\u2019m a Computer Science graduate interested in building practical software, AI, and data-driven solutions. I enjoy turning ideas into usable products, from academic assistants and medical AI systems to support tools and automation workflows.',
-  // TODO: replace with your real links and email.
+  intro: 'A portfolio of my work, skills, and journey in technology.',
   github: 'https://github.com/hisham-cs',
   linkedin: 'https://www.linkedin.com/in/hisham-a-almalki',
   email: 'hasalmalki@outlook.com',
-  // CV — set showCv to true and place your file at public/cv.pdf to re-enable the download button.
   showCv: false,
   cv: 'cv.pdf',
 }
@@ -120,10 +112,10 @@ export const projects = [
     icon: 'chat',
     description:
       'An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.',
-    image: '', // optional: path to a screenshot in public/ (e.g. 'screenshots/faten.png')
+    image: '', 
     tags: ['OpenAI API', 'FastAPI', 'Firebase', 'Next.js', 'Academic Assistant'],
     github: 'https://github.com/your-username/faten',
-    demo: '', // add a live URL to show a "Live Demo" button
+    demo: '', 
     status: 'Completed',
   },
   {
@@ -152,15 +144,14 @@ export const projects = [
   },
 ]
 
-// Set status to 'In Progress' for any certificate you haven't finished yet —
-// it will show an "In Progress" badge instead of the year.
+
 export const certificates = [
   {
     name: 'KAUST Academy — Advanced Artificial Intelligence',
     issuer: 'KAUST Academy · 2026',
     year: '2026',
     status: 'Completed',
-    link: '', // optional — add a credential URL when available
+    link: '', 
   },
   {
     name: 'KAUST Academy — Introduction to Artificial Intelligence',
