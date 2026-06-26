@@ -17,12 +17,19 @@ export default function About() {
           <SectionHeading eyebrow="Get to know me" title="About Me" />
         </Reveal>
         <Reveal delay={100}>
-          <div className="mx-auto max-w-3xl space-y-4 text-center">
-            {about.map((paragraph, i) => (
-              <p key={i} className="text-base leading-relaxed text-pretty text-slate-600 sm:text-lg dark:text-text-muted">
-                {paragraph}
-              </p>
-            ))}
+          <div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-slate-200/50 bg-white/50 p-6 pl-7 text-left backdrop-blur-sm sm:p-7 sm:pl-8 dark:border-surface-border/40 dark:bg-white/[0.03]">
+            {/* Purple accent line on the left edge */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-y-0 left-0 w-1 rounded-full bg-gradient-to-b from-indigo-500 to-violet-500 dark:from-brand dark:to-brand-light"
+            />
+            <div className="space-y-4">
+              {about.map((paragraph, i) => (
+                <p key={i} className="text-base leading-relaxed text-pretty text-slate-600 sm:text-lg dark:text-text-muted">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
         </Reveal>
 

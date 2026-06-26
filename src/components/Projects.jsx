@@ -1,21 +1,19 @@
 import { projects } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
-import { GitHubIcon, ExternalLinkIcon, ChatIcon, ActivityIcon, CarIcon, ChartIcon, CodeIcon, StarIcon } from './Icons.jsx'
+import { GitHubIcon, ExternalLinkIcon, ChatIcon, ActivityIcon, MessageCircleIcon, CodeIcon } from './Icons.jsx'
 
 const projectIcons = {
   chat: ChatIcon,
   medical: ActivityIcon,
-  car: CarIcon,
-  dashboard: ChartIcon,
+  support: MessageCircleIcon,
 }
 
 // Subtle per-project gradient hues — calmer and darker for dark mode.
 const previewGradients = {
   chat: 'from-indigo-100 via-violet-50 to-white dark:from-brand/10 dark:via-surface-card dark:to-surface-card',
   medical: 'from-violet-100 via-indigo-50 to-white dark:from-secondary/8 dark:via-surface-card dark:to-surface-card',
-  car: 'from-blue-100 via-indigo-50 to-white dark:from-accent/8 dark:via-surface-card dark:to-surface-card',
-  dashboard: 'from-sky-100 via-indigo-50 to-white dark:from-secondary/6 dark:via-surface-card dark:to-surface-card',
+  support: 'from-sky-100 via-indigo-50 to-white dark:from-accent/8 dark:via-surface-card dark:to-surface-card',
 }
 
 const statusStyles = {
@@ -34,19 +32,14 @@ export default function Projects() {
         <Reveal>
           <SectionHeading eyebrow="What I've built" title="Projects" />
         </Reveal>
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => {
             const Icon = projectIcons[project.icon] ?? CodeIcon
             const gradient = previewGradients[project.icon] ?? previewGradients.chat
-            const isFeatured = project.featured === true
             return (
               <Reveal key={project.name} delay={i * 75}>
                 <article
-                  className={`group flex h-full flex-col overflow-hidden rounded-2xl border bg-white/70 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:hover:shadow-xl ${
-                    isFeatured
-                      ? 'featured-card dark:border-brand/25 dark:bg-surface-card/70'
-                      : 'border-slate-200/70 hover:border-indigo-300 hover:shadow-indigo-500/5 dark:border-surface-border dark:bg-surface-card/60 dark:hover:border-surface-border-hover dark:hover:shadow-black/25'
-                  }`}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white/70 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/5 sm:hover:shadow-xl dark:border-surface-border dark:bg-surface-card/60 dark:hover:border-surface-border-hover dark:hover:shadow-black/25"
                 >
                   {/* Preview: screenshot when provided, otherwise a gradient panel */}
                   {project.image ? (
@@ -58,11 +51,6 @@ export default function Projects() {
                         loading="lazy"
                       />
                       <div className="absolute top-3 right-3 flex items-center gap-2">
-                        {isFeatured && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600/90 px-2.5 py-1 text-xs font-semibold text-white ring-1 ring-inset ring-white/20 dark:bg-brand/90">
-                            <StarIcon className="h-3 w-3" /> Featured
-                          </span>
-                        )}
                         {project.status && (
                           <span
                             className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${
@@ -87,11 +75,6 @@ export default function Projects() {
                         </div>
                       </div>
                       <div className="absolute top-3 right-3 flex items-center gap-2">
-                        {isFeatured && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600/90 px-2.5 py-1 text-xs font-semibold text-white ring-1 ring-inset ring-white/20 dark:bg-brand/90">
-                            <StarIcon className="h-3 w-3" /> Featured
-                          </span>
-                        )}
                         {project.status && (
                           <span
                             className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${

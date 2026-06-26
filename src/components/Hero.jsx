@@ -17,7 +17,6 @@ export default function Hero() {
         {/* Left: introduction */}
         <div className="text-center lg:text-left">
           <h1 className="text-4xl font-extrabold tracking-tight text-balance text-slate-900 sm:text-5xl xl:text-6xl dark:text-text-main">
-            Hi, I'm{' '}
             <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent dark:from-brand dark:to-brand-light">
               {displayName}
             </span>
@@ -84,9 +83,12 @@ export default function Hero() {
           </div>
 
           {/* Stats row */}
-          <div className="mt-8 flex items-center justify-center divide-x divide-slate-200 lg:justify-start dark:divide-surface-border">
+          <div className="mt-8 flex items-stretch justify-center divide-x divide-slate-200 lg:justify-start dark:divide-surface-border">
             {stats.map((stat) => (
-              <div key={stat.label} className="px-5 first:pl-0 sm:px-7 sm:first:pl-0">
+              <div
+                key={stat.label}
+                className="flex flex-col items-center px-5 text-center first:pl-0 sm:px-7 sm:first:pl-0"
+              >
                 <p className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-xl font-extrabold text-transparent sm:text-2xl dark:from-brand dark:to-brand-light">
                   {stat.value}
                 </p>
@@ -116,7 +118,7 @@ export default function Hero() {
               </div>
               <div className="min-w-0">
                 <p className="font-semibold text-slate-900 dark:text-text-main">{profile.name}</p>
-                <p className="text-sm text-slate-600 dark:text-text-muted">Computer Science Student</p>
+                <p className="text-sm text-slate-600 dark:text-text-muted">Computer Science Graduate</p>
                 <p className="text-xs text-slate-500 dark:text-text-dim">
                   {education.university}
                 </p>
@@ -126,10 +128,10 @@ export default function Hero() {
             <div className="my-5 h-px bg-gradient-to-r from-transparent via-slate-300/70 to-transparent dark:via-surface-border" />
 
             <div className="space-y-4 text-sm">
-              {/* Currently seeking */}
+              {/* Open to */}
               <div>
                 <p className="mb-1.5 text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-text-dim">
-                  Currently seeking
+                  Open to
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {heroCard.seeking.map((role, idx) => (
@@ -152,7 +154,7 @@ export default function Hero() {
               {/* Focus areas */}
               <div>
                 <p className="mb-2 text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-text-dim">
-                  Focus
+                  Interests
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {focusAreas.map((area) => (
@@ -166,10 +168,10 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Best work */}
+              {/* Selected work */}
               <div>
                 <p className="mb-2 text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-text-dim">
-                  Best work
+                  Selected work
                 </p>
                 <ul className="space-y-1.5">
                   {heroCard.bestWork.map((item) => (
