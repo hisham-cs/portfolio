@@ -5,12 +5,12 @@
 
 export const profile = {
   name: 'Hisham Al-Malki',
-  title: 'Computer Science Student | AI/ML & Data Analysis',
+  title: 'Computer Science Graduate | AI & Data Analysis',
   intro:
-    'I build practical AI and data-driven systems, including medical imaging models, academic assistants, computer-vision pipelines, and analytics dashboards. My focus is solving real problems with machine learning, data analysis, and applied AI.',
+    'I\u2019m a Computer Science graduate interested in building practical software, AI, and data-driven solutions. I enjoy turning ideas into usable products, from academic assistants and medical AI systems to support tools and automation workflows.',
   // TODO: replace with your real links and email.
   github: 'https://github.com/hisham-cs',
-  linkedin: 'https://www.linkedin.com/in/hisham-almalki-5b618737a/',
+  linkedin: 'https://www.linkedin.com/in/hisham-a-almalki',
   email: 'hasalmalki@outlook.com',
   // CV — set showCv to true and place your file at public/cv.pdf to re-enable the download button.
   showCv: false,
@@ -18,26 +18,26 @@ export const profile = {
 }
 
 export const stats = [
-  { value: '4+', label: 'Projects' },
+  { value: '3', label: 'Projects' },
   { value: '2026', label: 'Graduate' },
-  { value: 'AI/ML', label: 'Focus' },
+  { value: 'Tech', label: 'Focus' },
 ]
 
 // Shown as chips on the hero profile card.
-export const focusAreas = ['Computer Vision', 'Data Analysis', 'Applied AI']
+export const focusAreas = ['Software Development', 'AI Systems', 'Data Analytics']
 
 // Structured data for the hero profile card.
 export const heroCard = {
-  seeking: ['AI/Data Internships', 'AI/Data Roles'],
-  bestWork: ['Medical Imaging AI', 'Academic Assistant', 'Car Damage Assessment'],
+  seeking: ['AI/Data Roles', 'Internships', 'Collaborations'],
+  bestWork: ['Faten Academic Assistant', 'Pulmonary Edema Detection', 'Smart Complaint System'],
 }
 
 // Small value cards rendered under the About paragraphs.
 export const aboutHighlights = [
   {
-    title: 'AI Systems',
+    title: 'Software & AI Systems',
     icon: 'ai',
-    text: 'Building practical AI tools such as academic assistants, prediction systems, and automation workflows.',
+    text: 'Building practical tools such as academic assistants, support chatbots, prediction systems, and automation workflows.',
   },
   {
     title: 'Computer Vision',
@@ -47,20 +47,20 @@ export const aboutHighlights = [
   {
     title: 'Data Analytics',
     icon: 'data',
-    text: 'Turning raw data into dashboards, insights, and measurable decisions using Python, SQL, and BI tools.',
+    text: 'Turning raw data into dashboards, insights, and clear decisions using Python, SQL, and BI tools.',
   },
 ]
 
 export const about = [
-  `I'm Hisham, a Computer Science student at Umm Al-Qura University. I'm interested in building AI and data solutions that move beyond experiments and become tools people can actually use.`,
-  `My approach is practical: start from a real problem, build a focused solution, evaluate it clearly, and improve it step by step. I'm working toward a career in AI and data, with a strong interest in computer vision, applied machine learning, and analytics.`,
+  `I'm Hisham Al-Malki, a Computer Science graduate from Umm Al-Qura University. I enjoy building practical technology solutions that turn ideas into usable tools, especially in software, AI systems, and data analysis.`,
+  `My work includes academic assistants, medical image classification, support chatbots, and analytics workflows. I focus on understanding the problem, building a clear solution, testing it, and improving it step by step.`,
 ]
 
 export const education = {
   university: 'Umm Al-Qura University',
   degree: 'Bachelor of Computer Science',
-  college: 'College of Computer and Information Systems',
-  graduation: 'Expected Graduation: 2026',
+  college: 'College of Computers',
+  graduation: 'Graduated: 2026',
 }
 
 export const skills = [
@@ -69,15 +69,15 @@ export const skills = [
     icon: 'core',
     items: [
       'Python',
-      'Machine Learning',
-      'Deep Learning',
-      'Computer Vision',
+      'SQL',
       'Data Analysis',
+      'Machine Learning',
+      'Problem Solving',
       'Model Evaluation',
     ],
   },
   {
-    category: 'AI / ML',
+    category: 'AI & Computer Vision',
     icon: 'ai',
     items: [
       'PyTorch',
@@ -86,14 +86,12 @@ export const skills = [
       'Transfer Learning',
       'Image Classification',
       'Grad-CAM',
-      'LLMs',
-      'OpenAI API',
     ],
   },
   {
     category: 'Data & BI',
     icon: 'data',
-    items: ['Pandas', 'NumPy', 'SQL', 'Power BI', 'Excel', 'Matplotlib', 'EDA', 'Data Cleaning'],
+    items: ['Pandas', 'NumPy', 'Power BI', 'Excel', 'EDA', 'Data Cleaning', 'Matplotlib'],
   },
   {
     category: 'Tools & Platforms',
@@ -104,22 +102,21 @@ export const skills = [
       'VS Code',
       'Jupyter Notebook',
       'Google Colab',
-      'Hugging Face',
       'Streamlit',
       'Firebase',
     ],
   },
   {
-    category: 'Backend / APIs',
+    category: 'Backend & APIs',
     icon: 'backend',
-    items: ['FastAPI', 'REST APIs', 'JSON', 'Basic OOP'],
+    items: ['FastAPI', 'REST APIs', 'JSON', 'OOP Fundamentals'],
   },
 ]
 
 export const projects = [
   {
-    name: 'Faten',
-    subtitle: 'AI Academic Assistant for Umm Al-Qura University Students',
+    name: 'Faten \u2014 UQU Academic Assistant',
+    subtitle: 'Graduation Project | Full-stack Academic Assistant',
     icon: 'chat',
     description:
       'An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.',
@@ -127,47 +124,31 @@ export const projects = [
     tags: ['OpenAI API', 'FastAPI', 'Firebase', 'Next.js', 'Academic Assistant'],
     github: 'https://github.com/your-username/faten',
     demo: '', // add a live URL to show a "Live Demo" button
-    status: 'In Progress',
-    featured: false,
+    status: 'Completed',
   },
   {
     name: 'Pulmonary Edema Detection',
-    subtitle: 'Deep Learning System for Chest X-ray Classification',
+    subtitle: 'Medical AI System for Chest X-ray Classification',
     icon: 'medical',
     description:
-      'A medical imaging application that detects pulmonary edema from chest X-ray images using an ensemble of CNN models, with Grad-CAM heatmaps to explain model predictions.',
+      'A medical imaging AI system that classifies chest X-ray images and provides Grad-CAM visual explanations to support model interpretability.',
     image: '',
     tags: ['PyTorch', 'CNNs', 'Transfer Learning', 'Grad-CAM', 'Streamlit', 'Medical Imaging'],
     github: 'https://github.com/your-username/pulmonary-edema-detection',
     demo: 'https://ai-pulmonary-edema-detector-n2mdhebrvfowgvbobyfo4j.streamlit.app/',
     status: 'Completed',
-    featured: true,
   },
   {
-    name: 'Car Damage Assessment',
-    subtitle: 'Computer Vision Pipeline for Vehicle Damage Analysis',
-    icon: 'car',
+    name: 'Smart Complaint System',
+    subtitle: 'RAG-based IT Support Chatbot',
+    icon: 'support',
     description:
-      'A computer-vision project that detects vehicle damage and identifies affected car parts from images, aiming to support automated inspection and damage assessment workflows.',
+      'A domain-specific chatbot for university IT support that understands user complaints, searches verified solutions using similarity search, and provides accurate responses or escalates unresolved cases for human review.',
     image: '',
-    tags: ['YOLO', 'Computer Vision', 'Segmentation', 'Python', 'Damage Detection'],
-    github: 'https://github.com/your-username/car-damage-assessment',
-    demo: '',
-    status: 'Prototype',
-    featured: false,
-  },
-  {
-    name: 'Data Analytics Dashboard',
-    subtitle: 'Business Insights Dashboard using Python and Power BI',
-    icon: 'dashboard',
-    description:
-      'An analytics workflow that transforms raw data into clear insights through data cleaning, EDA, SQL-style analysis, and interactive Power BI dashboards.',
-    image: '',
-    tags: ['Python', 'Pandas', 'SQL', 'Power BI', 'Excel', 'EDA'],
-    github: 'https://github.com/your-username/data-analytics-dashboard',
+    tags: ['Python', 'LLMs', 'RAG', 'OpenAI API', 'Similarity Search', 'Gradio'],
+    github: 'https://github.com/Saleh67676/Smart-Complaint-System.git',
     demo: '',
     status: 'Completed',
-    featured: false,
   },
 ]
 
@@ -175,24 +156,45 @@ export const projects = [
 // it will show an "In Progress" badge instead of the year.
 export const certificates = [
   {
-    name: 'KAUST Academy — Advanced AI Track',
-    issuer: 'KAUST Academy · 2025',
-    year: '2025',
+    name: 'KAUST Academy — Advanced Artificial Intelligence',
+    issuer: 'KAUST Academy · 2026',
+    year: '2026',
     status: 'Completed',
     link: '', // optional — add a credential URL when available
   },
   {
-    name: 'Data Analytics Bootcamp — Power BI & Excel',
-    issuer: 'Data Analytics Bootcamp · 2025',
+    name: 'KAUST Academy — Introduction to Artificial Intelligence',
+    issuer: 'KAUST Academy · 2026',
+    year: '2026',
+    status: 'Completed',
+    link: '',
+  },
+  {
+    name: 'Hash Plus — Data Analytics Bootcamp',
+    issuer: 'Power BI & Excel · 2026',
+    year: '2026',
+    status: 'Completed',
+    link: '',
+  },
+  {
+    name: 'DeepLearning.AI — Mathematics for ML and Data Science',
+    issuer: 'DeepLearning.AI · 2025',
     year: '2025',
     status: 'Completed',
     link: '',
   },
   {
-    name: 'Machine Learning Specialization',
-    issuer: 'Coursera · DeepLearning.AI',
-    year: '2024',
-    status: 'In Progress',
+    name: 'DataCamp — Python Data Fundamentals',
+    issuer: 'DataCamp · 2025',
+    year: '2025',
+    status: 'Completed',
+    link: '',
+  },
+  {
+    name: 'SDAIA — Fundamentals of Artificial Intelligence',
+    issuer: 'SDAIA · 2025',
+    year: '2025',
+    status: 'Completed',
     link: '',
   },
 ]

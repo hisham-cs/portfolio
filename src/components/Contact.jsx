@@ -20,8 +20,9 @@ export default function Contact() {
               Let's work together
             </h3>
             <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-slate-600 dark:text-text-muted">
-              I'm open to internships, collaborations, and AI/data-related opportunities. Feel free
-              to reach out if you're interested in my work or want to connect.
+              I'm open to junior roles, internships, collaborations, and technology-related
+              opportunities. Feel free to reach out if you're interested in my work or want to
+              connect.
             </p>
 
             {/* Visible copyable email */}

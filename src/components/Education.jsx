@@ -38,7 +38,7 @@ export default function Education() {
             className="absolute top-2 bottom-6 left-2.5 w-px bg-gradient-to-b from-indigo-400/60 via-slate-300 to-transparent sm:left-3 dark:from-brand/40 dark:via-surface-border"
           />
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Education entry */}
             <Reveal>
               <div className="relative">
@@ -72,7 +72,7 @@ export default function Education() {
               <Reveal key={cert.name} delay={75 + i * 75}>
                 <div className="relative">
                   <TimelineDot />
-                  <div className="group rounded-2xl border border-slate-200/70 bg-white/70 p-5 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/5 dark:border-surface-border dark:bg-surface-card/60 dark:hover:border-surface-border-hover dark:hover:shadow-black/20">
+                  <div className="group rounded-2xl border border-slate-200/70 bg-white/70 p-4 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/5 sm:p-5 dark:border-surface-border dark:bg-surface-card/60 dark:hover:border-surface-border-hover dark:hover:shadow-black/20">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="shrink-0 rounded-xl bg-indigo-50 p-2.5 text-indigo-600 transition-colors group-hover:bg-indigo-100 dark:bg-secondary/10 dark:text-secondary dark:group-hover:bg-secondary/15">
