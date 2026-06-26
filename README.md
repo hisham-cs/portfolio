@@ -74,7 +74,6 @@ npm run deploy
 - **Email**: [hasalmalki@outlook.com](mailto:hasalmalki@outlook.com)
 - **GitHub**: [https://github.com/hisham-cs](https://github.com/hisham-cs)
 - **LinkedIn**: [https://www.linkedin.com/in/hisham-a-almalki](https://www.linkedin.com/in/hisham-a-almalki)
-- **My website**: [https://hisham-cs.github.io/portfolio/](https://hisham-cs.github.io/portfolio/)
 
 ## License
 
