@@ -39,3 +39,6 @@ build/
 .cache/
 coverage/
 Thumbs.db
+
+# AI Skills Output
+templates/

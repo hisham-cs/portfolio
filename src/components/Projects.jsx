@@ -1,151 +1,93 @@
 import { projects } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
-import { GitHubIcon, ExternalLinkIcon, ChatIcon, ActivityIcon, MessageCircleIcon, CodeIcon } from './Icons.jsx'
-
-const projectIcons = {
-  chat: ChatIcon,
-  medical: ActivityIcon,
-  support: MessageCircleIcon,
-}
-
-// Subtle per-project gradient hues — calmer and darker for dark mode.
-const previewGradients = {
-  chat: 'from-indigo-100 via-violet-50 to-white dark:from-brand/10 dark:via-surface-card dark:to-surface-card',
-  medical: 'from-violet-100 via-indigo-50 to-white dark:from-secondary/8 dark:via-surface-card dark:to-surface-card',
-  support: 'from-sky-100 via-indigo-50 to-white dark:from-accent/8 dark:via-surface-card dark:to-surface-card',
-}
-
-const statusStyles = {
-  Completed:
-    'bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-success/10 dark:text-success dark:ring-success/20',
-  'In Progress':
-    'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-warning/10 dark:text-warning dark:ring-warning/20',
-  Prototype:
-    'bg-sky-50 text-sky-700 ring-sky-600/20 dark:bg-accent/10 dark:text-accent dark:ring-accent/20',
-}
+import { GitHubIcon, ExternalLinkIcon } from './Icons.jsx'
 
 export default function Projects() {
   return (
-    <section id="projects" className="scroll-mt-20 py-12 sm:py-18">
+    <section
+      id="projects"
+      className="scroll-mt-20 border-b border-slate-200 py-24 dark:border-surface-border sm:py-32"
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <SectionHeading eyebrow="What I've built" title="Projects" />
+          <SectionHeading eyebrow="What I've built" title="Projects" align="left" />
         </Reveal>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, i) => {
-            const Icon = projectIcons[project.icon] ?? CodeIcon
-            const gradient = previewGradients[project.icon] ?? previewGradients.chat
-            return (
-              <Reveal key={project.name} delay={i * 75}>
-                <article
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white/70 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/5 sm:hover:shadow-xl dark:border-surface-border dark:bg-surface-card/60 dark:hover:border-surface-border-hover dark:hover:shadow-black/25"
-                >
-                  {/* Preview: screenshot when provided, otherwise a gradient panel */}
-                  {project.image ? (
-                    <div className="relative h-40 overflow-hidden">
-                      <img
-                        src={`${import.meta.env.BASE_URL}${project.image}`}
-                        alt={`${project.name} screenshot`}
-                        className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-3 right-3 flex items-center gap-2">
-                        {project.status && (
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${
-                              statusStyles[project.status] ?? statusStyles.Completed
-                            }`}
-                          >
-                            {project.status}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={`relative flex h-32 items-center justify-center overflow-hidden bg-gradient-to-br ${gradient}`}>
-                      <div className="bg-grid absolute inset-0 opacity-60" aria-hidden="true" />
-                      <div
-                        aria-hidden="true"
-                        className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-white/40 blur-2xl dark:bg-secondary/5"
-                      />
-                      <div className="relative flex items-center gap-3">
-                        <div className="rounded-xl bg-white/80 p-3 text-indigo-600 shadow-sm ring-1 ring-indigo-100 transition-transform duration-300 group-hover:scale-110 dark:bg-surface-section/80 dark:text-secondary dark:ring-surface-border">
-                          <Icon className="h-8 w-8" />
-                        </div>
-                      </div>
-                      <div className="absolute top-3 right-3 flex items-center gap-2">
-                        {project.status && (
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${
-                              statusStyles[project.status] ?? statusStyles.Completed
-                            }`}
-                          >
-                            {project.status}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
 
-                  <div className="flex grow flex-col p-5 sm:p-6">
-                    <h3 className="text-lg font-semibold tracking-tight text-slate-900 transition-colors group-hover:text-indigo-600 sm:text-xl dark:text-text-main dark:group-hover:text-secondary">
-                      {project.name}
-                    </h3>
-                    {project.subtitle && (
-                      <p className="mt-1 text-xs font-medium text-indigo-600/80 dark:text-text-muted">
-                        {project.subtitle}
-                      </p>
+        <div className="border-t border-slate-200 dark:border-surface-border">
+          {projects.map((project, i) => (
+            <Reveal key={project.name} delay={i * 80}>
+              <article className="grid gap-6 border-b border-slate-200 py-12 lg:grid-cols-12 lg:gap-x-12 dark:border-surface-border">
+                {/* Left: index, name, subtitle, status */}
+                <div className="lg:col-span-4">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-xs text-brand-500 dark:text-brand-400">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    {project.status && (
+                      <span className="flex items-center gap-1.5 font-mono text-xs tracking-[0.1em] text-slate-400 uppercase dark:text-text-dim">
+                        <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+                        {project.status}
+                      </span>
                     )}
-                    <p className="mt-2.5 grow text-sm leading-relaxed text-slate-600 dark:text-text-muted">
-                      {project.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200 dark:bg-surface-section dark:text-text-muted dark:hover:bg-surface-border/50"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-5 flex flex-wrap items-center gap-3">
-                      {project.demo ? (
-                        <>
-                          <a
-                            href={project.demo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:-translate-y-0.5 hover:bg-indigo-500 hover:shadow-md dark:bg-brand dark:shadow-brand/15 dark:hover:bg-brand-light"
-                          >
-                            <ExternalLinkIcon /> Live Demo
-                          </a>
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 dark:border-surface-border dark:text-text-muted dark:hover:border-surface-border-hover dark:hover:bg-surface-section"
-                          >
-                            <GitHubIcon className="h-4 w-4" /> GitHub
-                          </a>
-                        </>
-                      ) : (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:-translate-y-0.5 hover:bg-indigo-500 hover:shadow-md dark:bg-brand dark:shadow-brand/15 dark:hover:bg-brand-light"
-                        >
-                          <GitHubIcon className="h-4 w-4" /> GitHub
-                        </a>
-                      )}
-                    </div>
                   </div>
-                </article>
-              </Reveal>
-            )
-          })}
+                  <h3 className="mt-3 font-display text-2xl font-semibold tracking-[-0.01em] text-slate-900 sm:text-3xl dark:text-text-main">
+                    {project.name}
+                  </h3>
+                  {project.subtitle && (
+                    <p className="mt-2 font-mono text-xs text-slate-500 dark:text-text-dim">{project.subtitle}</p>
+                  )}
+                </div>
+
+                {/* Right: description, tags, links */}
+                <div className="lg:col-span-8">
+                  <p className="max-w-[65ch] text-lg leading-[1.7] text-slate-600 dark:text-text-muted">
+                    {project.description}
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-x-3 gap-y-2">
+                    {project.tags.map((tag, j) => (
+                      <span key={tag} className="flex items-center gap-3">
+                        {j > 0 && (
+                          <span className="text-slate-300 dark:text-surface-border-hover" aria-hidden="true">
+                            /
+                          </span>
+                        )}
+                        <span className="font-mono text-sm text-slate-600 dark:text-text-muted">{tag}</span>
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap items-center gap-6">
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
+                      >
+                        <ExternalLinkIcon className="h-4 w-4" />
+                        Live Demo
+                        <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-1.5 text-sm font-semibold text-slate-700 transition-colors hover:text-brand-700 dark:text-text-main dark:hover:text-brand-300"
+                      >
+                        <GitHubIcon className="h-4 w-4" />
+                        GitHub
+                        <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

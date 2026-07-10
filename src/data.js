@@ -1,12 +1,15 @@
 export const profile = {
   name: 'Hisham Al-Malki',
-  title: 'Computer Science Graduate | AI & Data Analysis',
+  title: 'Data Analyst | AI Engineer',
   intro: 'A portfolio of my work, skills, and journey in technology.',
   github: 'https://github.com/hisham-cs',
   linkedin: 'https://www.linkedin.com/in/hisham-a-almalki',
   email: 'hasalmalki@outlook.com',
   showCv: false,
   cv: 'cv.pdf',
+  // Set to a real headshot path (e.g. 'headshot.jpg' in /public) to replace
+  // the initials placeholder in the hero card.
+  photo: '',
 }
 
 export const stats = [
@@ -15,21 +18,18 @@ export const stats = [
   { value: 'Tech', label: 'Focus' },
 ]
 
-// Shown as chips on the hero profile card.
-export const focusAreas = ['Software Development', 'AI Systems', 'Data Analytics']
-
 // Structured data for the hero profile card.
 export const heroCard = {
   seeking: ['AI/Data Roles', 'Internships', 'Collaborations'],
   bestWork: ['Faten Academic Assistant', 'Pulmonary Edema Detection', 'Smart Complaint System'],
 }
 
-// Small value cards rendered under the About paragraphs.
+// Focus-area ledger rendered alongside the About bio.
 export const aboutHighlights = [
   {
-    title: 'Software & AI Systems',
-    icon: 'ai',
-    text: 'Building practical tools such as academic assistants, support chatbots, prediction systems, and automation workflows.',
+    title: 'Data Analytics',
+    icon: 'data',
+    text: 'Turning raw data into dashboards, insights, and clear decisions using Python, SQL, and BI tools.',
   },
   {
     title: 'Computer Vision',
@@ -37,9 +37,9 @@ export const aboutHighlights = [
     text: 'Working with image classification, medical imaging, segmentation, and model evaluation.',
   },
   {
-    title: 'Data Analytics',
-    icon: 'data',
-    text: 'Turning raw data into dashboards, insights, and clear decisions using Python, SQL, and BI tools.',
+    title: 'Software & AI Systems',
+    icon: 'ai',
+    text: 'Building practical tools such as academic assistants, support chatbots, prediction systems, and automation workflows.',
   },
 ]
 
@@ -48,11 +48,17 @@ export const about = [
   `My work includes academic assistants, medical image classification, support chatbots, and analytics workflows. I focus on understanding the problem, building a clear solution, testing it, and improving it step by step.`,
 ]
 
+// Editorial pull-quote for the About section — a distinct statement of
+// working values, not a repeat of the surrounding paragraphs.
+export const aboutQuote = `Turning data into decisions and ideas into software.`
+
 export const education = {
   university: 'Umm Al-Qura University',
   degree: 'Bachelor of Computer Science',
   college: 'College of Computers',
   graduation: 'Graduated: 2026',
+  gpa: '3.48 / 4.0',
+  honours: 'Second Class Honours',
 }
 
 export const skills = [
@@ -114,7 +120,7 @@ export const projects = [
       'An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.',
     image: '', 
     tags: ['OpenAI API', 'FastAPI', 'Firebase', 'Next.js', 'Academic Assistant'],
-    github: 'https://github.com/your-username/faten',
+    github: 'https://github.com/Saleh67676/Faten.git',
     demo: '', 
     status: 'Completed',
   },
@@ -126,7 +132,7 @@ export const projects = [
       'A medical imaging AI system that classifies chest X-ray images and provides Grad-CAM visual explanations to support model interpretability.',
     image: '',
     tags: ['PyTorch', 'CNNs', 'Transfer Learning', 'Grad-CAM', 'Streamlit', 'Medical Imaging'],
-    github: 'https://github.com/your-username/pulmonary-edema-detection',
+    github: 'https://github.com/hisham-cs/AI-Pulmonary-Edema-Detector.git',
     demo: 'https://ai-pulmonary-edema-detector-n2mdhebrvfowgvbobyfo4j.streamlit.app/',
     status: 'Completed',
   },

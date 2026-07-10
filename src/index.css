@@ -3,71 +3,48 @@
 /* Enable class-based dark mode (toggled via the .dark class on <html>) */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Custom color palette ───────────────────────────────────── */
+/* ── Design tokens ──────────────────────────────────────────── */
 @theme {
-  /* Brand / accent */
-  --color-brand: #7C6DFF;
-  --color-brand-light: #9B8FFF;
-  --color-brand-dim: #6358CC;
-  --color-secondary: #38BDF8;
-  --color-accent: #22D3EE;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'General Sans', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Accent — a single steel-blue hue, used at different weights for
+     light mode (darker shades, on white) and dark mode (lighter shades). */
+  --color-brand-50: #eef3f8;
+  --color-brand-100: #dce7f0;
+  --color-brand-200: #b9cfe1;
+  --color-brand-300: #8cb0ce;
+  --color-brand-400: #6690b6;
+  --color-brand-500: #4c7699;
+  --color-brand-600: #3b6284;
+  --color-brand-700: #2e4e6b;
+  --color-brand-800: #243d54;
+  --color-brand-900: #1c2f41;
 
   /* Status */
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
+  --color-success: #10b981;
+  --color-warning: #d97706;
 
   /* Surfaces (dark mode) */
-  --color-surface-base: #050816;
-  --color-surface-section: #070B18;
-  --color-surface-card: #0B1020;
-  --color-surface-border: #1E2A44;
-  --color-surface-border-hover: #2D3F66;
+  --color-surface-base: #18181b;
+  --color-surface-raised: #232328;
+  --color-surface-card: #202024;
+  --color-surface-hover: #27272a;
+  --color-surface-border: #29292e;
+  --color-surface-border-hover: #35353c;
 
-  /* Text */
-  --color-text-main: #F8FAFC;
-  --color-text-muted: #94A3B8;
-  --color-text-dim: #64748B;
-}
-
-/* ── Subtle grid pattern (global background) ────────────────── */
-.bg-grid {
-  background-image:
-    linear-gradient(to right, rgb(100 116 139 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(100 116 139 / 0.06) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
-
-.dark .bg-grid {
-  background-image:
-    linear-gradient(to right, rgb(148 163 184 / 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(148 163 184 / 0.03) 1px, transparent 1px);
-}
-
-/* ── Hero animated gradient ─────────────────────────────────── */
-@keyframes hero-drift {
-  0%, 100% { transform: translate(-50%, 0) scale(1); }
-  33%      { transform: translate(-42%, 4%) scale(1.08); }
-  66%      { transform: translate(-58%, -3%) scale(0.95); }
-}
-
-@keyframes hero-drift-alt {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(-6%, 6%) scale(1.12); }
-}
-
-.animate-hero-drift {
-  animation: hero-drift 14s ease-in-out infinite;
-}
-
-.animate-hero-drift-alt {
-  animation: hero-drift-alt 18s ease-in-out infinite;
+  /* Text (dark mode) */
+  --color-text-main: #f4f4f5;
+  --color-text-muted: #a1a1aa;
+  --color-text-dim: #71717a;
 }
 
 /* ── Scroll reveal (fade-in + slide-up) ─────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .reveal.is-visible {
@@ -81,8 +58,25 @@
     transform: none;
     transition: none;
   }
-  .animate-hero-drift,
-  .animate-hero-drift-alt {
+}
+
+/* ── Hero entrance (on-mount fade-up, staggered via inline delay) ─────
+   Duration/easing follow the strict-gsap "element entrance" budget:
+   0.3–0.6s, power2.out (cubic-bezier(0.215,0.61,0.355,1) approximation). */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-in {
+  opacity: 0;
+  animation: hero-in 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-in {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
