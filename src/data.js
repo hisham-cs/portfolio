@@ -5,8 +5,12 @@ export const profile = {
   github: 'https://github.com/hisham-cs',
   linkedin: 'https://www.linkedin.com/in/hisham-a-almalki',
   email: 'hasalmalki@outlook.com',
-  showCv: false,
-  cv: 'cv.pdf',
+  // Resolves to /assets/cv/hisham-almalki-cv.pdf under the site's base path.
+  // Add the real file at public/assets/cv/hisham-almalki-cv.pdf (see the
+  // PLACEHOLDER.txt note in that folder); set showCv to false to hide the
+  // Download CV buttons again in the meantime.
+  showCv: true,
+  cv: 'assets/cv/hisham-almalki-cv.pdf',
   // Set to a real headshot path (e.g. 'headshot.jpg' in /public) to replace
   // the initials placeholder in the hero card.
   photo: '',
@@ -63,18 +67,6 @@ export const education = {
 
 export const skills = [
   {
-    category: 'Core Skills',
-    icon: 'core',
-    items: [
-      'Python',
-      'SQL',
-      'Data Analysis',
-      'Machine Learning',
-      'Problem Solving',
-      'Model Evaluation',
-    ],
-  },
-  {
     category: 'AI & Computer Vision',
     icon: 'ai',
     items: [
@@ -107,9 +99,45 @@ export const skills = [
   {
     category: 'Backend & APIs',
     icon: 'backend',
-    items: ['FastAPI', 'REST APIs', 'JSON', 'OOP Fundamentals'],
+    items: ['FastAPI', 'REST APIs'],
   },
 ]
+
+// Project screenshots are zero-config: drop files named `{slug}-1.jpg`,
+// `{slug}-2.png` (any extension, mixed extensions are fine) into
+// src/assets/projects/ and they show up automatically, in numeric order,
+// for the project whose `slug` matches. No path or extension ever needs to
+// be written here. Vite globs the folder at build time, so files are
+// hashed/optimized like any other imported asset.
+//
+// `imageAlts` is an optional array of alt text matched by index to the
+// discovered images (imageAlts[0] describes {slug}-1, etc.) \u2014 filenames
+// can't carry meaningful alt text, so this is the only place to add it.
+// Without an entry, a given image falls back to
+// "<project name> \u2014 screenshot <n>".
+//
+// `images` is a manual override: if a project defines it directly (as an
+// array of { src, alt }), that array wins outright and slug-based discovery
+// is skipped for that project. Leave both `images` and `slug` unset (or no
+// matching files on disk) to show the terminal-style placeholder. One
+// resolved image renders plainly (no carousel chrome); two or more render
+// as a carousel with arrows, a position counter, and swipe/keyboard nav.
+const projectImageModules = import.meta.glob('./assets/projects/*.{png,jpg,jpeg,webp,gif,avif,svg}', {
+  eager: true,
+  import: 'default',
+})
+
+const projectImagesBySlug = {}
+for (const [path, url] of Object.entries(projectImageModules)) {
+  const filename = path.split('/').pop()
+  const match = filename.match(/^(.+)-(\d+)\.[^.]+$/)
+  if (!match) continue
+  const [, slug, order] = match
+  ;(projectImagesBySlug[slug] ??= []).push({ order: Number(order), url })
+}
+for (const slug in projectImagesBySlug) {
+  projectImagesBySlug[slug].sort((a, b) => a.order - b.order)
+}
 
 export const projects = [
   {
@@ -118,10 +146,10 @@ export const projects = [
     icon: 'chat',
     description:
       'An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.',
-    image: '', 
+    slug: 'faten',
     tags: ['OpenAI API', 'FastAPI', 'Firebase', 'Next.js', 'Academic Assistant'],
     github: 'https://github.com/Saleh67676/Faten.git',
-    demo: '', 
+    demo: '',
     status: 'Completed',
   },
   {
@@ -130,7 +158,7 @@ export const projects = [
     icon: 'medical',
     description:
       'A medical imaging AI system that classifies chest X-ray images and provides Grad-CAM visual explanations to support model interpretability.',
-    image: '',
+    slug: 'pulmonary-edema',
     tags: ['PyTorch', 'CNNs', 'Transfer Learning', 'Grad-CAM', 'Streamlit', 'Medical Imaging'],
     github: 'https://github.com/hisham-cs/AI-Pulmonary-Edema-Detector.git',
     demo: 'https://ai-pulmonary-edema-detector-n2mdhebrvfowgvbobyfo4j.streamlit.app/',
@@ -142,7 +170,7 @@ export const projects = [
     icon: 'support',
     description:
       'A domain-specific chatbot for university IT support that understands user complaints, searches verified solutions using similarity search, and provides accurate responses or escalates unresolved cases for human review.',
-    image: '',
+    slug: 'smart-complaint',
     tags: ['Python', 'LLMs', 'RAG', 'OpenAI API', 'Similarity Search', 'Gradio'],
     github: 'https://github.com/Saleh67676/Smart-Complaint-System.git',
     demo: '',
@@ -150,48 +178,62 @@ export const projects = [
   },
 ]
 
+// Resolves a project's media to an array of { src, alt }: an explicit
+// `images` override wins if present, otherwise falls back to whatever was
+// auto-discovered in src/assets/projects/ for `slug`, otherwise empty
+// (placeholder).
+export function getProjectImages(project) {
+  if (project.images?.length) return project.images
 
+  const discovered = project.slug ? projectImagesBySlug[project.slug] : undefined
+  if (discovered?.length) {
+    return discovered.map(({ url }, i) => ({
+      src: url,
+      alt: project.imageAlts?.[i] || `${project.name} \u2014 screenshot ${i + 1}`,
+    }))
+  }
+
+  return []
+}
+
+
+// `link` is an optional credential/verification URL — when present,
+// Education renders a "Verify →" link on that certificate's card.
 export const certificates = [
   {
-    name: 'KAUST Academy — Advanced Artificial Intelligence',
-    issuer: 'KAUST Academy · 2026',
+    title: 'Advanced Artificial Intelligence',
+    issuer: 'KAUST Academy',
     year: '2026',
-    status: 'Completed',
-    link: '', 
+    link: '',
   },
   {
-    name: 'KAUST Academy — Introduction to Artificial Intelligence',
-    issuer: 'KAUST Academy · 2026',
+    title: 'Introduction to Artificial Intelligence',
+    issuer: 'KAUST Academy',
     year: '2026',
-    status: 'Completed',
     link: '',
   },
   {
-    name: 'Hash Plus — Data Analytics Bootcamp',
-    issuer: 'Power BI & Excel · 2026',
+    title: 'Data Analytics Bootcamp (Power BI & Excel)',
+    issuer: 'Hash Plus',
     year: '2026',
-    status: 'Completed',
     link: '',
   },
   {
-    name: 'DeepLearning.AI — Mathematics for ML and Data Science',
-    issuer: 'DeepLearning.AI · 2025',
+    title: 'Mathematics for Machine Learning and Data Science',
+    issuer: 'DeepLearning.AI',
     year: '2025',
-    status: 'Completed',
     link: '',
   },
   {
-    name: 'DataCamp — Python Data Fundamentals',
-    issuer: 'DataCamp · 2025',
+    title: 'Python Data Fundamentals',
+    issuer: 'DataCamp',
     year: '2025',
-    status: 'Completed',
     link: '',
   },
   {
-    name: 'SDAIA — Fundamentals of Artificial Intelligence',
-    issuer: 'SDAIA · 2025',
+    title: 'Fundamentals of Artificial Intelligence',
+    issuer: 'SDAIA',
     year: '2025',
-    status: 'Completed',
     link: '',
   },
 ]

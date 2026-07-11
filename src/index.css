@@ -34,10 +34,24 @@
   --color-surface-border: #29292e;
   --color-surface-border-hover: #35353c;
 
-  /* Text (dark mode) */
-  --color-text-main: #f4f4f5;
-  --color-text-muted: #a1a1aa;
-  --color-text-dim: #71717a;
+  /* Text — 3-tier semantic scale, light-mode values here. Every value is
+     verified ≥4.5:1 against both surface tones it appears on (see the
+     `.dark` overrides below for the dark-mode pairing); pick from this
+     scale instead of raw slate-* utilities so contrast stays provable. */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #5b6472;
+}
+
+/* Dark-mode text tier overrides — same three tokens, re-verified against
+   both --color-surface-base (#18181b) and --color-surface-card (#202024):
+   primary 14.8–16.1:1, secondary 6.3–6.9:1, muted 5.3–5.8:1. All clear the
+   4.5:1 body-text floor; the previous dim tone (#71717a) measured ~3.4:1
+   and is retired rather than reused. */
+.dark {
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #93939c;
 }
 
 /* ── Scroll reveal (fade-in + slide-up) ─────────────────────── */
@@ -78,5 +92,66 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ── Terminal-style project placeholder cursor ──────────────── */
+.terminal-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.2em;
+  background: currentColor;
+  vertical-align: -0.15em;
+  animation: terminal-blink 1.1s step-end infinite;
+}
+
+@keyframes terminal-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ── Focus visibility ────────────────────────────────────────
+   One consistent keyboard-focus ring for every interactive element,
+   in the single accent color, so it survives regardless of the
+   element's own background/border styling. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark [tabindex]:focus-visible {
+  outline-color: var(--color-brand-400);
+}
+
+/* ── Carousel arrows (ProjectMedia) ──────────────────────────
+   Always visible by default — this is also the correct state for touch
+   devices, which have no hover to reveal anything. On pointers that do
+   support hover, dim them until the card (or an arrow itself) is
+   hovered/focused. */
+.carousel-arrow {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .carousel-arrow {
+    opacity: 0.45;
+  }
+
+  .group:hover .carousel-arrow,
+  .group:focus-within .carousel-arrow {
+    opacity: 1;
   }
 }
