@@ -1,0 +1,9 @@
+Add your resume here as: hisham-almalki-cv.pdf
+
+The "Download CV" buttons in the Hero and Contact sections link to
+/assets/cv/hisham-almalki-cv.pdf (resolved against the site's base path,
+see src/data.js -> profile.cv). Until that exact file exists in this
+folder, those buttons will 404 — drop the real PDF in with this filename
+and they'll work immediately, no code changes needed.
+
+You can delete this file once the real PDF is in place.
