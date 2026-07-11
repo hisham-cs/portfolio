@@ -18,7 +18,7 @@ export default function Skills() {
                   <span className="font-mono text-xs text-brand-500 dark:text-brand-400">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-slate-900 dark:text-text-main">
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-text-primary">
                     {group.category}
                   </h3>
                 </div>
@@ -27,7 +27,7 @@ export default function Skills() {
                   {group.items.map((skill, j) => (
                     <span key={skill} className="flex items-center gap-3">
                       {j > 0 && <span className="text-slate-300 dark:text-surface-border-hover" aria-hidden="true">/</span>}
-                      <span className="font-mono text-sm text-slate-600 dark:text-text-muted">{skill}</span>
+                      <span className="font-mono text-sm text-text-secondary">{skill}</span>
                     </span>
                   ))}
                 </div>

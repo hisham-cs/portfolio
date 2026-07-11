@@ -1,6 +1,7 @@
 import { profile, education, heroCard } from '../data.js'
-import { ArrowRightIcon, DownloadIcon } from './Icons.jsx'
+import { ArrowRightIcon, ExternalLinkIcon } from './Icons.jsx'
 import Button from './ui/Button.jsx'
+import HeroVisual from './HeroVisual.jsx'
 
 export default function Hero() {
   // Non-breaking hyphens stop the browser from wrapping mid-name ("Al-Malki").
@@ -13,7 +14,7 @@ export default function Hero() {
       id="home"
       className="relative isolate border-b border-slate-200 bg-white dark:border-surface-border dark:bg-surface-base"
     >
-      <div className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 sm:pt-32">
+      <div className="mx-auto max-w-6xl px-4 pt-20 sm:px-6 sm:pt-24">
         {/* Hairline rule — the one deliberate structural line, reused below
             as the vertical divider between the two columns. Clears the
             fixed h-16 navbar (64px) with room to spare before it. */}
@@ -23,11 +24,11 @@ export default function Hero() {
           Computer Science Graduate · {gradYear}
         </p>
 
-        <div className="grid gap-12 pt-8 pb-24 sm:pb-32 lg:grid-cols-12 lg:gap-x-12">
+        <div className="grid gap-12 pt-8 pb-16 sm:pb-20 lg:grid-cols-12 lg:gap-x-12">
           {/* Left: the editorial column — name, role, statement, entry points */}
           <div className="lg:col-span-8">
             <h1
-              className="hero-in font-display text-6xl font-bold tracking-[-0.03em] text-slate-900 sm:text-7xl dark:text-text-main"
+              className="hero-in font-display text-6xl font-bold tracking-[-0.03em] text-text-primary sm:text-7xl"
               style={{ animationDelay: '70ms' }}
             >
               {displayName}
@@ -39,7 +40,7 @@ export default function Hero() {
               {profile.title}
             </p>
             <p
-              className="hero-in mt-4 max-w-md text-lg leading-[1.7] text-slate-600 dark:text-text-muted"
+              className="hero-in mt-4 max-w-md text-lg leading-[1.7] text-text-secondary"
               style={{ animationDelay: '210ms' }}
             >
               {profile.intro}
@@ -50,36 +51,37 @@ export default function Hero() {
                 View My Work
                 <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </Button>
-              {hasCv ? (
+              <Button href="#contact" variant="outline" className="px-7 py-3">
+                Get in Touch
+              </Button>
+              {hasCv && (
                 <Button
                   href={`${import.meta.env.BASE_URL}${profile.cv}`}
-                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
                   variant="outline"
                   className="px-7 py-3"
                 >
-                  <DownloadIcon className="h-4 w-4" /> Download CV
-                </Button>
-              ) : (
-                <Button href="#contact" variant="outline" className="px-7 py-3">
-                  Get in Touch
+                  <ExternalLinkIcon className="h-4 w-4" /> View CV
                 </Button>
               )}
             </div>
           </div>
 
-          {/* Right: mono ledger rail — structured metadata, not decoration */}
+          {/* Right: compact status line + a decorative data/AI visual that
+              fills the space the bio column's extra height leaves behind */}
           <div
-            className="hero-in lg:col-span-4 lg:border-l lg:border-slate-200 lg:pl-12 dark:lg:border-surface-border"
+            className="hero-in flex flex-col lg:col-span-4 lg:h-full lg:border-l lg:border-slate-200 lg:pl-12 dark:lg:border-surface-border"
             style={{ animationDelay: '350ms' }}
           >
-            <dl className="space-y-8">
+            <dl>
               <div>
-                <dt className="font-mono text-xs tracking-[0.14em] text-slate-400 uppercase dark:text-text-dim">
+                <dt className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
                   Available For
                 </dt>
                 <dd className="mt-3 space-y-2">
                   {heroCard.seeking.map((item) => (
-                    <div key={item} className="flex items-baseline gap-2 text-sm text-slate-700 dark:text-text-main">
+                    <div key={item} className="flex items-baseline gap-2 text-sm text-text-primary">
                       <span className="font-mono text-brand-500 dark:text-brand-400">—</span>
                       {item}
                     </div>
@@ -87,6 +89,10 @@ export default function Hero() {
                 </dd>
               </div>
             </dl>
+
+            <div className="mt-8 hidden min-h-40 flex-1 lg:block">
+              <HeroVisual />
+            </div>
           </div>
         </div>
       </div>

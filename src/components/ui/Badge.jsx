@@ -1,6 +1,6 @@
 const variants = {
   neutral:
-    'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-surface-hover dark:text-text-muted dark:hover:bg-surface-border',
+    'bg-slate-100 text-text-secondary hover:bg-slate-200 dark:bg-surface-hover dark:hover:bg-surface-border',
   accent:
     'bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/16',
   success: 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-success/10 dark:text-success dark:ring-success/20',
