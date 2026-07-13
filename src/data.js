@@ -99,12 +99,19 @@ export const skills = [
   },
 ]
 
-// Project screenshots are zero-config: drop files named `{slug}-1.jpg`,
-// `{slug}-2.png` (any extension, mixed extensions are fine) into
-// src/assets/projects/ and they show up automatically, in numeric order,
-// for the project whose `slug` matches. No path or extension ever needs to
-// be written here. Vite globs the folder at build time, so files are
-// hashed/optimized like any other imported asset.
+// Project screenshots are zero-config: drop responsive WebP variants named
+// `{slug}-{n}-{width}w.webp` (e.g. `faten-1-480w.webp`, `faten-1-960w.webp`,
+// `faten-1-1600w.webp`) into src/assets/projects/ and they show up
+// automatically, in numeric order, for the project whose `slug` matches. No
+// path or extension ever needs to be written here. Vite globs the folder at
+// build time, so files are hashed/optimized like any other imported asset.
+// All screenshots are captured at 16:9 \u2014 height is derived from width
+// rather than stored separately.
+//
+// WebP-only, deliberately: there's no browserslist/analytics data in this
+// project indicating any target browser needs a legacy raster fallback, so
+// don't reintroduce PNG/JPG originals without revisiting that (see
+// DESIGN.md before adding a second format).
 //
 // `imageAlts` is an optional array of alt text matched by index to the
 // discovered images (imageAlts[0] describes {slug}-1, etc.) \u2014 filenames
@@ -119,7 +126,9 @@ export const skills = [
 // resolved image renders plainly; two or more auto-cycle on hover/focus in
 // the compact card grid, or render as a static all-visible mosaic on the
 // flagship project card.
-const projectImageModules = import.meta.glob('./assets/projects/*.{png,jpg,jpeg,webp,gif,avif,svg}', {
+const ASPECT_RATIO = 9 / 16
+
+const projectImageModules = import.meta.glob('./assets/projects/*.webp', {
   eager: true,
   import: 'default',
 })
@@ -127,13 +136,23 @@ const projectImageModules = import.meta.glob('./assets/projects/*.{png,jpg,jpeg,
 const projectImagesBySlug = {}
 for (const [path, url] of Object.entries(projectImageModules)) {
   const filename = path.split('/').pop()
-  const match = filename.match(/^(.+)-(\d+)\.[^.]+$/)
+  const match = filename.match(/^(.+)-(\d+)-(\d+)w\.webp$/)
   if (!match) continue
-  const [, slug, order] = match
-  ;(projectImagesBySlug[slug] ??= []).push({ order: Number(order), url })
+  const [, slug, order, width] = match
+  const bucket = (projectImagesBySlug[slug] ??= [])
+  const orderNum = Number(order)
+  let entry = bucket.find((e) => e.order === orderNum)
+  if (!entry) {
+    entry = { order: orderNum, variants: [] }
+    bucket.push(entry)
+  }
+  entry.variants.push({ width: Number(width), url })
 }
 for (const slug in projectImagesBySlug) {
   projectImagesBySlug[slug].sort((a, b) => a.order - b.order)
+  for (const entry of projectImagesBySlug[slug]) {
+    entry.variants.sort((a, b) => a.width - b.width)
+  }
 }
 
 export const projects = [
@@ -175,19 +194,28 @@ export const projects = [
   },
 ]
 
-// Resolves a project's media to an array of { src, alt }: an explicit
-// `images` override wins if present, otherwise falls back to whatever was
-// auto-discovered in src/assets/projects/ for `slug`, otherwise empty
-// (placeholder).
+// Resolves a project's media to an array of { src, srcSet, width, height,
+// alt }: an explicit `images` override wins if present, otherwise falls
+// back to whatever was auto-discovered in src/assets/projects/ for `slug`,
+// otherwise empty (placeholder). `src`/`width`/`height` are the largest
+// discovered variant (the fallback for browsers that ignore `srcSet`);
+// `srcSet` lists every width so the browser can pick the smallest one that
+// satisfies the `sizes` the caller renders it at.
 export function getProjectImages(project) {
   if (project.images?.length) return project.images
 
   const discovered = project.slug ? projectImagesBySlug[project.slug] : undefined
   if (discovered?.length) {
-    return discovered.map(({ url }, i) => ({
-      src: url,
-      alt: project.imageAlts?.[i] || `${project.name} \u2014 screenshot ${i + 1}`,
-    }))
+    return discovered.map(({ variants }, i) => {
+      const largest = variants[variants.length - 1]
+      return {
+        src: largest.url,
+        srcSet: variants.map((v) => `${v.url} ${v.width}w`).join(', '),
+        width: largest.width,
+        height: Math.round(largest.width * ASPECT_RATIO),
+        alt: project.imageAlts?.[i] || `${project.name} \u2014 screenshot ${i + 1}`,
+      }
+    })
   }
 
   return []

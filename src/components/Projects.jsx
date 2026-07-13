@@ -96,8 +96,13 @@ function FlagshipProject({ project, index }) {
             >
               <img
                 src={img.src}
+                srcSet={img.srcSet}
+                sizes="(min-width: 640px) 500px, 42vw"
+                width={img.width}
+                height={img.height}
                 alt={img.alt}
                 loading={i === 0 ? 'eager' : 'lazy'}
+                fetchPriority={i === 0 ? 'high' : undefined}
                 decoding="async"
                 className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover/tile:scale-[1.03]"
               />
