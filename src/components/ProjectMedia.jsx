@@ -86,11 +86,15 @@ export default function ProjectMedia({ project }) {
         <img
           key={`${img.src}-${i}`}
           src={img.src}
+          srcSet={img.srcSet}
+          sizes="(min-width: 640px) 50vw, 100vw"
+          width={img.width}
+          height={img.height}
           alt={
             img.alt ||
             `${project.name} — project preview screenshot${images.length > 1 ? ` ${i + 1} of ${images.length}` : ''}`
           }
-          loading={i === 0 ? 'eager' : 'lazy'}
+          loading="lazy"
           decoding="async"
           aria-hidden={i !== index}
           className={`absolute inset-0 h-full w-full object-cover ${
