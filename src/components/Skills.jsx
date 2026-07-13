@@ -1,12 +1,6 @@
 import { skills } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
-import { BrainIcon, ChartIcon, WrenchIcon, ApiIcon } from './Icons.jsx'
-
-// One outline icon per category, same stroke weight as the rest of Icons.jsx
-// — a visual anchor for the card, always paired with the category label so
-// it never has to carry meaning on its own.
-const iconMap = { ai: BrainIcon, data: ChartIcon, tools: WrenchIcon, backend: ApiIcon }
 
 export default function Skills() {
   return (
@@ -18,8 +12,6 @@ export default function Skills() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           {skills.map((group, i) => {
-            const Icon = iconMap[group.icon]
-
             return (
               <Reveal key={group.category} delay={i * 60}>
                 <div className="group/card flex h-full flex-col rounded-2xl border border-transparent bg-surface p-6 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-surface-elevated hover:shadow-md sm:p-8">
@@ -27,7 +19,6 @@ export default function Skills() {
                     <span className="font-mono text-xs text-text-muted">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <Icon className="h-6 w-6 text-text-secondary transition-colors duration-200 group-hover/card:text-text-primary" />
                     <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-text-primary">
                       {group.category}
                     </h3>

@@ -75,28 +75,24 @@ export const education = {
 export const skills = [
   {
     category: 'AI & Computer Vision',
-    icon: 'ai',
     primary: ['PyTorch', 'CNNs', 'Grad-CAM'],
     secondary: ['Scikit-learn', 'Transfer Learning', 'Image Classification'],
     proof: { label: 'Pulmonary Edema Detection', slug: 'pulmonary-edema' },
   },
   {
     category: 'Data & BI',
-    icon: 'data',
     primary: ['Pandas', 'Power BI', 'EDA'],
     secondary: ['NumPy', 'Excel', 'Data Cleaning', 'Matplotlib'],
     proof: { label: 'Applied across every project’s data layer' },
   },
   {
     category: 'Tools & Platforms',
-    icon: 'tools',
     primary: ['Streamlit', 'Firebase', 'Git'],
     secondary: ['GitHub', 'VS Code', 'Jupyter Notebook', 'Google Colab'],
     proof: { label: 'The workflow behind every project here' },
   },
   {
     category: 'Backend & APIs',
-    icon: 'backend',
     primary: ['FastAPI', 'REST APIs'],
     secondary: [],
     proof: { label: 'Faten — UQU Academic Assistant', slug: 'faten' },
