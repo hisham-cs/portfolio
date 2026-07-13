@@ -1,6 +1,12 @@
 import { skills } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
+import { BrainIcon, ChartIcon, WrenchIcon, ApiIcon } from './Icons.jsx'
+
+// One outline icon per category, same stroke weight as the rest of Icons.jsx
+// — a visual anchor for the card, always paired with the category label so
+// it never has to carry meaning on its own.
+const iconMap = { ai: BrainIcon, data: ChartIcon, tools: WrenchIcon, backend: ApiIcon }
 
 export default function Skills() {
   return (
@@ -10,30 +16,70 @@ export default function Skills() {
           <SectionHeading eyebrow="What I work with" title="Skills" align="left" />
         </Reveal>
 
-        <div className="border-t border-border">
-          {skills.map((group, i) => (
-            <Reveal key={group.category} delay={i * 60}>
-              <div className="grid gap-3 border-b border-border py-8 lg:grid-cols-12 lg:gap-x-12">
-                <div className="flex items-baseline gap-3 lg:col-span-3">
-                  <span className="font-mono text-xs text-text-muted">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-text-primary">
-                    {group.category}
-                  </h3>
-                </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          {skills.map((group, i) => {
+            const Icon = iconMap[group.icon]
 
-                <div className="flex flex-wrap gap-x-3 gap-y-2 lg:col-span-9">
-                  {group.items.map((skill, j) => (
-                    <span key={skill} className="flex items-center gap-3">
-                      {j > 0 && <span className="text-border" aria-hidden="true">/</span>}
-                      <span className="font-mono text-sm text-text-secondary">{skill}</span>
+            return (
+              <Reveal key={group.category} delay={i * 60}>
+                <div className="group/card flex h-full flex-col rounded-2xl border border-transparent bg-surface p-6 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-surface-elevated hover:shadow-md sm:p-8">
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-xs text-text-muted">
+                      {String(i + 1).padStart(2, '0')}
                     </span>
-                  ))}
+                    <Icon className="h-5 w-5 text-text-muted transition-colors duration-200 group-hover/card:text-text-secondary" />
+                    <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-text-primary">
+                      {group.category}
+                    </h3>
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {group.primary.map((skill) => (
+                      <span
+                        key={skill}
+                        className="rounded-lg bg-surface-elevated px-3 py-1.5 text-sm font-semibold text-text-primary transition-colors duration-200 group-hover/card:bg-background"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+
+                  {group.secondary.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2">
+                      {group.secondary.map((skill, j) => (
+                        <span key={skill} className="flex items-center gap-3">
+                          {j > 0 && (
+                            <span className="text-border" aria-hidden="true">
+                              /
+                            </span>
+                          )}
+                          <span className="font-mono text-xs text-text-secondary">{skill}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {group.proof && (
+                    <div className="mt-6 border-t border-border pt-4">
+                      {group.proof.slug ? (
+                        <a
+                          href={`#${group.proof.slug}`}
+                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
+                        >
+                          Proven in {group.proof.label}
+                          <span className="transition-transform duration-200 group-hover/link:translate-x-0.5">
+                            →
+                          </span>
+                        </a>
+                      ) : (
+                        <p className="text-sm text-text-muted">{group.proof.label}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            )
+          })}
         </div>
       </div>
     </section>
