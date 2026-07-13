@@ -14,13 +14,13 @@ export default function Avatar({ name, src, size = 56, className = '' }) {
   return (
     <div
       style={{ width: size, height: size }}
-      className={`flex shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-brand-200/70 bg-brand-100 dark:border-surface-border dark:bg-surface-hover ${className}`}
+      className={`flex shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface ${className}`}
     >
       {src ? (
         <img src={src} alt={name} className="h-full w-full object-cover" />
       ) : (
         <span
-          className="font-bold text-brand-700 dark:text-brand-300"
+          className="font-bold text-text-primary"
           style={{ fontSize: size * 0.36 }}
         >
           {getInitials(name)}

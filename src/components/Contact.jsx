@@ -26,9 +26,10 @@ export default function Contact() {
               <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
                 Email
               </p>
+              {/* Approved accent spot (d) */}
               <a
                 href={`mailto:${profile.email}`}
-                className="group mt-2 inline-flex min-h-11 items-center gap-3 font-display text-2xl font-semibold tracking-[-0.01em] text-brand-700 transition-colors hover:text-brand-800 sm:text-3xl dark:text-brand-300 dark:hover:text-brand-200"
+                className="group mt-2 inline-flex min-h-11 items-center gap-3 font-display text-2xl font-semibold tracking-[-0.01em] text-accent transition-colors hover:text-accent-hover sm:text-3xl"
               >
                 {profile.email}
                 <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
@@ -39,7 +40,7 @@ export default function Contact() {
           {/* Right: mono ledger of other channels */}
           <Reveal
             delay={100}
-            className="lg:col-span-4 lg:border-l lg:border-slate-200 lg:pl-12 dark:lg:border-surface-border"
+            className="lg:col-span-4 lg:border-l lg:border-border lg:pl-12"
           >
             <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
               Elsewhere
@@ -49,7 +50,7 @@ export default function Contact() {
                 href={profile.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-brand-700 dark:hover:text-brand-300"
+                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
               >
                 <LinkedInIcon className="h-4 w-4" />
                 LinkedIn
@@ -59,7 +60,7 @@ export default function Contact() {
                 href={profile.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-brand-700 dark:hover:text-brand-300"
+                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
               >
                 <GitHubIcon className="h-4 w-4" />
                 GitHub
@@ -69,7 +70,7 @@ export default function Contact() {
                 <a
                   href={`${import.meta.env.BASE_URL}${profile.cv}`}
                   download
-                  className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-brand-700 dark:hover:text-brand-300"
+                  className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
                 >
                   <DownloadIcon className="h-4 w-4" />
                   Download CV

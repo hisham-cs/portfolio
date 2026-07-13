@@ -10,7 +10,7 @@ import useMediaQuery from '../hooks/useMediaQuery.js'
 const NODE_COUNT = 18
 const LINK_DISTANCE = 120
 const DRIFT_SPEED = 0.15
-const FALLBACK_RGB = [76, 118, 153] // brand-500, used only if currentColor can't be read
+const FALLBACK_RGB = [115, 108, 99] // text-muted (light), used only if currentColor can't be read
 
 function makeNodes(width, height) {
   return Array.from({ length: NODE_COUNT }, () => ({
@@ -127,7 +127,7 @@ export default function HeroVisual() {
   if (!isDesktop) return null
 
   return (
-    <div className="h-full w-full text-brand-500 dark:text-brand-400" aria-hidden="true">
+    <div className="h-full w-full text-text-muted" aria-hidden="true">
       <canvas ref={canvasRef} className="block h-full w-full" />
     </div>
   )

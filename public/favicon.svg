@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#3B6284" />
+  <rect width="64" height="64" rx="16" fill="#B8402C" />
   <text
     x="32"
     y="34"
@@ -8,6 +8,6 @@
     font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif"
     font-weight="700"
     font-size="30"
-    fill="#F4F4F5"
+    fill="#F4F0E8"
   >H</text>
 </svg>

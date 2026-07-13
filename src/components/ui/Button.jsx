@@ -1,10 +1,14 @@
 const variants = {
+  // The one primary-styled action per view (taste rule: exactly one). This
+  // is one of the four sanctioned accent locations — see index.css.
   primary:
-    'bg-brand-600 text-white shadow-sm shadow-black/10 hover:bg-brand-700 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10 dark:bg-brand-500 dark:hover:bg-brand-600 dark:shadow-black/30',
+    'bg-accent text-accent-contrast shadow-sm shadow-black/10 hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-md',
   secondary:
-    'border border-slate-300 bg-white/70 text-text-secondary shadow-sm backdrop-blur hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700 hover:shadow-md dark:border-surface-border dark:bg-surface-card/70 dark:hover:border-surface-border-hover dark:hover:text-brand-300',
+    'border border-border bg-surface-elevated/70 text-text-secondary shadow-sm backdrop-blur hover:-translate-y-0.5 hover:border-text-muted hover:text-text-primary hover:shadow-md',
+  // Neutral, not accent-bordered: an accent-colored border here would put a
+  // second accent-styled button next to the primary CTA in Hero.
   outline:
-    'border-2 border-brand-600 text-brand-700 hover:-translate-y-0.5 hover:bg-brand-50 hover:border-brand-700 dark:border-brand-400 dark:text-text-primary dark:hover:border-brand-300 dark:hover:bg-brand-400/10',
+    'border-2 border-border text-text-primary hover:-translate-y-0.5 hover:border-text-muted hover:bg-surface',
 }
 
 export default function Button({ as: Tag = 'a', variant = 'primary', className = '', children, ...props }) {
