@@ -18,7 +18,7 @@ export default function Projects() {
         <div className="border-t border-border">
           {projects.map((project, i) => (
             <Reveal key={project.name} delay={i * 80}>
-              <article className="group border-b border-border py-12">
+              <article id={project.slug} className="group scroll-mt-24 border-b border-border py-12">
                 <ProjectMedia project={project} />
 
                 <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-x-12">

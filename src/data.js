@@ -65,41 +65,41 @@ export const education = {
   honours: 'Second Class Honours',
 }
 
+// `primary` are the signature skills for the category (shown with more
+// visual weight); `secondary` are the remaining, supporting skills. Every
+// skill from the old flat list is preserved across the two arrays. `proof`
+// links the category to real evidence: a `slug` anchors straight to the
+// matching project card in Projects; omit `slug` for a category with no
+// single clean project match and it renders as plain supporting text
+// instead of a fabricated link.
 export const skills = [
   {
     category: 'AI & Computer Vision',
     icon: 'ai',
-    items: [
-      'PyTorch',
-      'Scikit-learn',
-      'CNNs',
-      'Transfer Learning',
-      'Image Classification',
-      'Grad-CAM',
-    ],
+    primary: ['PyTorch', 'CNNs', 'Grad-CAM'],
+    secondary: ['Scikit-learn', 'Transfer Learning', 'Image Classification'],
+    proof: { label: 'Pulmonary Edema Detection', slug: 'pulmonary-edema' },
   },
   {
     category: 'Data & BI',
     icon: 'data',
-    items: ['Pandas', 'NumPy', 'Power BI', 'Excel', 'EDA', 'Data Cleaning', 'Matplotlib'],
+    primary: ['Pandas', 'Power BI', 'EDA'],
+    secondary: ['NumPy', 'Excel', 'Data Cleaning', 'Matplotlib'],
+    proof: { label: 'Applied across every project’s data layer' },
   },
   {
     category: 'Tools & Platforms',
     icon: 'tools',
-    items: [
-      'Git',
-      'GitHub',
-      'VS Code',
-      'Jupyter Notebook',
-      'Google Colab',
-      'Streamlit',
-      'Firebase',
-    ],
+    primary: ['Streamlit', 'Firebase', 'Git'],
+    secondary: ['GitHub', 'VS Code', 'Jupyter Notebook', 'Google Colab'],
+    proof: { label: 'Pulmonary Edema Detection', slug: 'pulmonary-edema' },
   },
   {
     category: 'Backend & APIs',
     icon: 'backend',
-    items: ['FastAPI', 'REST APIs'],
+    primary: ['FastAPI', 'REST APIs'],
+    secondary: [],
+    proof: { label: 'Faten — UQU Academic Assistant', slug: 'faten' },
   },
 ]
 
