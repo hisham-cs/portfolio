@@ -27,7 +27,7 @@ export default function Skills() {
                     <span className="font-mono text-xs text-text-muted">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <Icon className="h-5 w-5 text-text-muted transition-colors duration-200 group-hover/card:text-text-secondary" />
+                    <Icon className="h-6 w-6 text-text-secondary transition-colors duration-200 group-hover/card:text-text-primary" />
                     <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-text-primary">
                       {group.category}
                     </h3>
@@ -60,11 +60,11 @@ export default function Skills() {
                   )}
 
                   {group.proof && (
-                    <div className="mt-6 border-t border-border pt-4">
+                    <div className="mt-auto border-t border-border pt-4">
                       {group.proof.slug ? (
                         <a
                           href={`#${group.proof.slug}`}
-                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
+                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
                         >
                           Proven in {group.proof.label}
                           <span className="transition-transform duration-200 group-hover/link:translate-x-0.5">
