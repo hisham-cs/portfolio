@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react'
 import { getProjectImages } from '../data.js'
 import useMediaQuery from '../hooks/useMediaQuery.js'
 
-const CYCLE_INTERVAL_MS = 1400
+const CYCLE_INTERVAL_MS = 2500
 
 // Preview slot for a compact project card. Renders the given image(s)/GIF
 // inside a fixed-aspect box (no layout shift while it loads); falls back to
 // a terminal-style typographic mockup when no media is provided yet. The
-// first image is always visible with zero interaction — a project with
-// multiple images auto-cycles through the rest for as long as the card is
-// hovered or focused, then settles back on the first frame. No arrows, no
-// swipe: this is a bonus preview, not a required control.
+// first image is always visible with zero interaction.
+//
+// A project with multiple images gets small tap targets (dots) that jump
+// straight to a frame — these are the reachability guarantee for touch and
+// keyboard, since there's no hover on a touchscreen. Hovering/focusing the
+// card is a bonus on top: it auto-cycles through the rest and settles back
+// on the first frame on mouse-leave/blur.
 function slugify(name) {
   return name
     .toLowerCase()
@@ -56,10 +59,6 @@ export default function ProjectMedia({ project }) {
       onMouseLeave={isMulti ? handleDeactivate : undefined}
       onFocus={isMulti ? handleActivate : undefined}
       onBlur={isMulti ? handleDeactivate : undefined}
-      tabIndex={isMulti ? 0 : undefined}
-      aria-label={
-        isMulti ? `${project.name} — ${images.length} screenshots, hover or focus to preview` : undefined
-      }
     >
       {isPlaceholder && (
         // Ink terminal — a fixed dark island (see index.css): it keeps this
@@ -103,11 +102,28 @@ export default function ProjectMedia({ project }) {
       ))}
 
       {isMulti && (
-        <div
-          className="pointer-events-none absolute right-2 bottom-2 z-10 rounded-md bg-black/60 px-2 py-1 font-mono text-[11px] tracking-[0.08em] text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100"
-          aria-hidden="true"
-        >
-          {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
+        <div className="absolute inset-x-0 bottom-2 z-10 flex justify-center">
+          <div className="flex items-center gap-1 rounded-full bg-black/40 px-1">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setIndex(i)
+                }}
+                aria-label={`Show screenshot ${i + 1} of ${images.length}`}
+                aria-current={i === index}
+                className="flex h-9 w-7 items-center justify-center"
+              >
+                <span
+                  className={`block h-1.5 w-1.5 rounded-full transition-colors duration-200 ${
+                    i === index ? 'bg-white' : 'bg-white/40'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
