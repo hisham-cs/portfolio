@@ -157,23 +157,3 @@ button:focus-visible,
   outline-offset: 2px;
   border-radius: 4px;
 }
-
-/* ── Carousel arrows (ProjectMedia) ──────────────────────────
-   Always visible by default — this is also the correct state for touch
-   devices, which have no hover to reveal anything. On pointers that do
-   support hover, dim them until the card (or an arrow itself) is
-   hovered/focused. */
-.carousel-arrow {
-  opacity: 1;
-}
-
-@media (hover: hover) {
-  .carousel-arrow {
-    opacity: 0.45;
-  }
-
-  .group:hover .carousel-arrow,
-  .group:focus-within .carousel-arrow {
-    opacity: 1;
-  }
-}

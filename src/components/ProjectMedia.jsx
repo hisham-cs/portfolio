@@ -1,15 +1,16 @@
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getProjectImages } from '../data.js'
-import { ChevronLeftIcon, ChevronRightIcon } from './Icons.jsx'
 import useMediaQuery from '../hooks/useMediaQuery.js'
 
-const SWIPE_THRESHOLD = 40
+const CYCLE_INTERVAL_MS = 1400
 
-// Preview slot for a project card. Renders the given image(s)/GIF inside a
-// fixed-aspect box (no layout shift while it loads); falls back to a
-// terminal-style typographic mockup when no media is provided yet. Two or
-// more images become a carousel — a single image stays exactly as plain as
-// it's always been, no chrome.
+// Preview slot for a compact project card. Renders the given image(s)/GIF
+// inside a fixed-aspect box (no layout shift while it loads); falls back to
+// a terminal-style typographic mockup when no media is provided yet. The
+// first image is always visible with zero interaction — a project with
+// multiple images auto-cycles through the rest for as long as the card is
+// hovered or focused, then settles back on the first frame. No arrows, no
+// swipe: this is a bonus preview, not a required control.
 function slugify(name) {
   return name
     .toLowerCase()
@@ -22,39 +23,24 @@ function slugify(name) {
 export default function ProjectMedia({ project }) {
   const slug = slugify(project.name)
   const images = getProjectImages(project)
-  const isCarousel = images.length > 1
+  const isMulti = images.length > 1
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 
   const [index, setIndex] = useState(0)
-  const touchStartX = useRef(null)
+  const [active, setActive] = useState(false)
 
-  const goTo = (nextIndex) => {
-    const len = images.length
-    setIndex(((nextIndex % len) + len) % len)
-  }
-  const showPrev = () => goTo(index - 1)
-  const showNext = () => goTo(index + 1)
+  useEffect(() => {
+    if (!isMulti || !active || prefersReducedMotion) return
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % images.length)
+    }, CYCLE_INTERVAL_MS)
+    return () => clearInterval(id)
+  }, [isMulti, active, prefersReducedMotion, images.length])
 
-  const handleKeyDown = (e) => {
-    if (!isCarousel) return
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      showPrev()
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault()
-      showNext()
-    }
-  }
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX
-  }
-  const handleTouchEnd = (e) => {
-    if (touchStartX.current === null) return
-    const delta = e.changedTouches[0].clientX - touchStartX.current
-    if (delta > SWIPE_THRESHOLD) showPrev()
-    else if (delta < -SWIPE_THRESHOLD) showNext()
-    touchStartX.current = null
+  const handleActivate = () => setActive(true)
+  const handleDeactivate = () => {
+    setActive(false)
+    setIndex(0)
   }
 
   const isPlaceholder = images.length === 0
@@ -66,9 +52,14 @@ export default function ProjectMedia({ project }) {
           ? 'border-transparent bg-ink'
           : 'border-border bg-surface group-hover:border-text-muted'
       }`}
-      onKeyDown={handleKeyDown}
-      onTouchStart={isCarousel ? handleTouchStart : undefined}
-      onTouchEnd={isCarousel ? handleTouchEnd : undefined}
+      onMouseEnter={isMulti ? handleActivate : undefined}
+      onMouseLeave={isMulti ? handleDeactivate : undefined}
+      onFocus={isMulti ? handleActivate : undefined}
+      onBlur={isMulti ? handleDeactivate : undefined}
+      tabIndex={isMulti ? 0 : undefined}
+      aria-label={
+        isMulti ? `${project.name} — ${images.length} screenshots, hover or focus to preview` : undefined
+      }
     >
       {isPlaceholder && (
         // Ink terminal — a fixed dark island (see index.css): it keeps this
@@ -104,43 +95,20 @@ export default function ProjectMedia({ project }) {
           decoding="async"
           aria-hidden={i !== index}
           className={`absolute inset-0 h-full w-full object-cover ${
-            prefersReducedMotion ? '' : 'transition-opacity duration-300 ease-out'
+            prefersReducedMotion ? '' : 'transition-opacity duration-500 ease-out'
           } ${i === index ? 'opacity-100' : 'opacity-0'} ${
-            isCarousel ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.03]'
+            isMulti ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.03]'
           }`}
         />
       ))}
 
-      {isCarousel && (
-        <>
-          <button
-            type="button"
-            onClick={showPrev}
-            aria-label="Previous image"
-            className="carousel-arrow absolute top-1/2 left-2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg bg-black/25 text-white transition-colors duration-200 hover:bg-black/45 focus-visible:bg-black/45"
-          >
-            <ChevronLeftIcon className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            onClick={showNext}
-            aria-label="Next image"
-            className="carousel-arrow absolute top-1/2 right-2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg bg-black/25 text-white transition-colors duration-200 hover:bg-black/45 focus-visible:bg-black/45"
-          >
-            <ChevronRightIcon className="h-5 w-5" />
-          </button>
-
-          <div
-            className="pointer-events-none absolute right-2 bottom-2 z-10 rounded-md bg-black/60 px-2 py-1 font-mono text-[11px] tracking-[0.08em] text-white"
-            aria-hidden="true"
-          >
-            {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
-          </div>
-
-          <span className="sr-only" aria-live="polite">
-            {`Image ${index + 1} of ${images.length}`}
-          </span>
-        </>
+      {isMulti && (
+        <div
+          className="pointer-events-none absolute right-2 bottom-2 z-10 rounded-md bg-black/60 px-2 py-1 font-mono text-[11px] tracking-[0.08em] text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100"
+          aria-hidden="true"
+        >
+          {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
+        </div>
       )}
     </div>
   )
