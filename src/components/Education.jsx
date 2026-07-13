@@ -8,7 +8,7 @@ export default function Education() {
   return (
     <section
       id="education"
-      className="scroll-mt-20 border-b border-border py-24 sm:py-32"
+      className="scroll-mt-20 border-b border-border py-16 sm:py-20"
     >
       {/* Anchor kept for old #certificates links */}
       <span id="certificates" />
