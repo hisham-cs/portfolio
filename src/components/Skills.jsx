@@ -4,7 +4,7 @@ import Reveal from './Reveal.jsx'
 
 export default function Skills() {
   return (
-    <section id="skills" className="scroll-mt-20 border-b border-border py-24 sm:py-32">
+    <section id="skills" className="scroll-mt-20 border-b border-border py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <SectionHeading eyebrow="What I work with" title="Skills" align="left" />

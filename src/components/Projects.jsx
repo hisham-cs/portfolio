@@ -162,7 +162,7 @@ export default function Projects() {
   const rest = projects.filter((p) => p.slug !== FLAGSHIP_SLUG)
 
   return (
-    <section id="projects" className="scroll-mt-20 border-b border-border py-24 sm:py-32">
+    <section id="projects" className="scroll-mt-20 border-b border-border py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <SectionHeading eyebrow="What I've built" title="Projects" align="left" />

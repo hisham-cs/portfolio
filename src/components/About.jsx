@@ -4,13 +4,13 @@ import Reveal from './Reveal.jsx'
 
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-20 border-b border-border py-24 sm:py-32">
+    <section id="about" className="scroll-mt-20 border-b border-border py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <SectionHeading eyebrow="Get to know me" title="About Me" align="left" />
         </Reveal>
 
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-12">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left: the editorial column — bio copy with a pulled-quote highlight */}
           <Reveal className="lg:col-span-8">
             <div className="max-w-[65ch]">

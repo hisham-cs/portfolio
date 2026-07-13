@@ -7,13 +7,13 @@ export default function Contact() {
   const hasCv = profile.showCv && profile.cv
 
   return (
-    <section id="contact" className="scroll-mt-20 py-24 sm:py-32">
+    <section id="contact" className="scroll-mt-20 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <SectionHeading eyebrow="Get in touch" title="Contact" align="left" />
         </Reveal>
 
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-12">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left: closing statement + the primary channel, given real visual weight */}
           <Reveal className="lg:col-span-8">
             <p className="max-w-[65ch] text-lg leading-[1.7] text-text-secondary">
