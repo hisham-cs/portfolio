@@ -92,7 +92,7 @@ export const skills = [
     icon: 'tools',
     primary: ['Streamlit', 'Firebase', 'Git'],
     secondary: ['GitHub', 'VS Code', 'Jupyter Notebook', 'Google Colab'],
-    proof: { label: 'Pulmonary Edema Detection', slug: 'pulmonary-edema' },
+    proof: { label: 'The workflow behind every project here' },
   },
   {
     category: 'Backend & APIs',
