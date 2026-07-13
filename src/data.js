@@ -120,8 +120,9 @@ export const skills = [
 // array of { src, alt }), that array wins outright and slug-based discovery
 // is skipped for that project. Leave both `images` and `slug` unset (or no
 // matching files on disk) to show the terminal-style placeholder. One
-// resolved image renders plainly (no carousel chrome); two or more render
-// as a carousel with arrows, a position counter, and swipe/keyboard nav.
+// resolved image renders plainly; two or more auto-cycle on hover/focus in
+// the compact card grid, or render as a static all-visible mosaic on the
+// flagship project card.
 const projectImageModules = import.meta.glob('./assets/projects/*.{png,jpg,jpeg,webp,gif,avif,svg}', {
   eager: true,
   import: 'default',
