@@ -2,6 +2,7 @@ import { profile, education, heroCard } from '../data.js'
 import { ArrowRightIcon, ExternalLinkIcon } from './Icons.jsx'
 import Button from './ui/Button.jsx'
 import HeroVisual from './HeroVisual.jsx'
+import SpecialtyRotator from './SpecialtyRotator.jsx'
 
 export default function Hero() {
   // Non-breaking hyphens stop the browser from wrapping mid-name ("Al-Malki").
@@ -38,6 +39,13 @@ export default function Hero() {
               style={{ animationDelay: '140ms' }}
             >
               {profile.title}
+            </p>
+            <p
+              className="hero-in mt-3 text-lg text-text-secondary sm:text-xl"
+              style={{ animationDelay: '175ms' }}
+            >
+              Specializing in{' '}
+              <SpecialtyRotator className="font-semibold text-text-primary" />
             </p>
             <p
               className="hero-in mt-4 max-w-md text-lg leading-[1.7] text-text-secondary"
