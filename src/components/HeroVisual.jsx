@@ -12,13 +12,37 @@ const LINK_DISTANCE = 120
 const DRIFT_SPEED = 0.15
 const FALLBACK_RGB = [115, 108, 99] // text-muted (light), used only if currentColor can't be read
 
-function makeNodes(width, height) {
-  return Array.from({ length: NODE_COUNT }, () => ({
+// Four of the eighteen nodes are quietly anchored one per quadrant — a
+// loose stand-in for the four skill categories in Skills (AI/CV, Data/BI,
+// Tools, Backend), so the drifting graph is never a fully random scatter.
+// No labels, no hover reveal: the meaning is invisible by design, an
+// easter egg rather than a feature.
+const ANCHOR_COUNT = 4
+
+function randomNode(width, height) {
+  return {
     x: Math.random() * width,
     y: Math.random() * height,
     vx: (Math.random() - 0.5) * DRIFT_SPEED,
     vy: (Math.random() - 0.5) * DRIFT_SPEED,
-  }))
+  }
+}
+
+function makeNodes(width, height) {
+  const anchors = Array.from({ length: ANCHOR_COUNT }, (_, i) => {
+    const quadrantX = i % 2
+    const quadrantY = Math.floor(i / 2) % 2
+    return {
+      x: (quadrantX + 0.3 + Math.random() * 0.4) * (width / 2),
+      y: (quadrantY + 0.3 + Math.random() * 0.4) * (height / 2),
+      vx: (Math.random() - 0.5) * DRIFT_SPEED,
+      vy: (Math.random() - 0.5) * DRIFT_SPEED,
+    }
+  })
+
+  const scattered = Array.from({ length: NODE_COUNT - ANCHOR_COUNT }, () => randomNode(width, height))
+
+  return [...anchors, ...scattered]
 }
 
 export default function HeroVisual() {
