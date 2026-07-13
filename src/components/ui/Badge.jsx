@@ -1,10 +1,12 @@
 const variants = {
-  neutral:
-    'bg-slate-100 text-text-secondary hover:bg-slate-200 dark:bg-surface-hover dark:hover:bg-surface-border',
-  accent:
-    'bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/16',
-  success: 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-success/10 dark:text-success dark:ring-success/20',
-  warning: 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-warning/10 dark:text-warning dark:ring-warning/20',
+  neutral: 'bg-surface text-text-secondary hover:bg-surface-elevated',
+  // Not currently rendered anywhere in the app; kept token-consistent in
+  // case a future call site needs an accent-tinted badge. Using it would
+  // add a location beyond the four sanctioned accent spots — check that
+  // against the accent-discipline rule before wiring it up.
+  accent: 'bg-accent/10 text-accent hover:bg-accent/16',
+  success: 'bg-success/10 text-success ring-1 ring-inset ring-success/20',
+  warning: 'bg-warning/10 text-warning ring-1 ring-inset ring-warning/20',
 }
 
 export default function Badge({ variant = 'neutral', size = 'md', dot = false, className = '', children }) {

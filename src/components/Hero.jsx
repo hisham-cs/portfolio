@@ -12,15 +12,15 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative isolate border-b border-slate-200 bg-white dark:border-surface-border dark:bg-surface-base"
+      className="relative isolate border-b border-border bg-background"
     >
       <div className="mx-auto max-w-6xl px-4 pt-20 sm:px-6 sm:pt-24">
         {/* Hairline rule — the one deliberate structural line, reused below
             as the vertical divider between the two columns. Clears the
             fixed h-16 navbar (64px) with room to spare before it. */}
-        <div className="hero-in border-t border-slate-200 dark:border-surface-border" />
+        <div className="hero-in border-t border-border" />
 
-        <p className="hero-in mt-6 font-mono text-xs tracking-[0.14em] text-brand-600 uppercase dark:text-brand-300">
+        <p className="hero-in mt-6 font-mono text-xs tracking-[0.14em] text-text-secondary uppercase">
           Computer Science Graduate · {gradYear}
         </p>
 
@@ -34,7 +34,7 @@ export default function Hero() {
               {displayName}
             </h1>
             <p
-              className="hero-in mt-6 font-display text-xl font-medium tracking-[-0.01em] text-brand-600 sm:text-2xl dark:text-brand-300"
+              className="hero-in mt-6 font-display text-xl font-medium tracking-[-0.01em] text-text-primary sm:text-2xl"
               style={{ animationDelay: '140ms' }}
             >
               {profile.title}
@@ -71,7 +71,7 @@ export default function Hero() {
           {/* Right: compact status line + a decorative data/AI visual that
               fills the space the bio column's extra height leaves behind */}
           <div
-            className="hero-in flex flex-col lg:col-span-4 lg:h-full lg:border-l lg:border-slate-200 lg:pl-12 dark:lg:border-surface-border"
+            className="hero-in flex flex-col lg:col-span-4 lg:h-full lg:border-l lg:border-border lg:pl-12"
             style={{ animationDelay: '350ms' }}
           >
             <dl>
@@ -82,7 +82,7 @@ export default function Hero() {
                 <dd className="mt-3 space-y-2">
                   {heroCard.seeking.map((item) => (
                     <div key={item} className="flex items-baseline gap-2 text-sm text-text-primary">
-                      <span className="font-mono text-brand-500 dark:text-brand-400">—</span>
+                      <span className="font-mono text-text-muted">—</span>
                       {item}
                     </div>
                   ))}

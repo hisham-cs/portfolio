@@ -3,55 +3,82 @@
 /* Enable class-based dark mode (toggled via the .dark class on <html>) */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Design tokens ──────────────────────────────────────────── */
+/* ── Design tokens: "Oxide Ink" ─────────────────────────────────
+   One accent hue (a burnt-vermillion oxide), one warm-ink neutral
+   family shared by both modes, and a complete semantic state set.
+   Every --color-* here is overridden wholesale inside `.dark` below —
+   components reference the plain token (e.g. `bg-accent`, `text-
+   text-secondary`) with no `dark:` prefix, and the cascade resolves
+   the right value. This is the one mechanism for light/dark color,
+   replacing the old mix of per-utility `dark:` variants. */
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: 'General Sans', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  /* Accent — a single steel-blue hue, used at different weights for
-     light mode (darker shades, on white) and dark mode (lighter shades). */
-  --color-brand-50: #eef3f8;
-  --color-brand-100: #dce7f0;
-  --color-brand-200: #b9cfe1;
-  --color-brand-300: #8cb0ce;
-  --color-brand-400: #6690b6;
-  --color-brand-500: #4c7699;
-  --color-brand-600: #3b6284;
-  --color-brand-700: #2e4e6b;
-  --color-brand-800: #243d54;
-  --color-brand-900: #1c2f41;
+  /* Surfaces */
+  --color-background: #faf9f6;
+  --color-surface: #f1efe9;
+  --color-surface-elevated: #ffffff;
+  --color-border: #e3e0d8;
 
-  /* Status */
-  --color-success: #10b981;
-  --color-warning: #d97706;
+  /* Text — 3-tier scale derived from one warm-ink hue. Verified ≥4.5:1
+     against --color-background (see `.dark` below for dark-mode pairing):
+     primary 16.5:1, secondary 6.95:1, muted 4.92:1. */
+  --color-text-primary: #1c1a17;
+  --color-text-secondary: #5a564c;
+  --color-text-muted: #736c63;
 
-  /* Surfaces (dark mode) */
-  --color-surface-base: #18181b;
-  --color-surface-raised: #232328;
-  --color-surface-card: #202024;
-  --color-surface-hover: #27272a;
-  --color-surface-border: #29292e;
-  --color-surface-border-hover: #35353c;
+  /* Accent — single oxide-vermillion hue. accent-hover is the same hue,
+     darker, for hover/active states. accent-contrast is the button-label
+     color that stays legible on top of --color-accent in either mode
+     (white clears AA in light mode; the dark-mode accent tint is too
+     light for white text at 3.15:1, so it takes ink text instead, 5.83:1). */
+  --color-accent: #b8402c;
+  --color-accent-hover: #96331f;
+  --color-accent-contrast: #ffffff;
 
-  /* Text — 3-tier semantic scale, light-mode values here. Every value is
-     verified ≥4.5:1 against both surface tones it appears on (see the
-     `.dark` overrides below for the dark-mode pairing); pick from this
-     scale instead of raw slate-* utilities so contrast stays provable. */
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #5b6472;
+  /* Semantic states */
+  --color-success: #3f7a52;
+  --color-warning: #8f6015;
+  --color-error: #c1332a;
+
+  /* Ink terminal — a fixed dark island (Projects empty-state mockup)
+     that keeps this exact background/foreground set in BOTH light and
+     dark site modes; never redefined in `.dark`. ink-accent/ink-success
+     are deliberately not the same value as --color-accent/--color-success
+     in light mode: the light-mode accent (#b8402c) and light-mode success
+     (#3f7a52) were tuned for a pale background and only clear 3.15:1 /
+     3.40:1 against this dark ink — the dark-mode tints (#e2704f / #6fbe83)
+     clear 5.51:1 / 7.75:1 here, so those are the ones kept fixed. */
+  --color-ink: #1c1a17;
+  --color-ink-heading: #f4f0e8;
+  --color-ink-text: #b4ac9c;
+  --color-ink-accent: #e2704f;
+  --color-ink-success: #6fbe83;
 }
 
-/* Dark-mode text tier overrides — same three tokens, re-verified against
-   both --color-surface-base (#18181b) and --color-surface-card (#202024):
-   primary 14.8–16.1:1, secondary 6.3–6.9:1, muted 5.3–5.8:1. All clear the
-   4.5:1 body-text floor; the previous dim tone (#71717a) measured ~3.4:1
-   and is retired rather than reused. */
+/* Dark-mode overrides — re-verified against --color-background (#17140f):
+   text-primary 16.2:1, text-secondary 8.15:1, text-muted 5.43:1, accent
+   5.83:1 (as button text/on-background), success 8.19:1, warning 8.00:1,
+   error 5.63:1. All clear the 4.5:1 body-text floor; several clear AAA. */
 .dark {
-  --color-text-primary: #f4f4f5;
-  --color-text-secondary: #a1a1aa;
-  --color-text-muted: #93939c;
+  --color-background: #17140f;
+  --color-surface: #201c16;
+  --color-surface-elevated: #29241c;
+  --color-border: #342e24;
+
+  --color-text-primary: #f4f0e8;
+  --color-text-secondary: #b4ac9c;
+  --color-text-muted: #928b7c;
+
+  --color-accent: #e2704f;
+  --color-accent-hover: #ee8b6d;
+  --color-accent-contrast: #17140f;
+
+  --color-success: #6fbe83;
+  --color-warning: #d3a356;
+  --color-error: #e4685c;
 }
 
 /* ── Scroll reveal (fade-in + slide-up) ─────────────────────── */
@@ -119,21 +146,16 @@
 }
 
 /* ── Focus visibility ────────────────────────────────────────
-   One consistent keyboard-focus ring for every interactive element,
-   in the single accent color, so it survives regardless of the
-   element's own background/border styling. */
+   One consistent keyboard-focus ring for every interactive element, in
+   the single accent color. --color-accent already resolves to the
+   correct light/dark tint via the `.dark` cascade, so one rule covers
+   both modes. */
 a:focus-visible,
 button:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--color-brand-500);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-.dark a:focus-visible,
-.dark button:focus-visible,
-.dark [tabindex]:focus-visible {
-  outline-color: var(--color-brand-400);
 }
 
 /* ── Carousel arrows (ProjectMedia) ──────────────────────────

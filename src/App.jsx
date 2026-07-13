@@ -17,7 +17,7 @@ export default function App() {
   }, [dark])
 
   return (
-    <div className="min-h-screen bg-white text-text-primary antialiased dark:bg-surface-base">
+    <div className="min-h-screen bg-background text-text-primary antialiased">
       <Navbar dark={dark} toggleDark={() => setDark((d) => !d)} />
       <main>
         <Hero />

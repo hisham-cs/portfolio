@@ -8,7 +8,7 @@ export default function Education() {
   return (
     <section
       id="education"
-      className="scroll-mt-20 border-b border-slate-200 py-24 dark:border-surface-border sm:py-32"
+      className="scroll-mt-20 border-b border-border py-24 sm:py-32"
     >
       {/* Anchor kept for old #certificates links */}
       <span id="certificates" />
@@ -20,7 +20,7 @@ export default function Education() {
         {/* Degree — one larger, richer card; the one degree earns more
             visual weight than any single certificate */}
         <Reveal>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8 dark:border-surface-border dark:bg-surface-card sm:p-10">
+          <div className="rounded-2xl border border-border bg-surface p-8 sm:p-10">
             <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">Degree</p>
             <h3 className="mt-3 font-display text-2xl font-semibold tracking-[-0.01em] text-text-primary sm:text-3xl">
               {education.degree}
@@ -29,7 +29,7 @@ export default function Education() {
               {education.university} · {education.college}
             </p>
 
-            <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-6 border-t border-slate-200 pt-6 dark:border-surface-border">
+            <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-6 border-t border-border pt-6">
               <div>
                 <dt className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">GPA</dt>
                 <dd className="mt-1 font-display text-lg font-semibold text-text-primary">{education.gpa}</dd>
@@ -52,8 +52,8 @@ export default function Education() {
             <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">Certificates</p>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {certificates.map((cert, i) => (
-                <div key={cert.title} className="rounded-xl border border-slate-200 p-5 dark:border-surface-border">
-                  <span className="font-mono text-xs text-brand-500 dark:text-brand-400">
+                <div key={cert.title} className="rounded-xl border border-border p-5">
+                  <span className="font-mono text-xs text-text-muted">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <h4 className="mt-2 font-display text-base font-semibold leading-snug text-text-primary">
@@ -67,7 +67,7 @@ export default function Education() {
                         href={cert.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
+                        className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
                       >
                         Verify
                         <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>

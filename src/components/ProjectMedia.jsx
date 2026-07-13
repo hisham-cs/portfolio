@@ -57,25 +57,37 @@ export default function ProjectMedia({ project }) {
     touchStartX.current = null
   }
 
+  const isPlaceholder = images.length === 0
+
   return (
     <div
-      className="relative aspect-video overflow-hidden rounded-xl border border-slate-200 bg-slate-50 transition-colors duration-300 group-hover:border-brand-300 dark:border-surface-border dark:bg-surface-card dark:group-hover:border-brand-400/40"
+      className={`relative aspect-video overflow-hidden rounded-xl border transition-colors duration-300 ${
+        isPlaceholder
+          ? 'border-transparent bg-ink'
+          : 'border-border bg-surface group-hover:border-text-muted'
+      }`}
       onKeyDown={handleKeyDown}
       onTouchStart={isCarousel ? handleTouchStart : undefined}
       onTouchEnd={isCarousel ? handleTouchEnd : undefined}
     >
-      {images.length === 0 && (
+      {isPlaceholder && (
+        // Ink terminal — a fixed dark island (see index.css): it keeps this
+        // exact background/foreground set in both light and dark site
+        // modes, rather than following the page theme like everything else.
         <div className="absolute inset-0 flex flex-col justify-center gap-2 px-6 font-mono text-sm sm:px-8">
-          <p className="truncate text-text-secondary">
-            <span className="text-brand-600 dark:text-brand-300">$</span> cat README.md
+          <p className="truncate text-ink-text">
+            <span className="text-ink-accent">$</span> cat README.md
           </p>
-          <p className="truncate pl-4 font-semibold text-text-primary"># {project.name}</p>
+          <p className="truncate pl-4 font-semibold text-ink-heading"># {project.name}</p>
           {project.subtitle && (
-            <p className="truncate pl-4 text-text-secondary">{project.subtitle}</p>
+            <p className="truncate pl-4 text-ink-text">{project.subtitle}</p>
           )}
-          <p className="mt-2 truncate text-text-secondary">
-            <span className="text-brand-600 dark:text-brand-300">$</span> open ./{slug}
-            <span className="terminal-cursor" aria-hidden="true" />
+          {project.status && (
+            <p className="truncate pl-4 text-ink-success">✓ {project.status}</p>
+          )}
+          <p className="mt-2 truncate text-ink-text">
+            <span className="text-ink-accent">$</span> open ./{slug}
+            <span className="terminal-cursor text-ink-accent" aria-hidden="true" />
           </p>
         </div>
       )}

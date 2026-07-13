@@ -8,24 +8,24 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="scroll-mt-20 border-b border-slate-200 py-24 dark:border-surface-border sm:py-32"
+      className="scroll-mt-20 border-b border-border py-24 sm:py-32"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <SectionHeading eyebrow="What I've built" title="Projects" align="left" />
         </Reveal>
 
-        <div className="border-t border-slate-200 dark:border-surface-border">
+        <div className="border-t border-border">
           {projects.map((project, i) => (
             <Reveal key={project.name} delay={i * 80}>
-              <article className="group border-b border-slate-200 py-12 dark:border-surface-border">
+              <article className="group border-b border-border py-12">
                 <ProjectMedia project={project} />
 
                 <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-x-12">
                   {/* Left: index, name, subtitle, status */}
                   <div className="lg:col-span-4">
                     <div className="flex items-baseline gap-3">
-                      <span className="font-mono text-xs text-brand-500 dark:text-brand-400">
+                      <span className="font-mono text-xs text-text-muted">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       {project.status && (
@@ -53,7 +53,7 @@ export default function Projects() {
                       {project.tags.map((tag, j) => (
                         <span key={tag} className="flex items-center gap-3">
                           {j > 0 && (
-                            <span className="text-slate-300 dark:text-surface-border-hover" aria-hidden="true">
+                            <span className="text-border" aria-hidden="true">
                               /
                             </span>
                           )}
@@ -68,7 +68,7 @@ export default function Projects() {
                           href={project.demo}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
+                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
                         >
                           <ExternalLinkIcon className="h-4 w-4" />
                           Live Demo
@@ -80,7 +80,7 @@ export default function Projects() {
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-brand-700 dark:hover:text-brand-300"
+                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
                         >
                           <GitHubIcon className="h-4 w-4" />
                           GitHub
