@@ -28,22 +28,23 @@ export const heroCard = {
   bestWork: ['Faten Academic Assistant', 'Pulmonary Edema Detection', 'Smart Complaint System'],
 }
 
-// Focus-area ledger rendered alongside the About bio. Titles echo the
-// Skills category names where they overlap ("AI & Computer Vision" is a
-// direct match) so scrolling from About into Skills reads as the same
-// vocabulary, not a second taxonomy.
+// Focus band rendered below the About narrative — a compact 3-up, one
+// line of description each, not a ledger. Titles echo the Skills category
+// names where they overlap ("AI & Computer Vision" is a direct match) so
+// scrolling from About into Skills reads as the same vocabulary, not a
+// second taxonomy.
 export const aboutHighlights = [
   {
     title: 'Data Analytics',
-    text: 'Turning raw data into dashboards, insights, and clear decisions using Python, SQL, and BI tools.',
+    text: 'Dashboards, insights, and clear decisions from raw data.',
   },
   {
     title: 'AI & Computer Vision',
-    text: 'Working with image classification, medical imaging, segmentation, and model evaluation.',
+    text: 'Image classification, medical imaging, and model evaluation.',
   },
   {
     title: 'Software & AI Systems',
-    text: 'Building practical tools such as academic assistants, support chatbots, prediction systems, and automation workflows.',
+    text: 'Practical tools: academic assistants, chatbots, and automation.',
   },
 ]
 
