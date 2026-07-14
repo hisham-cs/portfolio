@@ -1,4 +1,4 @@
-import { about, aboutQuote, aboutHighlights } from '../data.js'
+import { about, aboutQuote, aboutCurrently, aboutHighlights } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
 
@@ -11,10 +11,12 @@ export default function About() {
         </Reveal>
 
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
-          {/* Left: the editorial column — bio copy with a pulled-quote highlight */}
+          {/* Left: the editorial column — one tightened paragraph, the
+              pull-quote as the actual centerpiece (not sandwiched between
+              two paragraphs of equal weight), then a closing status line */}
           <Reveal className="lg:col-span-8">
             <div className="max-w-[65ch]">
-              <p className="text-lg leading-[1.7] text-text-secondary">{about[0]}</p>
+              <p className="text-lg leading-[1.7] text-text-secondary">{about}</p>
 
               {/* Approved accent spot (c): the rule only — the quote text itself
                   stays neutral so the accent doesn't multiply within one block. */}
@@ -24,7 +26,7 @@ export default function About() {
                 </p>
               </blockquote>
 
-              <p className="text-lg leading-[1.7] text-text-secondary">{about[1]}</p>
+              <p className="font-mono text-sm text-text-secondary">{aboutCurrently}</p>
             </div>
           </Reveal>
 

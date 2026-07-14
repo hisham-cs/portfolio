@@ -28,33 +28,39 @@ export const heroCard = {
   bestWork: ['Faten Academic Assistant', 'Pulmonary Edema Detection', 'Smart Complaint System'],
 }
 
-// Focus-area ledger rendered alongside the About bio.
+// Focus-area ledger rendered alongside the About bio. Titles echo the
+// Skills category names where they overlap ("AI & Computer Vision" is a
+// direct match) so scrolling from About into Skills reads as the same
+// vocabulary, not a second taxonomy.
 export const aboutHighlights = [
   {
     title: 'Data Analytics',
-    icon: 'data',
     text: 'Turning raw data into dashboards, insights, and clear decisions using Python, SQL, and BI tools.',
   },
   {
-    title: 'Computer Vision',
-    icon: 'vision',
+    title: 'AI & Computer Vision',
     text: 'Working with image classification, medical imaging, segmentation, and model evaluation.',
   },
   {
     title: 'Software & AI Systems',
-    icon: 'ai',
     text: 'Building practical tools such as academic assistants, support chatbots, prediction systems, and automation workflows.',
   },
 ]
 
-export const about = [
-  `I'm Hisham Al-Malki, a Computer Science graduate from Umm Al-Qura University. I enjoy building practical technology solutions that turn ideas into usable tools, especially in software, AI systems, and data analysis.`,
-  `My work includes academic assistants, medical image classification, support chatbots, and analytics workflows. I focus on understanding the problem, building a clear solution, testing it, and improving it step by step.`,
-]
+// One tightened paragraph — identity and approach, not a project recap
+// (Projects now owns that in full detail two sections later).
+export const about = `I'm Hisham Al-Malki, a Computer Science graduate from Umm Al-Qura University. I build AI and data systems the same way every time: understand the problem first, build the simplest solution that works, then test and refine it until it holds up.`
 
 // Editorial pull-quote for the About section — a distinct statement of
-// working values, not a repeat of the surrounding paragraphs.
+// working values, not a repeat of the surrounding paragraph.
 export const aboutQuote = `Turning data into decisions and ideas into software.`
+
+// One-line status beat closing the About bio, under the pull-quote —
+// intentionally plain sentence case (not the uppercase-tracked micro-label
+// style used for "Focus"/"Available For": that treatment is for category
+// headers, not full sentences, and per taste-editorial tracking belongs on
+// headlines/captions only, never body text).
+export const aboutCurrently = `Currently: going deeper into machine learning & data analysis`
 
 export const education = {
   university: 'Umm Al-Qura University',
