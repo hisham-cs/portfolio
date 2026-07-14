@@ -48,9 +48,23 @@ ask whether something else should be removed instead.
 — it's kept token-consistent for a possible future need, but wiring it up
 would be a fifth location. Don't, without revisiting this section first.
 
+**Explicit exception**: the global keyboard focus ring (`a:focus-visible,
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid
+var(--color-accent); }` in `index.css`) also resolves to the accent token.
+This is intentionally not counted against the four content locations above
+— it's an accessibility-mandated system affordance applied uniformly to
+every focusable element, not a decorative/attention use. Don't flag it as
+a violation in a future accent audit; don't remove it to "get back to
+exactly one usage" either.
+
 Every other emphasis need (hover states, status, links) should reach for
 `text-primary`/`text-secondary` weight or color shifts, or the semantic
-`success`/`warning`/`error` tokens — never a second accent.
+`success`/`warning`/`error` tokens — never a second accent. The Currently
+chip in `About.jsx` (`bg-surface` pill + `bg-success` status dot) is the
+reference example: success used semantically for "active now," the same
+dot language as the status badges in `Projects.jsx` — not a new accent
+spot, and not itemized separately because it's the same token/pattern
+reused, not a new one invented.
 
 ## Spacing scale (post rhythm-pass)
 
@@ -67,6 +81,10 @@ inventing a value.
 | Skills card grid | `gap-5` | 2-up capability cards |
 | Projects compact card grid | `gap-6` | 2-up cards below the flagship |
 | Card internal padding | `p-6 sm:p-8` (Skills, compact Projects), `p-6 sm:p-10` (flagship Project) | Flagship gets more room to earn its treatment |
+| Education: degree card → certificates pivot | `mt-10` | Tightened from `mt-12` — they're one story, not two disconnected blocks |
+| Education: certificate row | `py-5`, hairline `border-b border-border` | Same row grammar as Skills/Projects, not a card |
+| Contact: Elsewhere rail links | `gap-2` | Tightened from `gap-3` |
+| About: quote → paragraph → chip → Focus band | `mt-8`, `mt-6`, `mt-10`+`pt-8` | See "Section composition patterns" below — these values are load-bearing for the quote-first structure, not arbitrary |
 
 **Borders vs. background**: prefer a background/radius shift over a visible
 border for new card-style components (this is why Skills cards use
@@ -76,20 +94,58 @@ existing hairline-rule grammar (`border-b border-border` between sections,
 already-restrained pattern — keep reusing it for structural dividers, don't
 extend it into new card chrome.
 
+## Section composition patterns
+
+Not every section has to share the same internal grammar. Two Phase 2
+decisions are system law now — a future session should not "fix" either
+one back toward consistency-for-its-own-sake:
+
+- **About is quote-first, not two-column.** After two failed incremental
+  passes (a two-column prose+rail layout, then a full-width quote
+  breakout bolted onto that same layout) proved the two-column structure
+  itself was the ceiling, About was rebuilt around one organizing idea:
+  the pull-quote leads as the section's thesis (large, first thing after
+  the heading), the paragraph supports it, a Currently chip closes the
+  narrative beat, and a hairline rule pivots into a compact 3-up Focus
+  band. This works specifically because Hero already owns "who" (name,
+  title, the specialty rotator) — About is voice, not evidence, and it's
+  the one section allowed to read differently from Skills/Projects/
+  Education, which *are* evidence and correctly share a denser, row-based
+  grammar. Do not re-introduce a sidebar or force About back into the
+  8/4 column split used elsewhere — that split was the diagnosed problem,
+  not an inconsistency to resolve.
+- **Certificate ordering is signal-based, not chronological.** KAUST
+  Academy (×2) and SDAIA lead `certificates` in `data.js` regardless of
+  year, because they carry the most recognition for Saudi AI recruiters.
+  Each row still shows its own year specifically so the ordering reads as
+  intentional rather than an accident of data entry. Don't "fix" this
+  back to date order.
+
 ## Motion budget
 
 Every animation in this codebase should be nameable in one phrase ("state
 changed," "more content available," "this is the active one"). If you can't
 name it, it's decoration — cut it.
 
-| Interaction | Duration | Easing | File |
-|---|---|---|---|
-| Hero specialty-line crossfade | 500ms per transition, 4s hold | ease-out (opacity only) | `SpecialtyRotator.jsx` |
-| Skills card hover/focus lift | 200ms | ease-out (translate + background + border) | `Skills.jsx` |
-| Projects image hover/focus auto-cycle | 500ms crossfade, 2.5s hold | ease-out (opacity only) | `ProjectMedia.jsx` |
-| Nav active-section underline | instant (state, not animated) | — | `Navbar.jsx` |
-| Scroll-reveal (fade-up on first view) | 600ms | ease-out (opacity + translateY) | `Reveal.jsx` / `.reveal` in `index.css` |
-| Hero entrance (on mount) | 500ms, staggered | cubic-bezier(0.215,.61,.355,1) | `.hero-in` in `index.css` |
+The table has six rows, but only **three count against the "motion
+touches" budget** — the bespoke, per-section ones. The other three are
+either the shared baseline entrance system (used everywhere, not a
+per-section addition) or explicitly not animated at all:
+
+| Interaction | Duration | Easing | File | Counts as a touch? |
+|---|---|---|---|---|
+| Hero specialty-line crossfade | 500ms per transition, 4s hold | ease-out (opacity only) | `SpecialtyRotator.jsx` | Yes (1) |
+| Skills card hover/focus lift | 200ms | ease-out (translate + background + border) | `Skills.jsx` | Yes (2) |
+| Projects image hover/focus auto-cycle | 500ms crossfade, 2.5s hold | ease-out (opacity only) | `ProjectMedia.jsx` | Yes (3) |
+| Scroll-reveal (fade-up on first view) | 600ms | ease-out (opacity + translateY) | `Reveal.jsx` / `.reveal` in `index.css` | No — shared baseline, used on every section |
+| Hero entrance (on mount) | 500ms, staggered | cubic-bezier(0.215,.61,.355,1) | `.hero-in` in `index.css` | No — same baseline pattern, on-mount instead of on-scroll |
+| Nav active-section underline | instant (state, not animated) | — | `Navbar.jsx` | No — explicitly not animated |
+
+Phase 2 (About/Education/Contact) added zero new rows to this table —
+every hover/transition it uses is the pre-existing sitewide link-hover
+pattern (`transition-colors` + arrow-nudge) or the shared Reveal
+baseline, confirmed by grep across `About.jsx`, `Education.jsx`,
+`Contact.jsx` during the Phase 2 final audit.
 
 Rules to keep this from growing back into clutter:
 
@@ -97,4 +153,4 @@ Rules to keep this from growing back into clutter:
 - **Reachability can't depend on hover.** Any hover-revealed content (Projects' extra screenshots) needs a tap/click/focus path that doesn't require a pointer with hover — see the dot indicators in `ProjectMedia.jsx`.
 - **Reserve space, don't reflow.** If text length changes (like the specialty rotator), size the container from an invisible longest-value spacer in normal flow rather than letting content reflow live.
 - No scroll-jacking, no particle backgrounds, no typing-effect headlines — these read as template output, not craft.
-- Cap new interactions per section at 1–2. This site has exactly four motion touches total (table above); adding a fifth anywhere should prompt the same "what am I removing to make room" question as the accent rule.
+- Cap new interactions per section at 1–2. This site has exactly three bespoke motion touches (table above); adding a fourth anywhere should prompt the same "what am I removing to make room" question as the accent rule.
