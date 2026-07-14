@@ -224,6 +224,11 @@ export function getProjectImages(project) {
 
 // `link` is an optional credential/verification URL — when present,
 // Education renders a "Verify →" link on that certificate's card.
+//
+// Order is signal-based, not chronological: KAUST Academy and SDAIA carry
+// the most recognition for Saudi AI recruiters, so they lead regardless of
+// year. Each row still shows its own year so that ordering reads as
+// intentional rather than an accident of data entry.
 export const certificates = [
   {
     title: 'Advanced Artificial Intelligence',
@@ -238,9 +243,9 @@ export const certificates = [
     link: '',
   },
   {
-    title: 'Data Analytics Bootcamp (Power BI & Excel)',
-    issuer: 'Hash Plus',
-    year: '2026',
+    title: 'Fundamentals of Artificial Intelligence',
+    issuer: 'SDAIA',
+    year: '2025',
     link: '',
   },
   {
@@ -250,14 +255,14 @@ export const certificates = [
     link: '',
   },
   {
-    title: 'Python Data Fundamentals',
-    issuer: 'DataCamp',
-    year: '2025',
+    title: 'Data Analytics Bootcamp (Power BI & Excel)',
+    issuer: 'Hash Plus',
+    year: '2026',
     link: '',
   },
   {
-    title: 'Fundamentals of Artificial Intelligence',
-    issuer: 'SDAIA',
+    title: 'Python Data Fundamentals',
+    issuer: 'DataCamp',
     year: '2025',
     link: '',
   },

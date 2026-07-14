@@ -46,28 +46,33 @@ export default function Education() {
           </div>
         </Reveal>
 
-        {/* Certificates — compact two-column grid, one card per credential */}
+        {/* Certificates — dense hairline-divided list (same row grammar as
+            Skills/Projects) instead of a grid of near-identical boxes.
+            Order is signal-based (see data.js), so the year stays visible
+            on every row to show that's deliberate, not chronological. */}
         <Reveal delay={80}>
           <div className="mt-12">
             <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">Certificates</p>
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="mt-4 border-t border-border">
               {certificates.map((cert, i) => (
-                <div key={cert.title} className="rounded-xl border border-border p-5">
-                  <span className="font-mono text-xs text-text-muted">
+                <div key={cert.title} className="flex items-start gap-4 border-b border-border py-5">
+                  <span className="pt-0.5 font-mono text-xs text-text-muted">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <h4 className="mt-2 font-display text-base font-semibold leading-snug text-text-primary">
-                    {cert.title}
-                  </h4>
-                  <p className="mt-1 text-sm text-text-secondary">{cert.issuer}</p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="font-mono text-xs text-text-muted">{cert.year}</span>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-display text-base font-semibold leading-snug text-text-primary">
+                      {cert.title}
+                    </h4>
+                    <p className="mt-1 text-sm text-text-secondary">
+                      {cert.issuer} <span className="text-text-muted">·</span>{' '}
+                      <span className="font-mono text-xs text-text-muted">{cert.year}</span>
+                    </p>
                     {cert.link && (
                       <a
                         href={cert.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
+                        className="group mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
                       >
                         Verify
                         <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
