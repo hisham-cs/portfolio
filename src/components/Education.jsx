@@ -51,7 +51,7 @@ export default function Education() {
             Order is signal-based (see data.js), so the year stays visible
             on every row to show that's deliberate, not chronological. */}
         <Reveal delay={80}>
-          <div className="mt-12">
+          <div className="mt-10">
             <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">Certificates</p>
             <div className="mt-4 border-t border-border">
               {certificates.map((cert, i) => (
@@ -63,10 +63,7 @@ export default function Education() {
                     <h4 className="font-display text-base font-semibold leading-snug text-text-primary">
                       {cert.title}
                     </h4>
-                    <p className="mt-1 text-sm text-text-secondary">
-                      {cert.issuer} <span className="text-text-muted">·</span>{' '}
-                      <span className="font-mono text-xs text-text-muted">{cert.year}</span>
-                    </p>
+                    <p className="mt-1 text-sm text-text-secondary">{cert.issuer}</p>
                     {cert.link && (
                       <a
                         href={cert.link}
@@ -79,6 +76,7 @@ export default function Education() {
                       </a>
                     )}
                   </div>
+                  <span className="shrink-0 pt-0.5 font-mono text-xs text-text-muted">{cert.year}</span>
                 </div>
               ))}
             </div>
