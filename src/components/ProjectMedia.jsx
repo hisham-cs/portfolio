@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getProjectImages } from '../data.js'
 import useMediaQuery from '../hooks/useMediaQuery.js'
 
@@ -14,6 +14,22 @@ const CYCLE_INTERVAL_MS = 2500
 // keyboard, since there's no hover on a touchscreen. Hovering/focusing the
 // card is a bonus on top: it auto-cycles through the rest and settles back
 // on the first frame on mouse-leave/blur.
+//
+// The stacked <img>s are pointer-events-none: a non-1 opacity value creates
+// its own CSS stacking context, and Chromium's hit-testing can transiently
+// resolve the cursor to a crossfading image instead of the dots sitting
+// above it (z-10), firing a spurious mouseleave on the dots that reset the
+// index mid-transition. Images have no click/hover behavior of their own —
+// making them non-interactive removes the ambiguity outright rather than
+// fighting stacking-context timing.
+//
+// handleDeactivate doesn't trust the mouseleave/blur event's relatedTarget
+// synchronously — under rapid programmatic interaction (and, per testing,
+// occasionally for real too) a stale/incorrect hit-test can fire a leave
+// event whose relatedTarget is nowhere near the actual cursor position. It
+// re-checks the container's live :hover/:focus-within state a frame later
+// before committing, which is always authoritative regardless of what any
+// individual event claims.
 function slugify(name) {
   return name
     .toLowerCase()
@@ -31,25 +47,39 @@ export default function ProjectMedia({ project }) {
 
   const [index, setIndex] = useState(0)
   const [active, setActive] = useState(false)
+  const containerRef = useRef(null)
 
+  // A self-rescheduling timeout, not setInterval: the effect depends on
+  // `index`, so ANY index change — the auto-tick below or an explicit dot
+  // click — cancels the pending timer and reschedules a fresh one exactly
+  // CYCLE_INTERVAL_MS out. That guarantees a manual dot selection is always
+  // a single, direct crossfade to the target frame; the auto-cycle can
+  // never land an unrelated tick immediately before or after it.
   useEffect(() => {
     if (!isMulti || !active || prefersReducedMotion) return
-    const id = setInterval(() => {
+    const id = setTimeout(() => {
       setIndex((i) => (i + 1) % images.length)
     }, CYCLE_INTERVAL_MS)
-    return () => clearInterval(id)
-  }, [isMulti, active, prefersReducedMotion, images.length])
+    return () => clearTimeout(id)
+  }, [index, isMulti, active, prefersReducedMotion, images.length])
 
   const handleActivate = () => setActive(true)
   const handleDeactivate = () => {
-    setActive(false)
-    setIndex(0)
+    requestAnimationFrame(() => {
+      const node = containerRef.current
+      if (!node) return
+      const stillEngaged = node.matches(':hover') || node.contains(document.activeElement)
+      if (stillEngaged) return
+      setActive(false)
+      setIndex(0)
+    })
   }
 
   const isPlaceholder = images.length === 0
 
   return (
     <div
+      ref={containerRef}
       className={`relative aspect-video overflow-hidden rounded-xl border transition-colors duration-300 ${
         isPlaceholder
           ? 'border-transparent bg-ink'
@@ -97,7 +127,7 @@ export default function ProjectMedia({ project }) {
           loading="lazy"
           decoding="async"
           aria-hidden={i !== index}
-          className={`absolute inset-0 h-full w-full object-cover ${
+          className={`pointer-events-none absolute inset-0 h-full w-full object-cover ${
             prefersReducedMotion ? '' : 'transition-opacity duration-500 ease-out'
           } ${i === index ? 'opacity-100' : 'opacity-0'} ${
             isMulti ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.03]'
