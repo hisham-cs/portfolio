@@ -10,16 +10,15 @@ export default function Contact() {
     <section id="contact" className="scroll-mt-20 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <SectionHeading eyebrow="Get in touch" title="Contact" align="left" />
+          <SectionHeading eyebrow="Open to opportunities" title="Let's put data to work." align="left" />
         </Reveal>
 
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left: closing statement + the primary channel, given real visual weight */}
           <Reveal className="lg:col-span-8">
             <p className="max-w-[65ch] text-lg leading-[1.7] text-text-secondary">
-              I'm open to Data Analytics & AI roles, internships, collaborations, and technology-related
-              opportunities. Feel free to reach out if you're interested in my work or want to
-              connect.
+              I'm open to Data Analytics & AI roles, internships, and collaborations — reach out
+              if you'd like to connect.
             </p>
 
             <div className="mt-8">
@@ -29,7 +28,7 @@ export default function Contact() {
               {/* Approved accent spot (d) */}
               <a
                 href={`mailto:${profile.email}`}
-                className="group mt-2 inline-flex min-h-11 items-center gap-3 font-display text-2xl font-semibold tracking-[-0.01em] text-accent transition-colors hover:text-accent-hover sm:text-3xl"
+                className="group mt-2 inline-flex min-h-11 items-center gap-3 font-display text-2xl font-semibold tracking-[-0.01em] text-accent transition-colors hover:text-accent-hover sm:text-3xl lg:text-4xl"
               >
                 {profile.email}
                 <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
@@ -45,7 +44,7 @@ export default function Contact() {
             <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
               Elsewhere
             </p>
-            <div className="mt-4 flex flex-col items-start gap-3">
+            <div className="mt-4 flex flex-col items-start gap-2">
               <a
                 href={profile.linkedin}
                 target="_blank"
