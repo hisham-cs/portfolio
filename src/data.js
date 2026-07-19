@@ -86,9 +86,9 @@ export const experience = [
     period: 'Mar 2025 – Aug 2025',
     location: 'Makkah',
     achievements: [
-      'Led a trainee team building a Device Management App for device registration, review, and task handling',
-      'Built a Power BI dashboard visualizing university operations data for decision support',
-      'Authored the SRS document covering app requirements, features, and workflow',
+      'Led a team building a Device Management App',
+      'Built a Power BI dashboard that turns data into decisions',
+      'Authored the SRS defining the app\'s requirements and workflow',
       'Documented 200+ computer devices across university labs and colleges',
       'Presented project outcomes to Deanship leadership',
     ],
