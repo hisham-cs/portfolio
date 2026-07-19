@@ -75,7 +75,7 @@ inventing a value.
 | Context | Value | Notes |
 |---|---|---|
 | Hero section | `pt-20 sm:pt-24`, `pb-16 sm:pb-20` | Unchanged since the rhythm pass — never flagged as loose, needs the air |
-| About / Skills / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space |
+| About / Skills / Experience / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space. New sections should default to this value, not invent one |
 | Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the flagship card and needs slightly more room |
 | Two-column row gap (About, Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12` |
 | Skills card grid | `gap-5` | 2-up capability cards |
@@ -120,6 +120,20 @@ one back toward consistency-for-its-own-sake:
   Each row still shows its own year specifically so the ordering reads as
   intentional rather than an accident of data entry. Don't "fix" this
   back to date order.
+- **Card vs. numbered-row grammar is chosen per how many entries there
+  are, not by section identity.** Education's degree and Experience's job
+  entries both use the richer degree-card treatment (`bg-surface
+  rounded-2xl border p-8 sm:p-10`, no number badge) because each is one
+  or few substantial entries earning real weight. Certificates, Skills
+  categories, and Projects use the dense numbered-row/card grammar
+  because they're several similar-weight siblings being enumerated. If
+  Experience grows to several jobs, keep the card treatment (stack with
+  `space-y-6`) rather than converting to rows — the card-vs-row choice
+  tracks entry richness, not entry count alone. Within a card, sub-points
+  (Experience's achievements) use the mono-dash `–` marker (same as
+  Hero's "Available For"), never numbers — numbers are reserved for
+  enumerating sibling entities across a section, not sub-points within
+  one.
 
 ## Motion budget
 
