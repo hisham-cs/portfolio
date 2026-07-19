@@ -16,20 +16,37 @@ export default function Navbar({ dark, toggleDark }) {
   const [active, setActive] = useState('')
   const [scrolled, setScrolled] = useState(false)
 
-  // Highlight the nav link of the section currently in view.
+  // Highlight the nav link of the section containing the viewport's
+  // vertical midpoint. The IntersectionObserver here is only a trigger —
+  // its rootMargin ("-45% 0px -45% 0px", a thin band at viewport center)
+  // just tells us *when* to recheck, not *what's* active. The previous
+  // version trusted per-entry ordering directly ("last isIntersecting
+  // entry in this callback batch wins"), which is fine when entries arrive
+  // one at a time but is an unguarded race when a fast scroll — a real
+  // trackpad fling behaves differently from any programmatic scroll a test
+  // can simulate — lands two sections' state changes in the same batch:
+  // whichever happens to be last in the (unordered) array wins, not
+  // necessarily the correct one. Recomputing from actual layout on every
+  // trigger removes the ordering dependency entirely instead of relying on
+  // it being benign.
   useEffect(() => {
     const ids = links.map((l) => l.href.slice(1))
     const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(`#${entry.target.id}`)
+    const recomputeActive = () => {
+      const viewportMid = window.innerHeight / 2
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect()
+        if (rect.top <= viewportMid && rect.bottom >= viewportMid) {
+          setActive(`#${section.id}`)
+          return
         }
-      },
-      { rootMargin: '-40% 0px -55% 0px' },
-    )
+      }
+    }
+
+    const observer = new IntersectionObserver(recomputeActive, { rootMargin: '-45% 0px -45% 0px' })
     sections.forEach((s) => observer.observe(s))
+    recomputeActive() // correct on mount too (e.g. a reload deep in the page)
     return () => observer.disconnect()
   }, [])
 
