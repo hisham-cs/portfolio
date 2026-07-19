@@ -72,6 +72,29 @@ export const education = {
   honours: 'Second Class Honours',
 }
 
+// Work/co-op history — an array from day one so a second entry appends
+// cleanly with zero component changes. Each entry renders as a card that
+// echoes Education's degree-card treatment (one/few rich entries earning
+// real visual weight), not the dense numbered-row grammar used for
+// certificates: `achievements` are sub-points within one entry, not
+// sibling entities being enumerated, so they render as a dash-marker list
+// (the same language as Hero's "Available For" rail) rather than numbered.
+export const experience = [
+  {
+    organization: 'Deanship of Information Technology — Umm Al-Qura University',
+    role: 'Cooperative Training',
+    period: 'Mar 2025 – Aug 2025',
+    location: 'Makkah',
+    achievements: [
+      'Led a trainee team building a Device Management App for device registration, review, and task handling',
+      'Built a Power BI dashboard visualizing university operations data for decision support',
+      'Authored the SRS document covering app requirements, features, and workflow',
+      'Documented 200+ computer devices across university labs and colleges',
+      'Presented project outcomes to Deanship leadership',
+    ],
+  },
+]
+
 // `primary` are the signature skills for the category (shown with more
 // visual weight); `secondary` are the remaining, supporting skills. Every
 // skill from the old flat list is preserved across the two arrays. `proof`
@@ -90,7 +113,7 @@ export const skills = [
     category: 'Data & BI',
     primary: ['Pandas', 'Power BI', 'EDA'],
     secondary: ['NumPy', 'Excel', 'Data Cleaning', 'Matplotlib'],
-    proof: { label: 'Applied across every project’s data layer' },
+    proof: { label: 'Cooperative Training — Power BI dashboard', slug: 'experience' },
   },
   {
     category: 'Tools & Platforms',
