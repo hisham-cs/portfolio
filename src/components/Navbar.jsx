@@ -19,35 +19,71 @@ export default function Navbar({ dark, toggleDark }) {
   // Highlight the nav link of the section containing the viewport's
   // vertical midpoint. The IntersectionObserver here is only a trigger —
   // its rootMargin ("-45% 0px -45% 0px", a thin band at viewport center)
-  // just tells us *when* to recheck, not *what's* active. The previous
-  // version trusted per-entry ordering directly ("last isIntersecting
-  // entry in this callback batch wins"), which is fine when entries arrive
-  // one at a time but is an unguarded race when a fast scroll — a real
-  // trackpad fling behaves differently from any programmatic scroll a test
-  // can simulate — lands two sections' state changes in the same batch:
-  // whichever happens to be last in the (unordered) array wins, not
-  // necessarily the correct one. Recomputing from actual layout on every
-  // trigger removes the ordering dependency entirely instead of relying on
-  // it being benign.
+  // just tells us *when* to recheck, not *what's* active. Recomputing from
+  // actual layout on every trigger removes any ordering dependency on the
+  // raw entries. Two more guards layer on top of that:
+  //
+  // - Tie-break by closest center, not first match: if two adjacent
+  //   sections both momentarily span the midpoint (plausible for two
+  //   sections each shorter than half the viewport, right as their shared
+  //   border crosses it), picking the first in DOM order is arbitrary.
+  //   Picking whichever section's center is nearest the midpoint is not.
+  // - A final recompute once scrolling actually stops: the observer only
+  //   fires on band-edge crossings, so a single long smooth-scroll
+  //   animation whose last crossing happens to tie between two sections
+  //   can leave that arbitrary-ish pick stale with nothing left to correct
+  //   it — seen concretely when a click-to-anchor jump lands on Contact,
+  //   the last section, and the page clamps at its max scroll before
+  //   Contact's rect ever gets a fresh trigger of its own. `scrollend`
+  //   guarantees one more recompute after settling; Safari doesn't support
+  //   it yet, so it falls back to a debounced scroll listener there.
   useEffect(() => {
     const ids = links.map((l) => l.href.slice(1))
     const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
 
     const recomputeActive = () => {
       const viewportMid = window.innerHeight / 2
+      let bestId = null
+      let bestDistance = Infinity
       for (const section of sections) {
         const rect = section.getBoundingClientRect()
         if (rect.top <= viewportMid && rect.bottom >= viewportMid) {
-          setActive(`#${section.id}`)
-          return
+          const distance = Math.abs((rect.top + rect.bottom) / 2 - viewportMid)
+          if (distance < bestDistance) {
+            bestDistance = distance
+            bestId = section.id
+          }
         }
       }
+      if (bestId) setActive(`#${bestId}`)
     }
 
     const observer = new IntersectionObserver(recomputeActive, { rootMargin: '-45% 0px -45% 0px' })
     sections.forEach((s) => observer.observe(s))
+
+    const supportsScrollEnd = 'onscrollend' in window
+    let scrollTimeout
+    const handleScroll = () => {
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(recomputeActive, 150)
+    }
+    if (supportsScrollEnd) {
+      window.addEventListener('scrollend', recomputeActive)
+    } else {
+      window.addEventListener('scroll', handleScroll, { passive: true })
+    }
+
     recomputeActive() // correct on mount too (e.g. a reload deep in the page)
-    return () => observer.disconnect()
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(scrollTimeout)
+      if (supportsScrollEnd) {
+        window.removeEventListener('scrollend', recomputeActive)
+      } else {
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }
   }, [])
 
   // Before scrolling, the navbar sits transparent over the hero, so its
