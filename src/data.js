@@ -5,6 +5,8 @@ export const profile = {
   github: 'https://github.com/hisham-cs',
   linkedin: 'https://www.linkedin.com/in/hisham-a-almalki',
   email: 'hasalmalki@outlook.com',
+  // Right-pole meta line in the Hero status band.
+  location: 'Makkah, SA',
   // Resolves to /assets/cv/hisham-almalki-cv.pdf under the site's base path.
   // Add the real file at public/assets/cv/hisham-almalki-cv.pdf (see the
   // PLACEHOLDER.txt note in that folder); set showCv to false to hide the
