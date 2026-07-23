@@ -130,10 +130,27 @@ one back toward consistency-for-its-own-sake:
   Experience grows to several jobs, keep the card treatment (stack with
   `space-y-6`) rather than converting to rows — the card-vs-row choice
   tracks entry richness, not entry count alone. Within a card, sub-points
-  (Experience's achievements) use the mono-dash `–` marker (same as
-  Hero's "Available For"), never numbers — numbers are reserved for
-  enumerating sibling entities across a section, not sub-points within
-  one.
+  (Experience's achievements) use the mono-dash `–` marker, never numbers
+  — numbers are reserved for enumerating sibling entities across a
+  section, not sub-points within one.
+- **Hero is Statement + Status Band, not two-column.** The original
+  "bio column + decorative right rail" skeleton left a hole that
+  demanded filler (a constellation canvas, then debate over what to put
+  there instead) — the fix was structural, not a better filler. Hero was
+  rebuilt single-column: name/title/rotator/intro/CTAs as one editorial
+  statement, then a hairline pivot (the same `mt-10`/`pt-8` values as
+  About's Focus-band pivot, deliberately) into a status band —
+  "Available" plus the `heroCard.seeking` items, as `bg-surface` chips.
+  This directly extends About's paragraph-then-band DNA, which is why it
+  was trusted for the highest-stakes section instead of proposing
+  something unproven. The two bands stay deliberately different
+  *devices*, not just different weights: About's Focus band is domains
+  (titles + descriptions); Hero's status band is status (short chips, no
+  descriptions) — the leading chip's `bg-success` dot (the same static
+  pattern as About's Currently chip) is what makes that read as a
+  different device, not a lighter copy. Available For is chips now, not
+  the mono-dash rail it used to be — if you're looking for that layout,
+  it's gone on purpose.
 
 ## Motion budget
 
@@ -160,6 +177,20 @@ every hover/transition it uses is the pre-existing sitewide link-hover
 pattern (`transition-colors` + arrow-nudge) or the shared Reveal
 baseline, confirmed by grep across `About.jsx`, `Education.jsx`,
 `Contact.jsx` during the Phase 2 final audit.
+
+**Net change — Hero restructure:** `HeroVisual.jsx` (the constellation
+canvas: continuous `requestAnimationFrame` drift, a `ResizeObserver`, a
+`MutationObserver` watching for theme changes) is deleted entirely. It
+was never itemized in the table above even when it existed — continuous
+ambient/idle motion is a different category from the interaction-
+triggered touches this budget tracks — but it was still real, constant
+motion on the page, and it's now gone with nothing replacing it: a net
+reduction, not a swap. The status band's leading chip has a colored dot
+(`bg-success`), but it's static — the same non-animated treatment as
+About's Currently chip — so it adds zero rows here too. The three
+bespoke touches (rotator, Skills hover, Projects auto-cycle) are
+unchanged; the rotator's reserved-height mechanism moved with it into
+the new single-column layout unmodified.
 
 Rules to keep this from growing back into clutter:
 
