@@ -74,7 +74,7 @@ inventing a value.
 
 | Context | Value | Notes |
 |---|---|---|
-| Hero section | `pt-20 sm:pt-24`, `pb-16 sm:pb-20` | Unchanged since the rhythm pass — never flagged as loose, needs the air |
+| Hero section | `pt-20 sm:pt-24`, `pb-20 sm:pb-24` | `pb` bumped from `pb-16 sm:pb-20` when Hero was resized for its full-width column — the statement needed more closing room under the taller type scale |
 | About / Skills / Experience / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space. New sections should default to this value, not invent one |
 | Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the flagship card and needs slightly more room |
 | Two-column row gap (About, Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12` |
@@ -139,18 +139,36 @@ one back toward consistency-for-its-own-sake:
   there instead) — the fix was structural, not a better filler. Hero was
   rebuilt single-column: name/title/rotator/intro/CTAs as one editorial
   statement, then a hairline pivot (the same `mt-10`/`pt-8` values as
-  About's Focus-band pivot, deliberately) into a status band —
-  "Available" plus the `heroCard.seeking` items, as `bg-surface` chips.
-  This directly extends About's paragraph-then-band DNA, which is why it
-  was trusted for the highest-stakes section instead of proposing
-  something unproven. The two bands stay deliberately different
-  *devices*, not just different weights: About's Focus band is domains
-  (titles + descriptions); Hero's status band is status (short chips, no
-  descriptions) — the leading chip's `bg-success` dot (the same static
-  pattern as About's Currently chip) is what makes that read as a
-  different device, not a lighter copy. Available For is chips now, not
-  the mono-dash rail it used to be — if you're looking for that layout,
-  it's gone on purpose.
+  About's Focus-band pivot, deliberately) into a status band. This
+  directly extends About's paragraph-then-band DNA, which is why it was
+  trusted for the highest-stakes section instead of proposing something
+  unproven. The two bands stay deliberately different *devices*, not
+  just different weights: About's Focus band is domains (titles +
+  descriptions); Hero's status band is status (a mono eyebrow line, no
+  descriptions). Available For is chips now, not the mono-dash rail it
+  used to be — if you're looking for that layout, it's gone on purpose.
+  A follow-up pass then resized the whole section for the full-width
+  column it now owns (it shipped sized for the old half-column at
+  first): the name runs `text-6xl sm:text-7xl lg:text-8xl` (up from
+  `text-5xl sm:text-6xl lg:text-7xl`), title and specialty line each
+  moved up one step, and headings run at their natural width — only the
+  intro paragraph keeps a readable measure (`max-w-2xl`, up from
+  `max-w-md`). `lg:text-8xl` (96px) sits just above taste-editorial's
+  Dramatic-Display reference point (92px): consistent with Display-tier
+  type at a dramatic ratio, not an unbounded escalation — no taste file
+  caps absolute pixel size, only typeface count. The status band's
+  status signal moved into the eyebrow line itself — `● AVAILABLE FOR`,
+  the same static `bg-success` dot as About's Currently chip, inline
+  before the label, matching the FOCUS/ACHIEVEMENTS mono-eyebrow
+  pattern — so the chip row underneath is purely the three
+  `heroCard.seeking` roles (sized up to `px-5 py-2.5 text-sm`), no
+  "Available" chip mixed in with them. A right-pole mono meta line
+  (`profile.location`) closes the row, baseline-aligned with the chips
+  via `items-baseline justify-start gap-x-6 gap-y-3 sm:justify-between`
+  (explicit `justify-start` base rather than relying on flexbox's
+  single-wrapped-item default). At 375px the chip row wraps to two rows
+  before the meta line drops below it, left-aligned — verified, not
+  assumed.
 
 ## Motion budget
 
