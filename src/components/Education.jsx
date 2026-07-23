@@ -60,9 +60,9 @@ export default function Education() {
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-display text-base font-semibold leading-snug text-text-primary">
+                    <h3 className="font-display text-base font-semibold leading-snug text-text-primary">
                       {cert.title}
-                    </h4>
+                    </h3>
                     <p className="mt-1 text-sm text-text-secondary">{cert.issuer}</p>
                     {cert.link && (
                       <a

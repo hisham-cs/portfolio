@@ -77,10 +77,10 @@ inventing a value.
 | Hero section | `pt-20 sm:pt-24`, `pb-20 sm:pb-24` | `pb` bumped from `pb-16 sm:pb-20` when Hero was resized for its full-width column — the statement needed more closing room under the taller type scale |
 | About / Skills / Experience / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space. New sections should default to this value, not invent one |
 | Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the flagship card and needs slightly more room |
-| Two-column row gap (About, Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12` |
+| Two-column row gap (Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12`. About no longer uses this grid — see its quote-first pattern below |
 | Skills card grid | `gap-5` | 2-up capability cards |
 | Projects compact card grid | `gap-6` | 2-up cards below the flagship |
-| Card internal padding | `p-6 sm:p-8` (Skills, compact Projects), `p-6 sm:p-10` (flagship Project) | Flagship gets more room to earn its treatment |
+| Card internal padding | `p-6 sm:p-8` (Skills), `p-6` (compact Projects, flat — no responsive bump), `p-6 sm:p-10` (flagship Project) | Flagship gets more room to earn its treatment |
 | Education: degree card → certificates pivot | `mt-10` | Tightened from `mt-12` — they're one story, not two disconnected blocks |
 | Education: certificate row | `py-5`, hairline `border-b border-border` | Same row grammar as Skills/Projects, not a card |
 | Contact: Elsewhere rail links | `gap-2` | Tightened from `gap-3` |
