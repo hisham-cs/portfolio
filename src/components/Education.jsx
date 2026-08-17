@@ -1,6 +1,15 @@
-import { education, certificates } from '../data.js'
+import { education, certificates, credentials, getCredentialImage } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
+import CredentialsGallery from './CredentialsGallery.jsx'
+
+// Only credentials with both image tiers actually dropped into
+// src/assets/credentials/ render — see getCredentialImage in data.js. A
+// metadata entry with no matching files yet (or a future recommendation
+// letter still pending permission) is silently skipped, not shown broken.
+const galleryItems = credentials
+  .map((credential) => ({ credential, image: getCredentialImage(credential) }))
+  .filter(({ image }) => image !== null)
 
 const gradYear = education.graduation.replace(/^\D+/, '')
 
@@ -82,6 +91,21 @@ export default function Education() {
             </div>
           </div>
         </Reveal>
+
+        {/* Credentials gallery — third zone, same mt-10 pivot as the
+            degree->certificates pivot above, extending the established
+            zone rhythm rather than becoming its own section. Renders
+            nothing when galleryItems is empty (no images dropped in yet). */}
+        {galleryItems.length > 0 && (
+          <Reveal delay={140}>
+            <div className="mt-10">
+              <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
+                Credentials
+              </p>
+              <CredentialsGallery items={galleryItems} />
+            </div>
+          </Reveal>
+        )}
       </div>
     </section>
   )
