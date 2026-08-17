@@ -85,6 +85,7 @@ inventing a value.
 | Card internal padding | `p-6 sm:p-8` (Skills), `p-6` (compact Projects, flat — no responsive bump), `p-6 sm:p-10` (flagship Project) | Flagship gets more room to earn its treatment |
 | Education: degree card → certificates pivot | `mt-10` | Tightened from `mt-12` — they're one story, not two disconnected blocks |
 | Education: certificate row | `py-5`, hairline `border-b border-border` | Same row grammar as Skills/Projects, not a card |
+| Education: certificates → credentials gallery pivot | `mt-10` | Same value as the degree→certificates pivot above — a third zone in the same established rhythm, not a new gap |
 | Contact: Elsewhere rail links | `gap-2` | Tightened from `gap-3` |
 | About: quote → paragraph → chip → Focus band | `mt-8`, `mt-6`, `mt-10`+`pt-8` | See "Section composition patterns" below — these values are load-bearing for the quote-first structure, not arbitrary |
 
@@ -164,6 +165,18 @@ one back toward consistency-for-its-own-sake:
   would govern too little and risks hiding a flagship behind an
   unnecessary control. The intended upgrade point is past ~6 projects;
   these tags are the data groundwork for that, not a preview of it.
+- **Education's credentials gallery is a third zone, not its own
+  section.** Education already had a proven zone-pivot pattern (degree
+  card → certificate list, `mt-10`); the gallery extends that same
+  rhythm rather than inventing new section-level chrome. The
+  alternative — a standalone "Credentials" section — was rejected
+  because this site's nav mirrors its sections 1:1, and 4-6 thumbnails
+  don't carry enough weight to justify a 7th nav entry next to
+  Projects and Experience. Recommendation letters (queued behind
+  professor permission, not built yet) technically reference
+  Experience more than Education, but functionally they're the same
+  "paper trail" story Education already tells — pairing them as one
+  zone reads as coherent, not a category mismatch.
 - **Hero is Statement + Status Band, not two-column.** The original
   "bio column + decorative right rail" skeleton left a hole that
   demanded filler (a constellation canvas, then debate over what to put
@@ -223,7 +236,7 @@ Every animation in this codebase should be nameable in one phrase ("state
 changed," "more content available," "this is the active one"). If you can't
 name it, it's decoration — cut it.
 
-The table has five rows, but only **two count against the "motion
+The table has six rows, but only **three count against the "motion
 touches" budget** — the bespoke, per-section ones. The other three are
 either the shared baseline entrance system (used everywhere, not a
 per-section addition) or explicitly not animated at all:
@@ -232,9 +245,23 @@ per-section addition) or explicitly not animated at all:
 |---|---|---|---|---|
 | Skills card hover/focus lift | 200ms | ease-out (translate + background + border) | `Skills.jsx` | Yes (1) |
 | Projects image hover/focus auto-cycle | 500ms crossfade, 2.5s hold | ease-out (opacity only) | `ProjectMedia.jsx` | Yes (2) |
+| Credentials lightbox open/close | 200ms | ease-out (opacity + scale only) | `CredentialsGallery.jsx` | Yes (3) |
 | Scroll-reveal (fade-up on first view) | 600ms | ease-out (opacity + translateY) | `Reveal.jsx` / `.reveal` in `index.css` | No — shared baseline, used on every section |
 | Hero entrance (on mount) | 500ms, staggered | cubic-bezier(0.215,.61,.355,1) | `.hero-in` in `index.css` | No — same baseline pattern, on-mount instead of on-scroll |
 | Nav active-section underline | instant (state, not animated) | — | `Navbar.jsx` | No — explicitly not animated |
+
+**Credentials lightbox — the fourth touch would-be, justified.** Adding
+this brings the count back to three, exactly where it was before the
+specialty rotator was removed above — a wash across the two changes,
+not growth. It clears the budget on every axis: 200ms sits at the
+strict-gsap micro-interaction ceiling, not the higher entrance-tier
+allowance; only `opacity`/`transform` (scale) animate, both
+compositor-friendly; it's `prefers-reduced-motion`-aware (skips
+straight to the end state); and it's the only way to view a
+credential at readable size, so it's load-bearing, not decorative.
+The horizontal scroll strip itself and the right-edge fade mask are
+native scroll and a static gradient respectively — neither is
+JS-driven motion, so neither adds a row.
 
 **Removed — Hero specialty-line crossfade.** Used to be `500ms per
 transition, 4s hold, ease-out (opacity only)` in `SpecialtyRotator.jsx`,
@@ -261,8 +288,7 @@ reduction, not a swap. The status band's leading chip has a colored dot
 (`bg-success`), but it's static — the same non-animated treatment as
 About's Currently chip — so it adds zero rows here too. The rotator
 itself outlived that restructure and was removed in a later pass (see
-above) — the two remaining bespoke touches (Skills hover, Projects
-auto-cycle) are unchanged.
+above); Skills hover and Projects auto-cycle are unchanged throughout.
 
 Rules to keep this from growing back into clutter:
 
@@ -270,4 +296,4 @@ Rules to keep this from growing back into clutter:
 - **Reachability can't depend on hover.** Any hover-revealed content (Projects' extra screenshots) needs a tap/click/focus path that doesn't require a pointer with hover — see the dot indicators in `ProjectMedia.jsx`.
 - **Reserve space, don't reflow.** If text length changes, size the container from an invisible longest-value spacer in normal flow rather than letting content reflow live — this was the specialty rotator's mechanism before it was removed; the rule still applies to any future component with variable-length live text.
 - No scroll-jacking, no particle backgrounds, no typing-effect headlines — these read as template output, not craft.
-- Cap new interactions per section at 1–2. This site has exactly two bespoke motion touches (table above); adding a third anywhere should prompt the same "what am I removing to make room" question as the accent rule.
+- Cap new interactions per section at 1–2. This site has exactly three bespoke motion touches (table above); adding a fourth anywhere should prompt the same "what am I removing to make room" question as the accent rule.

@@ -329,3 +329,78 @@ export const certificates = [
     link: '',
   },
 ]
+
+// Credentials gallery — Education's third zone, a horizontally scrollable
+// strip of scanned evidence (certificate images now, recommendation
+// letters once professor permission is granted). `type` is the only field
+// distinguishing the two ('certificate' | 'letter'); a letter appends as a
+// plain new entry with zero schema or component changes.
+//
+// Deliberately a separate array from `certificates` above, not a shared
+// one: `certificates` is the complete text ledger (all six, including the
+// two with no scanned image yet); `credentials` is only the subset with
+// real artwork to show, and a letter is not a certificate. `slug` drives
+// image discovery via `getCredentialImage` below — an entry with no
+// matching files simply doesn't render in the gallery, so adding metadata
+// here ahead of the actual image files (as with the two certificates below
+// still pending scans) is safe.
+export const credentials = [
+  {
+    slug: 'kaust-advanced-ai',
+    type: 'certificate',
+    title: 'Advanced Artificial Intelligence',
+    issuer: 'KAUST Academy',
+    year: '2026',
+  },
+  {
+    slug: 'kaust-intro-ai',
+    type: 'certificate',
+    title: 'Introduction to Artificial Intelligence',
+    issuer: 'KAUST Academy',
+    year: '2026',
+  },
+  {
+    slug: 'sdaia-fundamentals-ai',
+    type: 'certificate',
+    title: 'Fundamentals of Artificial Intelligence',
+    issuer: 'SDAIA',
+    year: '2025',
+  },
+  {
+    slug: 'deeplearning-ai-math-ml',
+    type: 'certificate',
+    title: 'Mathematics for Machine Learning and Data Science',
+    issuer: 'DeepLearning.AI',
+    year: '2025',
+  },
+]
+
+// Unlike project screenshots (fixed 16:9, so height is derivable from
+// width alone), credentials mix landscape certificates and portrait
+// letters — no single aspect ratio holds. Both dimensions are read
+// straight from the filename instead: `{slug}-thumb-{w}x{h}.webp` and
+// `{slug}-full-{w}x{h}.webp`, dropped into src/assets/credentials/. An
+// entry only appears in the gallery once both tiers exist for its slug.
+const credentialImageModules = import.meta.glob('./assets/credentials/*.webp', {
+  eager: true,
+  import: 'default',
+})
+
+const credentialImagesBySlug = {}
+for (const [path, url] of Object.entries(credentialImageModules)) {
+  const filename = path.split('/').pop()
+  const match = filename.match(/^(.+)-(thumb|full)-(\d+)x(\d+)\.webp$/)
+  if (!match) continue
+  const [, slug, tier, width, height] = match
+  const bucket = (credentialImagesBySlug[slug] ??= {})
+  bucket[tier] = { url, width: Number(width), height: Number(height) }
+}
+
+// Returns { thumb: {url,width,height}, full: {url,width,height} } for a
+// credential, or null if either tier hasn't been dropped into
+// src/assets/credentials/ yet.
+export function getCredentialImage(credential) {
+  const found = credential.slug ? credentialImagesBySlug[credential.slug] : undefined
+  if (!found?.thumb || !found?.full) return null
+  return found
+}
