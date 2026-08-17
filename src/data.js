@@ -115,7 +115,7 @@ export const skills = [
     category: 'Data & BI',
     primary: ['Pandas', 'Power BI', 'EDA'],
     secondary: ['NumPy', 'Excel', 'Data Cleaning', 'Matplotlib'],
-    proof: { label: 'Cooperative Training — Power BI dashboard', slug: 'experience' },
+    proof: { label: 'Telco Customer Churn Analysis', slug: 'telco-churn' },
   },
   {
     category: 'Tools & Platforms',
@@ -188,6 +188,32 @@ for (const slug in projectImagesBySlug) {
 }
 
 export const projects = [
+  {
+    name: 'Telco Customer Churn Analysis',
+    subtitle: 'End-to-end Analysis \u00b7 Power BI Dashboard + ML Model',
+    description:
+      'An end-to-end churn analysis on 7,043 telecom customers: data cleaned in Power Query, explored through a three-page Power BI dashboard, and modeled with logistic regression at 0.849 AUC. The dashboard and the model independently traced the 26.5% churn rate to the same drivers \u2014 contract type, fiber internet, electronic check payment, and low tenure \u2014 and the model surfaced one the manual analysis missed.',
+    slug: 'telco-churn',
+    tags: ['Python', 'pandas', 'scikit-learn', 'Power BI', 'Power Query', 'Excel', 'Jupyter'],
+    github: 'https://github.com/hisham-cs/telco-churn-analysis',
+    demo: '',
+    status: 'Completed',
+    // Reuses Education's degree-card dl/dt/dd stat grammar verbatim (see
+    // FlagshipProject in Projects.jsx) \u2014 optional per-project field, only
+    // rendered when present, so Faten below doesn't fabricate numbers it
+    // doesn't have.
+    metrics: [
+      { label: 'AUC-ROC', value: '0.849' },
+      { label: 'Recall on churners', value: '78%' },
+      { label: 'Customers', value: '7,043' },
+    ],
+    imageAlts: [
+      'Power BI dashboard overview page \u2014 churn rate and customer segments',
+      'Power BI dashboard drivers page \u2014 churn broken down by contract type, internet service, and payment method',
+      'ROC curve for the logistic regression churn model, AUC 0.849',
+      'Logistic regression coefficients ranked by impact on churn probability',
+    ],
+  },
   {
     name: 'Faten \u2014 UQU Academic Assistant',
     subtitle: 'Graduation Project | Full-stack Academic Assistant',
