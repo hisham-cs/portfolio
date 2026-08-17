@@ -191,6 +191,7 @@ export const projects = [
   {
     name: 'Telco Customer Churn Analysis',
     subtitle: 'End-to-end Analysis \u00b7 Power BI Dashboard + ML Model',
+    category: 'Data Analysis \u00b7 Machine Learning',
     description:
       'An end-to-end churn analysis on 7,043 telecom customers: data cleaned in Power Query, explored through a three-page Power BI dashboard, and modeled with logistic regression at 0.849 AUC. The dashboard and the model independently traced the 26.5% churn rate to the same drivers \u2014 contract type, fiber internet, electronic check payment, and low tenure \u2014 and the model surfaced one the manual analysis missed.',
     slug: 'telco-churn',
@@ -217,6 +218,7 @@ export const projects = [
   {
     name: 'Faten \u2014 UQU Academic Assistant',
     subtitle: 'Graduation Project | Full-stack Academic Assistant',
+    category: 'AI Systems \u00b7 Full-Stack',
     icon: 'chat',
     description:
       'An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.',
@@ -229,6 +231,7 @@ export const projects = [
   {
     name: 'Pulmonary Edema Detection',
     subtitle: 'Medical AI System for Chest X-ray Classification',
+    category: 'Computer Vision · Medical AI',
     icon: 'medical',
     description:
       'A medical imaging AI system that classifies chest X-ray images and provides Grad-CAM visual explanations to support model interpretability.',
@@ -241,6 +244,7 @@ export const projects = [
   {
     name: 'Smart Complaint System',
     subtitle: 'RAG-based IT Support Chatbot',
+    category: 'Machine Learning · RAG / LLM Systems',
     icon: 'support',
     description:
       'A domain-specific chatbot for university IT support that understands user complaints, searches verified solutions using similarity search, and provides accurate responses or escalates unresolved cases for human review.',
