@@ -4,10 +4,11 @@ import Reveal from './Reveal.jsx'
 import ProjectMedia from './ProjectMedia.jsx'
 import { GitHubIcon, ExternalLinkIcon } from './Icons.jsx'
 
-// The strongest differentiator gets a full-width feature treatment at the
-// top of the section — every screenshot visible at once, nothing gated
-// behind a click. Everything else is scannable in a compact 2-up grid below.
-const FLAGSHIP_SLUG = 'faten'
+// The strongest work gets a full-width feature treatment — every screenshot
+// visible at once, nothing gated behind a click. Order mirrors Hero's own
+// title, "Data Analyst | AI Engineer": Telco (Data) leads, Faten (AI)
+// follows, then everything else is scannable in a compact 2-up grid below.
+const FLAGSHIP_SLUGS = ['telco-churn', 'faten']
 
 function ProjectLinks({ project }) {
   return (
@@ -115,6 +116,21 @@ function FlagshipProject({ project, index }) {
         {project.description}
       </p>
 
+      {project.metrics?.length > 0 && (
+        <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-6 border-t border-border pt-6">
+          {project.metrics.map((metric) => (
+            <div key={metric.label}>
+              <dt className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
+                {metric.label}
+              </dt>
+              <dd className="mt-1 font-display text-lg font-semibold text-text-primary">
+                {metric.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
       <ProjectTags tags={project.tags} />
       <ProjectLinks project={project} />
     </div>
@@ -163,8 +179,10 @@ function CompactProject({ project, index }) {
 }
 
 export default function Projects() {
-  const flagship = projects.find((p) => p.slug === FLAGSHIP_SLUG)
-  const rest = projects.filter((p) => p.slug !== FLAGSHIP_SLUG)
+  const flagships = FLAGSHIP_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(
+    Boolean,
+  )
+  const rest = projects.filter((p) => !FLAGSHIP_SLUGS.includes(p.slug))
 
   return (
     <section id="projects" className="scroll-mt-20 border-b border-border py-20 sm:py-28">
@@ -173,15 +191,17 @@ export default function Projects() {
           <SectionHeading eyebrow="What I've built" title="Projects" align="left" />
         </Reveal>
 
-        {flagship && (
-          <Reveal>
-            <div id={flagship.slug} className="scroll-mt-24">
-              <FlagshipProject project={flagship} index={projects.indexOf(flagship)} />
-            </div>
-          </Reveal>
-        )}
+        <div className="space-y-10">
+          {flagships.map((flagship, i) => (
+            <Reveal key={flagship.slug} delay={i * 80}>
+              <div id={flagship.slug} className="scroll-mt-24">
+                <FlagshipProject project={flagship} index={projects.indexOf(flagship)} />
+              </div>
+            </Reveal>
+          ))}
+        </div>
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2">
           {rest.map((project, i) => (
             <Reveal key={project.name} delay={(i + 1) * 80}>
               <div id={project.slug} className="h-full scroll-mt-24">

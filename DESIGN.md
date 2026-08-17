@@ -77,7 +77,8 @@ inventing a value.
 | Hero section | `pt-20 sm:pt-24`, `pb-20 sm:pb-24` | `pb` bumped from `pb-16 sm:pb-20` when Hero was resized for its full-width column — the statement needed more closing room under the taller type scale |
 | Hero: title → intro paragraph | `mt-5` | Bumped from `mt-4` after the specialty rotator was deleted — the intro now follows the title paragraph directly instead of the rotator line, so it earns a half-step more room than the old tight follow-on gap had |
 | About / Skills / Experience / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space. New sections should default to this value, not invent one |
-| Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the flagship card and needs slightly more room |
+| Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the flagship cards and needs slightly more room |
+| Projects: between the two flagship cards, and flagship block → compact grid | `space-y-10`, `mt-10` | Same 40px value both places — one uniform rhythm from the two flagships into the grid below, not two different gaps |
 | Two-column row gap (Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12`. About no longer uses this grid — see its quote-first pattern below |
 | Skills card grid | `gap-5` | 2-up capability cards |
 | Projects compact card grid | `gap-6` | 2-up cards below the flagship |
@@ -134,6 +135,23 @@ one back toward consistency-for-its-own-sake:
   (Experience's achievements) use the mono-dash `–` marker, never numbers
   — numbers are reserved for enumerating sibling entities across a
   section, not sub-points within one.
+- **Projects leads with two flagships, ordered to mirror Hero's title.**
+  Telco Customer Churn Analysis and Faten — UQU Academic Assistant both
+  render through `FlagshipProject`, in that order, because Hero's title
+  is literally "Data Analyst | AI Engineer" — Data (Telco) before AI
+  (Faten). The compact 2-up grid (Pulmonary Edema, Smart Complaint)
+  follows both, unchanged in its own internal grammar. Telco's metrics
+  row (`0.849 AUC-ROC · 78% RECALL ON CHURNERS · 7,043 CUSTOMERS`)
+  reuses Education's degree-card stat grammar verbatim — same
+  `dl`/`dt`/`dd`, `border-t border-border pt-6`, `gap-x-10 gap-y-6` —
+  not a new pattern. It's an optional per-project field (`metrics` in
+  `data.js`); Faten doesn't define one, so nothing is fabricated for a
+  project without hard numbers to show. Skills' Data & BI category
+  proof-link now points at Telco (`slug: 'telco-churn'`) instead of the
+  Cooperative Training experience entry — public, inspectable, and
+  quantified beats an internal anecdote with no clickable artifact;
+  Cooperative Training still has its own full card in Experience,
+  unaffected.
 - **Hero is Statement + Status Band, not two-column.** The original
   "bio column + decorative right rail" skeleton left a hole that
   demanded filler (a constellation canvas, then debate over what to put
