@@ -76,6 +76,11 @@ function FlagshipProject({ project, index }) {
       <div className="flex flex-wrap items-center gap-3">
         <span className="font-mono text-xs text-text-muted">{String(index + 1).padStart(2, '0')}</span>
         <StatusDot status={project.status} />
+        {project.category && (
+          <span className="font-mono text-xs tracking-[0.1em] text-text-muted uppercase">
+            · {project.category}
+          </span>
+        )}
         <span className="font-mono text-xs tracking-[0.1em] text-text-muted uppercase">
           · Flagship project
         </span>
@@ -143,9 +148,14 @@ function CompactProject({ project, index }) {
       <ProjectMedia project={project} />
 
       <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="font-mono text-xs text-text-muted">{String(index + 1).padStart(2, '0')}</span>
           <StatusDot status={project.status} />
+          {project.category && (
+            <span className="font-mono text-xs tracking-[0.1em] text-text-muted uppercase">
+              · {project.category}
+            </span>
+          )}
         </div>
 
         <h3 className="mt-3 font-display text-xl font-semibold tracking-[-0.01em] text-text-primary">

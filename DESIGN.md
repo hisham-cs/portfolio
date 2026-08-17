@@ -152,6 +152,18 @@ one back toward consistency-for-its-own-sake:
   quantified beats an internal anecdote with no clickable artifact;
   Cooperative Training still has its own full card in Experience,
   unaffected.
+- **Every project carries a `category` mono tag now — groundwork, not
+  a filter.** Rendered in each card's meta row (`· CATEGORY`, same
+  mono grammar as the existing `· Flagship project` label): Telco
+  "Data Analysis · Machine Learning", Faten "AI Systems · Full-Stack",
+  Pulmonary Edema "Computer Vision · Medical AI" (keeps Computer
+  Vision explicit — it's a declared Skills category, part of the
+  site's own vocabulary, so "Machine Learning · Medical Imaging" would
+  have quietly dropped it), Smart Complaint "Machine Learning · RAG /
+  LLM Systems". No interactive filter yet — with four projects it
+  would govern too little and risks hiding a flagship behind an
+  unnecessary control. The intended upgrade point is past ~6 projects;
+  these tags are the data groundwork for that, not a preview of it.
 - **Hero is Statement + Status Band, not two-column.** The original
   "bio column + decorative right rail" skeleton left a hole that
   demanded filler (a constellation canvas, then debate over what to put
