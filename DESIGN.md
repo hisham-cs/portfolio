@@ -75,6 +75,7 @@ inventing a value.
 | Context | Value | Notes |
 |---|---|---|
 | Hero section | `pt-20 sm:pt-24`, `pb-20 sm:pb-24` | `pb` bumped from `pb-16 sm:pb-20` when Hero was resized for its full-width column — the statement needed more closing room under the taller type scale |
+| Hero: title → intro paragraph | `mt-5` | Bumped from `mt-4` after the specialty rotator was deleted — the intro now follows the title paragraph directly instead of the rotator line, so it earns a half-step more room than the old tight follow-on gap had |
 | About / Skills / Experience / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space. New sections should default to this value, not invent one |
 | Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the flagship card and needs slightly more room |
 | Two-column row gap (Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12`. About no longer uses this grid — see its quote-first pattern below |
@@ -137,7 +138,7 @@ one back toward consistency-for-its-own-sake:
   "bio column + decorative right rail" skeleton left a hole that
   demanded filler (a constellation canvas, then debate over what to put
   there instead) — the fix was structural, not a better filler. Hero was
-  rebuilt single-column: name/title/rotator/intro/CTAs as one editorial
+  rebuilt single-column: name/title/intro/CTAs as one editorial
   statement, then a hairline pivot (the same `mt-10`/`pt-8` values as
   About's Focus-band pivot, deliberately) into a status band. This
   directly extends About's paragraph-then-band DNA, which is why it was
@@ -150,25 +151,41 @@ one back toward consistency-for-its-own-sake:
   A follow-up pass then resized the whole section for the full-width
   column it now owns (it shipped sized for the old half-column at
   first): the name runs `text-6xl sm:text-7xl lg:text-8xl` (up from
-  `text-5xl sm:text-6xl lg:text-7xl`), title and specialty line each
-  moved up one step, and headings run at their natural width — only the
-  intro paragraph keeps a readable measure (`max-w-2xl`, up from
-  `max-w-md`). `lg:text-8xl` (96px) sits just above taste-editorial's
-  Dramatic-Display reference point (92px): consistent with Display-tier
-  type at a dramatic ratio, not an unbounded escalation — no taste file
-  caps absolute pixel size, only typeface count. The status band's
-  status signal moved into the eyebrow line itself — `● AVAILABLE FOR`,
-  the same static `bg-success` dot as About's Currently chip, inline
-  before the label, matching the FOCUS/ACHIEVEMENTS mono-eyebrow
-  pattern — so the chip row underneath is purely the three
-  `heroCard.seeking` roles (sized up to `px-5 py-2.5 text-sm`), no
-  "Available" chip mixed in with them. A right-pole mono meta line
-  (`profile.location`) closes the row, baseline-aligned with the chips
-  via `items-baseline justify-start gap-x-6 gap-y-3 sm:justify-between`
-  (explicit `justify-start` base rather than relying on flexbox's
-  single-wrapped-item default). At 375px the chip row wraps to two rows
-  before the meta line drops below it, left-aligned — verified, not
-  assumed.
+  `text-5xl sm:text-6xl lg:text-7xl`), title moved up one step, and
+  headings run at their natural width — only the intro paragraph keeps
+  a readable measure (`max-w-2xl`, up from `max-w-md`). `lg:text-8xl`
+  (96px) sits just above taste-editorial's Dramatic-Display reference
+  point (92px): consistent with Display-tier type at a dramatic ratio,
+  not an unbounded escalation — no taste file caps absolute pixel size,
+  only typeface count. The status band's status signal moved into the
+  eyebrow line itself — `● AVAILABLE FOR`, the same static `bg-success`
+  dot as About's Currently chip, inline before the label, matching the
+  FOCUS/ACHIEVEMENTS mono-eyebrow pattern — so the chip row underneath
+  is purely the three `heroCard.seeking` roles (sized up to `px-5
+  py-2.5 text-sm`), no "Available" chip mixed in with them. A
+  right-pole mono meta line (`profile.location`) closes the row,
+  baseline-aligned with the chips via `items-baseline justify-start
+  gap-x-6 gap-y-3 sm:justify-between` (explicit `justify-start` base
+  rather than relying on flexbox's single-wrapped-item default). At
+  375px the chip row wraps to two rows before the meta line drops below
+  it, left-aligned — verified, not assumed.
+- **The specialty rotator is gone.** `SpecialtyRotator.jsx`, its
+  reserved-height invisible-spacer mechanism, and the "Specializing
+  in…" line are deleted outright — not hidden, not reduced-motion-
+  gated. `profile.title` ("Data Analyst | AI Engineer") now carries
+  identity alone at its existing scale; it was never sized down to
+  share the line with the rotator, so nothing needs to grow to fill
+  the gap. The vertical rhythm was rebalanced instead: the intro
+  paragraph, which used to sit `mt-4` under the rotator line, now sits
+  `mt-5` directly under the title paragraph — a half-step up from the
+  old tight follow-on gap, in from the scale, so the paragraph reads as
+  the statement's second beat rather than an orphaned leftover. Stagger
+  delays on the remaining `hero-in` elements (h1 70ms, title 140ms,
+  intro 210ms, CTAs 280ms, status band 320ms) were left untouched
+  rather than renumbered — removing one element from a staggered
+  sequence doesn't obligate re-timing the rest. The Hero's only
+  remaining live signal is the static `bg-success` status dot on
+  "AVAILABLE FOR" (see motion budget below).
 
 ## Motion budget
 
@@ -176,19 +193,26 @@ Every animation in this codebase should be nameable in one phrase ("state
 changed," "more content available," "this is the active one"). If you can't
 name it, it's decoration — cut it.
 
-The table has six rows, but only **three count against the "motion
+The table has five rows, but only **two count against the "motion
 touches" budget** — the bespoke, per-section ones. The other three are
 either the shared baseline entrance system (used everywhere, not a
 per-section addition) or explicitly not animated at all:
 
 | Interaction | Duration | Easing | File | Counts as a touch? |
 |---|---|---|---|---|
-| Hero specialty-line crossfade | 500ms per transition, 4s hold | ease-out (opacity only) | `SpecialtyRotator.jsx` | Yes (1) |
-| Skills card hover/focus lift | 200ms | ease-out (translate + background + border) | `Skills.jsx` | Yes (2) |
-| Projects image hover/focus auto-cycle | 500ms crossfade, 2.5s hold | ease-out (opacity only) | `ProjectMedia.jsx` | Yes (3) |
+| Skills card hover/focus lift | 200ms | ease-out (translate + background + border) | `Skills.jsx` | Yes (1) |
+| Projects image hover/focus auto-cycle | 500ms crossfade, 2.5s hold | ease-out (opacity only) | `ProjectMedia.jsx` | Yes (2) |
 | Scroll-reveal (fade-up on first view) | 600ms | ease-out (opacity + translateY) | `Reveal.jsx` / `.reveal` in `index.css` | No — shared baseline, used on every section |
 | Hero entrance (on mount) | 500ms, staggered | cubic-bezier(0.215,.61,.355,1) | `.hero-in` in `index.css` | No — same baseline pattern, on-mount instead of on-scroll |
 | Nav active-section underline | instant (state, not animated) | — | `Navbar.jsx` | No — explicitly not animated |
+
+**Removed — Hero specialty-line crossfade.** Used to be `500ms per
+transition, 4s hold, ease-out (opacity only)` in `SpecialtyRotator.jsx`,
+counted as touch (1) of three. The component, its reserved-height
+spacer, and the "Specializing in…" line are deleted outright (not
+reduced-motion-gated, not hidden) — see the Hero composition note
+above. This is a net reduction in the touch budget, not a swap: nothing
+new was added to replace it.
 
 Phase 2 (About/Education/Contact) added zero new rows to this table —
 every hover/transition it uses is the pre-existing sitewide link-hover
@@ -205,15 +229,15 @@ triggered touches this budget tracks — but it was still real, constant
 motion on the page, and it's now gone with nothing replacing it: a net
 reduction, not a swap. The status band's leading chip has a colored dot
 (`bg-success`), but it's static — the same non-animated treatment as
-About's Currently chip — so it adds zero rows here too. The three
-bespoke touches (rotator, Skills hover, Projects auto-cycle) are
-unchanged; the rotator's reserved-height mechanism moved with it into
-the new single-column layout unmodified.
+About's Currently chip — so it adds zero rows here too. The rotator
+itself outlived that restructure and was removed in a later pass (see
+above) — the two remaining bespoke touches (Skills hover, Projects
+auto-cycle) are unchanged.
 
 Rules to keep this from growing back into clutter:
 
 - **`prefers-reduced-motion: reduce` is mandatory** on every animation, no exceptions. Check the media query and either skip the transition class or freeze state on the first frame — every component above already does this; new ones must too.
 - **Reachability can't depend on hover.** Any hover-revealed content (Projects' extra screenshots) needs a tap/click/focus path that doesn't require a pointer with hover — see the dot indicators in `ProjectMedia.jsx`.
-- **Reserve space, don't reflow.** If text length changes (like the specialty rotator), size the container from an invisible longest-value spacer in normal flow rather than letting content reflow live.
+- **Reserve space, don't reflow.** If text length changes, size the container from an invisible longest-value spacer in normal flow rather than letting content reflow live — this was the specialty rotator's mechanism before it was removed; the rule still applies to any future component with variable-length live text.
 - No scroll-jacking, no particle backgrounds, no typing-effect headlines — these read as template output, not craft.
-- Cap new interactions per section at 1–2. This site has exactly three bespoke motion touches (table above); adding a fourth anywhere should prompt the same "what am I removing to make room" question as the accent rule.
+- Cap new interactions per section at 1–2. This site has exactly two bespoke motion touches (table above); adding a third anywhere should prompt the same "what am I removing to make room" question as the accent rule.

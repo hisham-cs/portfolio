@@ -1,7 +1,6 @@
 import { profile, education, heroCard } from '../data.js'
 import { ArrowRightIcon, ExternalLinkIcon } from './Icons.jsx'
 import Button from './ui/Button.jsx'
-import SpecialtyRotator from './SpecialtyRotator.jsx'
 
 // Statement + Status Band: a single editorial column (no sidebar, no filler
 // visual) that closes on a status band below a hairline pivot — the same
@@ -53,14 +52,7 @@ export default function Hero() {
             {profile.title}
           </p>
           <p
-            className="hero-in mt-3 text-xl text-text-secondary sm:text-2xl"
-            style={{ animationDelay: '175ms' }}
-          >
-            Specializing in{' '}
-            <SpecialtyRotator className="font-semibold text-text-primary" />
-          </p>
-          <p
-            className="hero-in mt-4 max-w-2xl text-lg leading-[1.7] text-text-secondary"
+            className="hero-in mt-5 max-w-2xl text-lg leading-[1.7] text-text-secondary"
             style={{ animationDelay: '210ms' }}
           >
             {profile.intro}
