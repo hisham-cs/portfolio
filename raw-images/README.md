@@ -5,7 +5,7 @@ scripts/prepare-images.mjs`). This folder itself is gitignored — only the
 generated WebP files under `src/assets/projects/` and
 `src/assets/credentials/` get committed.
 
-## `projects/` — flagship mosaic screenshots
+## `projects/` — project card screenshots
 
 Name each file `{project-slug}-{order}-{label}.{png,jpg,jpeg}`. Only the
 `{slug}-{order}-` prefix is parsed; `{label}` is free text for your own
