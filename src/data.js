@@ -203,9 +203,10 @@ export const projects = [
   {
     name: 'Telco Customer Churn Analysis',
     subtitle: 'End-to-end Analysis \u00b7 Power BI Dashboard + ML Model',
-    category: 'Data Analysis \u00b7 Machine Learning',
+    category: 'Data Analysis',
+    categoryTag: 'Data Analysis \u00b7 Machine Learning',
     description:
-      'An end-to-end churn analysis on 7,043 telecom customers: data cleaned in Power Query, explored through a three-page Power BI dashboard, and modeled with logistic regression reaching 0.849 AUC and 78% recall on churners. The dashboard and the model independently traced the 26.5% churn rate to the same drivers \u2014 contract type, fiber internet, electronic check payment, and low tenure \u2014 and the model surfaced one the manual analysis missed.',
+      'A churn analysis on 7,043 telecom customers with a 26.5% churn rate: logistic regression reaching 0.849 AUC and 78% recall on churners. The dashboard and the model independently traced churn to the same drivers \u2014 contract type and fiber internet \u2014 and the model surfaced one the analysis missed.',
     slug: 'telco-churn',
     tags: ['Python', 'pandas', 'scikit-learn', 'Power BI', 'Power Query', 'Excel', 'Jupyter'],
     github: 'https://github.com/hisham-cs/telco-churn-analysis',
@@ -221,7 +222,8 @@ export const projects = [
   {
     name: 'Faten \u2014 UQU Academic Assistant',
     subtitle: 'Graduation Project | Full-stack Academic Assistant',
-    category: 'AI Systems \u00b7 Full-Stack',
+    category: 'AI',
+    categoryTag: 'AI Systems \u00b7 Full-Stack',
     icon: 'chat',
     description:
       'An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.',
@@ -234,7 +236,8 @@ export const projects = [
   {
     name: 'Pulmonary Edema Detection',
     subtitle: 'Medical AI System for Chest X-ray Classification',
-    category: 'Computer Vision · Medical AI',
+    category: 'AI',
+    categoryTag: 'Computer Vision · Medical AI',
     icon: 'medical',
     description:
       'A medical imaging AI system that classifies chest X-ray images and provides Grad-CAM visual explanations to support model interpretability.',
@@ -247,7 +250,8 @@ export const projects = [
   {
     name: 'Smart Complaint System',
     subtitle: 'RAG-based IT Support Chatbot',
-    category: 'Machine Learning · RAG / LLM Systems',
+    category: 'AI',
+    categoryTag: 'RAG / LLM Systems',
     icon: 'support',
     description:
       'A domain-specific chatbot for university IT support that understands user complaints, searches verified solutions using similarity search, and provides accurate responses or escalates unresolved cases for human review.',
