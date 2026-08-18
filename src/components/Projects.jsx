@@ -1,14 +1,26 @@
-import { projects, getProjectImages } from '../data.js'
+import { useMemo, useState } from 'react'
+import { projects } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
 import ProjectMedia from './ProjectMedia.jsx'
 import { GitHubIcon, ExternalLinkIcon } from './Icons.jsx'
 
-// The strongest work gets a full-width feature treatment — every screenshot
-// visible at once, nothing gated behind a click. Order mirrors Hero's own
-// title, "Data Analyst | AI Engineer": Telco (Data) leads, Faten (AI)
-// follows, then everything else is scannable in a compact 2-up grid below.
-const FLAGSHIP_SLUGS = ['telco-churn', 'faten']
+// Every project shares one card anatomy now -- no flagship tier. Priority
+// is expressed by array order in data.js (Telco leads deliberately, same
+// reasoning as before: it's the site's title-promised category), not by a
+// bigger card. See "Section composition patterns" in DESIGN.md.
+//
+// `category` is a single string like "Data Analysis · Machine Learning" --
+// split on the separator to get the atomic tokens the filter pills use.
+// Never hardcoded: a project with a new category token gets a pill for
+// free the next time this runs.
+function splitCategory(category) {
+  if (!category) return []
+  return category
+    .split('·')
+    .map((token) => token.trim())
+    .filter(Boolean)
+}
 
 function ProjectLinks({ project }) {
   return (
@@ -41,23 +53,6 @@ function ProjectLinks({ project }) {
   )
 }
 
-function ProjectTags({ tags }) {
-  return (
-    <div className="mt-5 flex flex-wrap gap-x-3 gap-y-2">
-      {tags.map((tag, j) => (
-        <span key={tag} className="flex items-center gap-3">
-          {j > 0 && (
-            <span className="text-border" aria-hidden="true">
-              /
-            </span>
-          )}
-          <span className="font-mono text-sm text-text-secondary">{tag}</span>
-        </span>
-      ))}
-    </div>
-  )
-}
-
 function StatusDot({ status }) {
   if (!status) return null
   return (
@@ -68,81 +63,7 @@ function StatusDot({ status }) {
   )
 }
 
-function FlagshipProject({ project, index }) {
-  const images = getProjectImages(project)
-
-  return (
-    <div className="rounded-2xl border border-border bg-surface p-6 sm:p-10">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="font-mono text-xs text-text-muted">{String(index + 1).padStart(2, '0')}</span>
-        <StatusDot status={project.status} />
-        {project.category && (
-          <span className="font-mono text-xs tracking-[0.1em] text-text-muted uppercase">
-            · {project.category}
-          </span>
-        )}
-        <span className="font-mono text-xs tracking-[0.1em] text-text-muted uppercase">
-          · Flagship project
-        </span>
-      </div>
-
-      <h3 className="mt-4 font-display text-3xl font-semibold tracking-[-0.01em] text-text-primary sm:text-4xl">
-        {project.name}
-      </h3>
-      {project.subtitle && (
-        <p className="mt-2 font-mono text-xs text-text-secondary">{project.subtitle}</p>
-      )}
-
-      {images.length > 0 && (
-        <div className="mt-8 grid grid-cols-2 gap-3">
-          {images.map((img, i) => (
-            <div
-              key={img.src}
-              className="group/tile relative aspect-video overflow-hidden rounded-lg border border-border bg-surface-elevated"
-            >
-              <img
-                src={img.src}
-                srcSet={img.srcSet}
-                sizes="(min-width: 640px) 500px, 42vw"
-                width={img.width}
-                height={img.height}
-                alt={img.alt}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                fetchPriority={i === 0 ? 'high' : undefined}
-                decoding="async"
-                className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover/tile:scale-[1.03]"
-              />
-            </div>
-          ))}
-        </div>
-      )}
-
-      <p className="mt-8 max-w-[65ch] text-lg leading-[1.7] text-text-secondary">
-        {project.description}
-      </p>
-
-      {project.metrics?.length > 0 && (
-        <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-6 border-t border-border pt-6">
-          {project.metrics.map((metric) => (
-            <div key={metric.label}>
-              <dt className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
-                {metric.label}
-              </dt>
-              <dd className="mt-1 font-display text-lg font-semibold text-text-primary">
-                {metric.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      )}
-
-      <ProjectTags tags={project.tags} />
-      <ProjectLinks project={project} />
-    </div>
-  )
-}
-
-function CompactProject({ project, index }) {
+function ProjectCard({ project, index }) {
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-text-muted hover:shadow-md">
       <ProjectMedia project={project} />
@@ -189,10 +110,20 @@ function CompactProject({ project, index }) {
 }
 
 export default function Projects() {
-  const flagships = FLAGSHIP_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(
-    Boolean,
-  )
-  const rest = projects.filter((p) => !FLAGSHIP_SLUGS.includes(p.slug))
+  const [activeCategory, setActiveCategory] = useState('All')
+
+  const categories = useMemo(() => {
+    const seen = new Set()
+    for (const project of projects) {
+      for (const token of splitCategory(project.category)) seen.add(token)
+    }
+    return Array.from(seen)
+  }, [])
+
+  const matches = (project) =>
+    activeCategory === 'All' || splitCategory(project.category).includes(activeCategory)
+
+  const visibleCount = projects.filter(matches).length
 
   return (
     <section id="projects" className="scroll-mt-20 border-b border-border py-20 sm:py-28">
@@ -201,23 +132,54 @@ export default function Projects() {
           <SectionHeading eyebrow="What I've built" title="Projects" align="left" />
         </Reveal>
 
-        <div className="space-y-10">
-          {flagships.map((flagship, i) => (
-            <Reveal key={flagship.slug} delay={i * 80}>
-              <div id={flagship.slug} className="scroll-mt-24">
-                <FlagshipProject project={flagship} index={projects.indexOf(flagship)} />
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        {/* Filter pills -- real buttons in a labelled group, aria-pressed
+            for state, no accent (weight/background contrast only, per
+            accent discipline). Instant filtering: cards are always
+            mounted and toggled via `hidden`, never unmounted/remounted,
+            so the shared Reveal entrance never replays on a filter
+            click -- no new motion touch. */}
+        <Reveal delay={40}>
+          <div
+            role="group"
+            aria-label="Filter projects by category"
+            className="mt-6 flex gap-2 overflow-x-auto pb-1"
+          >
+            {['All', ...categories].map((category) => {
+              const isActive = activeCategory === category
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => setActiveCategory(category)}
+                  className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-text-primary text-background'
+                      : 'bg-surface text-text-secondary hover:bg-surface-elevated'
+                  }`}
+                >
+                  {category}
+                </button>
+              )
+            })}
+          </div>
+        </Reveal>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {rest.map((project, i) => (
-            <Reveal key={project.name} delay={(i + 1) * 80}>
-              <div id={project.slug} className="h-full scroll-mt-24">
-                <CompactProject project={project} index={projects.indexOf(project)} />
-              </div>
-            </Reveal>
+        <p aria-live="polite" className="sr-only">
+          Showing {visibleCount} of {projects.length} projects
+        </p>
+
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          {projects.map((project, i) => (
+            <div
+              key={project.slug}
+              id={project.slug}
+              className={`h-full scroll-mt-24 ${matches(project) ? '' : 'hidden'}`}
+            >
+              <Reveal className="h-full" delay={i * 80}>
+                <ProjectCard project={project} index={i} />
+              </Reveal>
+            </div>
           ))}
         </div>
       </div>

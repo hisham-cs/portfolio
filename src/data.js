@@ -165,9 +165,9 @@ export const skills = [
 // array of { src, alt }), that array wins outright and slug-based discovery
 // is skipped for that project. Leave both `images` and `slug` unset (or no
 // matching files on disk) to show the terminal-style placeholder. One
-// resolved image renders plainly; two or more auto-cycle on hover/focus in
-// the compact card grid, or render as a static all-visible mosaic on the
-// flagship project card.
+// resolved image renders plainly; two or more auto-cycle on hover/focus
+// (or via tap dots on touch) -- every project card uses this same media
+// grammar now, there's no separate flagship treatment.
 const ASPECT_RATIO = 9 / 16
 
 const projectImageModules = import.meta.glob('./assets/projects/*/*.webp', {
@@ -211,15 +211,6 @@ export const projects = [
     github: 'https://github.com/hisham-cs/telco-churn-analysis',
     demo: '',
     status: 'Completed',
-    // Reuses Education's degree-card dl/dt/dd stat grammar verbatim (see
-    // FlagshipProject in Projects.jsx) \u2014 optional per-project field, only
-    // rendered when present, so Faten below doesn't fabricate numbers it
-    // doesn't have.
-    metrics: [
-      { label: 'AUC-ROC', value: '0.849' },
-      { label: 'Recall on churners', value: '78%' },
-      { label: 'Customers', value: '7,043' },
-    ],
     imageAlts: [
       'Power BI dashboard overview page \u2014 churn rate and customer segments',
       'Power BI dashboard drivers page \u2014 churn broken down by contract type, internet service, and payment method',
