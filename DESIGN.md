@@ -85,7 +85,6 @@ inventing a value.
 | Card internal padding | `p-6 sm:p-8` (Skills), `p-6` (Projects, flat — no responsive bump) | Projects cards are uniform; no separate flagship padding exists to differ from |
 | Education: degree card → certificates pivot | `mt-10` | Tightened from `mt-12` — they're one story, not two disconnected blocks |
 | Education: certificate row | `py-5`, hairline `border-b border-border` | Same row grammar as Skills/Projects, not a card |
-| Education: certificates → credentials gallery pivot | `mt-10` | Same value as the degree→certificates pivot above — a third zone in the same established rhythm, not a new gap |
 | Contact: Elsewhere rail links | `gap-2` | Tightened from `gap-3` |
 | About: quote → paragraph → chip → Focus band | `mt-8`, `mt-6`, `mt-10`+`pt-8` | See "Section composition patterns" below — these values are load-bearing for the quote-first structure, not arbitrary |
 
@@ -99,11 +98,10 @@ extend it into new card chrome.
 
 ## Image asset pipeline
 
-`src/assets/projects/{slug}/{n}-{width}w.webp` and
-`src/assets/credentials/{slug}/{thumb,full}-{w}x{h}.webp` — one subfolder
-per project/credential, not a flat folder of `{slug}-{n}-{width}w` files.
-27 files across three flat-named projects was unreadable at a glance;
-subfolders make the tree self-organizing as project count grows.
+`src/assets/projects/{slug}/{n}-{width}w.webp` — one subfolder per
+project, not a flat folder of `{slug}-{n}-{width}w` files. 27 files
+across three flat-named projects was unreadable at a glance; subfolders
+make the tree self-organizing as project count grows.
 
 **Two width tiers per project image, not three**: 480w (mobile) and
 1280w (everything else). A middle 960w tier was cut — with only two
@@ -116,14 +114,6 @@ run against the production build held **96/100 performance, CLS 0** —
 the same floor this project holds everywhere else. If a future change
 ever drops mobile below 95, add the third tier back rather than
 assuming two is always enough.
-
-Credentials keep their existing two tiers (`thumb`/`full`) — those were
-never three, so nothing was cut there, only reorganized into
-per-credential subfolders. Both tiers stay filename-encoded with real
-pixel dimensions (`{w}x{h}`, not a fixed ratio) because, unlike project
-screenshots, credentials mix landscape certificates and portrait
-letters with no single aspect ratio to derive from — see the comment
-above `getCredentialImage` in `data.js`.
 
 ## Section composition patterns
 
@@ -180,11 +170,12 @@ one back toward consistency-for-its-own-sake:
   have anywhere. The lesson: **these cards are content-rich (title +
   subtitle + description + tech tags + links) and need the ~540px a
   2-up grid column gives them at this container width** — a scroll
-  strip's width-per-card trade-off suits sparser content (like
-  Credentials' image thumbnails), not this. Don't re-attempt a
-  horizontal strip for Projects without solving the width problem
-  first. Priority is expressed by **array order in `data.js`, not by
-  size** — Telco Customer Churn Analysis leads (it's the category
+  strip's width-per-card trade-off suits sparser content (image
+  thumbnails, not a card carrying five kinds of content at once).
+  Don't re-attempt a horizontal strip for Projects without solving the
+  width problem first. Priority is expressed by **array order in
+  `data.js`, not by size** — Telco Customer Churn Analysis leads (it's
+  the category
   Hero's own title promises: "Data Analyst" before "AI Engineer"),
   Faten follows, then Pulmonary Edema and Smart Complaint. Telco's
   stat numbers (0.849 AUC, 78% recall, 7,043 customers, 26.5% churn
@@ -333,18 +324,17 @@ one back toward consistency-for-its-own-sake:
     new icon needed (`ArrowLeftIcon`, mirroring the existing
     `ArrowRightIcon` in `Icons.jsx` — hand-authored SVG matching that
     file's existing pattern, not a new dependency).
-- **Education's credentials gallery is a third zone, not its own
-  section.** Education already had a proven zone-pivot pattern (degree
-  card → certificate list, `mt-10`); the gallery extends that same
-  rhythm rather than inventing new section-level chrome. The
-  alternative — a standalone "Credentials" section — was rejected
-  because this site's nav mirrors its sections 1:1, and 4-6 thumbnails
-  don't carry enough weight to justify a 7th nav entry next to
-  Projects and Experience. Recommendation letters (queued behind
-  professor permission, not built yet) technically reference
-  Experience more than Education, but functionally they're the same
-  "paper trail" story Education already tells — pairing them as one
-  zone reads as coherent, not a category mismatch.
+- **Education is degree card + certificate list, two zones — a
+  credentials image gallery (certificate scans, a third zone below
+  the list) was built, then removed outright before any real images
+  ever landed in it.** The `CredentialsGallery.jsx` component, its
+  lightbox, the `credentials` data array and `getCredentialImage` in
+  `data.js`, the credentials handling in `scripts/prepare-images.mjs`,
+  and `raw-images/credentials/` are all gone — not disabled, not
+  hidden behind a flag. The text certificate list stays exactly as it
+  was and is considered sufficient on its own. Don't rebuild an image
+  gallery here without revisiting this decision first; it was a
+  deliberate call, not an oversight.
 - **Hero is Statement + Status Band, not two-column.** The original
   "bio column + decorative right rail" skeleton left a hole that
   demanded filler (a constellation canvas, then debate over what to put
@@ -404,7 +394,7 @@ Every animation in this codebase should be nameable in one phrase ("state
 changed," "more content available," "this is the active one"). If you can't
 name it, it's decoration — cut it.
 
-The table has six rows, but only **three count against the "motion
+The table has five rows, but only **two count against the "motion
 touches" budget** — the bespoke, per-section ones. The other three are
 either the shared baseline entrance system (used everywhere, not a
 per-section addition) or explicitly not animated at all:
@@ -413,23 +403,19 @@ per-section addition) or explicitly not animated at all:
 |---|---|---|---|---|
 | Skills card hover/focus lift | 200ms | ease-out (translate + background + border) | `Skills.jsx` | Yes (1) |
 | Projects image hover/focus auto-cycle | 500ms crossfade, 2.5s hold | ease-out (opacity only) | `ProjectMedia.jsx` | Yes (2) |
-| Credentials lightbox open/close | 200ms | ease-out (opacity + scale only) | `CredentialsGallery.jsx` | Yes (3) |
 | Scroll-reveal (fade-up on first view) | 600ms | ease-out (opacity + translateY) | `Reveal.jsx` / `.reveal` in `index.css` | No — shared baseline, used on every section |
 | Hero entrance (on mount) | 500ms, staggered | cubic-bezier(0.215,.61,.355,1) | `.hero-in` in `index.css` | No — same baseline pattern, on-mount instead of on-scroll |
 | Nav active-section underline | instant (state, not animated) | — | `Navbar.jsx` | No — explicitly not animated |
 
-**Credentials lightbox — the fourth touch would-be, justified.** Adding
-this brings the count back to three, exactly where it was before the
-specialty rotator was removed above — a wash across the two changes,
-not growth. It clears the budget on every axis: 200ms sits at the
-strict-gsap micro-interaction ceiling, not the higher entrance-tier
-allowance; only `opacity`/`transform` (scale) animate, both
-compositor-friendly; it's `prefers-reduced-motion`-aware (skips
-straight to the end state); and it's the only way to view a
-credential at readable size, so it's load-bearing, not decorative.
-The horizontal scroll strip itself and the right-edge fade mask are
-native scroll and a static gradient respectively — neither is
-JS-driven motion, so neither adds a row.
+**Removed — Credentials lightbox open/close.** Used to be `200ms,
+ease-out (opacity + scale only)` in `CredentialsGallery.jsx`, counted
+as touch (3) of three. The whole Credentials image gallery it belonged
+to was removed outright (see "Section composition patterns" above) —
+not just the animation, the entire feature. This is a net reduction in
+the touch budget, not a swap: nothing new was added to replace it. The
+site is back to two bespoke touches, same as right after the specialty
+rotator was removed and before the gallery briefly brought it back to
+three.
 
 **Removed — Hero specialty-line crossfade.** Used to be `500ms per
 transition, 4s hold, ease-out (opacity only)` in `SpecialtyRotator.jsx`,
@@ -464,4 +450,4 @@ Rules to keep this from growing back into clutter:
 - **Reachability can't depend on hover.** Any hover-revealed content (Projects' extra screenshots) needs a tap/click/focus path that doesn't require a pointer with hover — see the dot indicators in `ProjectMedia.jsx`.
 - **Reserve space, don't reflow.** If text length changes, size the container from an invisible longest-value spacer in normal flow rather than letting content reflow live — this was the specialty rotator's mechanism before it was removed; the rule still applies to any future component with variable-length live text.
 - No scroll-jacking, no particle backgrounds, no typing-effect headlines — these read as template output, not craft.
-- Cap new interactions per section at 1–2. This site has exactly three bespoke motion touches (table above); adding a fourth anywhere should prompt the same "what am I removing to make room" question as the accent rule.
+- Cap new interactions per section at 1–2. This site has exactly two bespoke motion touches (table above); adding a third anywhere should prompt the same "what am I removing to make room" question as the accent rule.
