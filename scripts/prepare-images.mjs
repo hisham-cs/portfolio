@@ -31,7 +31,10 @@ const OUT_PROJECTS_DIR = join(ROOT, 'src', 'assets', 'projects')
 const OUT_CREDENTIALS_DIR = join(ROOT, 'src', 'assets', 'credentials')
 
 const IMAGE_EXT_RE = /\.(png|jpe?g)$/i
-const PROJECT_WIDTHS = [480, 960, 1280]
+// 480w (mobile) + 1280w (everything else) -- a dropped middle 960w tier
+// kept almost none of the srcset benefit for a third of the file count;
+// confirmed via a post-change Lighthouse mobile run (see DESIGN.md).
+const PROJECT_WIDTHS = [480, 1280]
 const MOSAIC_HEIGHT_RATIO = 9 / 16 // 16:9 mosaic tiles, matches ASPECT_RATIO in data.js
 const THUMB_SHORT_EDGE = 352
 const FULL_LONG_EDGE = 1600
@@ -72,21 +75,28 @@ async function processProjectMosaics() {
   }
 
   if (Object.keys(bySlugOrder).length === 0) return
-  if (!existsSync(OUT_PROJECTS_DIR)) mkdirSync(OUT_PROJECTS_DIR, { recursive: true })
 
   for (const [slug, orders] of Object.entries(bySlugOrder)) {
+    const slugDir = join(OUT_PROJECTS_DIR, slug)
+    if (!existsSync(slugDir)) mkdirSync(slugDir, { recursive: true })
+
     for (const [order, srcPath] of Object.entries(orders)) {
       for (const width of PROJECT_WIDTHS) {
         const height = Math.round(width * MOSAIC_HEIGHT_RATIO)
-        const outName = `${slug}-${order}-${width}w.webp`
-        const outPath = join(OUT_PROJECTS_DIR, outName)
+        const outName = `${order}-${width}w.webp`
+        const outPath = join(slugDir, outName)
         const buffer = await sharp(srcPath)
           .rotate() // auto-orient per EXIF, then strip the tag
           .resize(width, height, { fit: 'cover', position: 'attention' })
           .webp({ quality: QUALITY })
           .toBuffer()
         writeFileSync(outPath, buffer)
-        results.push({ src: basename(srcPath), out: outName, dims: `${width}x${height}`, size: kb(buffer.length) })
+        results.push({
+          src: basename(srcPath),
+          out: `${slug}/${outName}`,
+          dims: `${width}x${height}`,
+          size: kb(buffer.length),
+        })
       }
     }
   }
@@ -96,8 +106,6 @@ async function processCredentials() {
   const files = listRaw(RAW_CREDENTIALS_DIR)
   if (files.length === 0) return
 
-  if (!existsSync(OUT_CREDENTIALS_DIR)) mkdirSync(OUT_CREDENTIALS_DIR, { recursive: true })
-
   for (const file of files) {
     const match = file.match(/^(cert|letter)-([a-z0-9]+(?:-[a-z0-9]+)*)(?:-.+)?\.(png|jpe?g)$/i)
     if (!match) {
@@ -106,6 +114,9 @@ async function processCredentials() {
     }
     const [, , slug] = match
     const srcPath = join(RAW_CREDENTIALS_DIR, file)
+    const slugDir = join(OUT_CREDENTIALS_DIR, slug)
+    if (!existsSync(slugDir)) mkdirSync(slugDir, { recursive: true })
+
     const meta = await sharp(srcPath).rotate().metadata()
     const landscape = meta.width >= meta.height
 
@@ -119,11 +130,11 @@ async function processCredentials() {
       .webp({ quality: QUALITY })
       .toBuffer()
     const thumbDims = await sharp(thumbBuffer).metadata()
-    const thumbName = `${slug}-thumb-${thumbDims.width}x${thumbDims.height}.webp`
-    writeFileSync(join(OUT_CREDENTIALS_DIR, thumbName), thumbBuffer)
+    const thumbName = `thumb-${thumbDims.width}x${thumbDims.height}.webp`
+    writeFileSync(join(slugDir, thumbName), thumbBuffer)
     results.push({
       src: file,
-      out: thumbName,
+      out: `${slug}/${thumbName}`,
       dims: `${thumbDims.width}x${thumbDims.height}`,
       size: kb(thumbBuffer.length),
     })
@@ -134,11 +145,11 @@ async function processCredentials() {
       .webp({ quality: QUALITY })
       .toBuffer()
     const fullDims = await sharp(fullBuffer).metadata()
-    const fullName = `${slug}-full-${fullDims.width}x${fullDims.height}.webp`
-    writeFileSync(join(OUT_CREDENTIALS_DIR, fullName), fullBuffer)
+    const fullName = `full-${fullDims.width}x${fullDims.height}.webp`
+    writeFileSync(join(slugDir, fullName), fullBuffer)
     results.push({
       src: file,
-      out: fullName,
+      out: `${slug}/${fullName}`,
       dims: `${fullDims.width}x${fullDims.height}`,
       size: kb(fullBuffer.length),
     })

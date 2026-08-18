@@ -132,13 +132,23 @@ export const skills = [
 ]
 
 // Project screenshots are zero-config: drop responsive WebP variants named
-// `{slug}-{n}-{width}w.webp` (e.g. `faten-1-480w.webp`, `faten-1-960w.webp`,
-// `faten-1-1600w.webp`) into src/assets/projects/ and they show up
-// automatically, in numeric order, for the project whose `slug` matches. No
-// path or extension ever needs to be written here. Vite globs the folder at
-// build time, so files are hashed/optimized like any other imported asset.
-// All screenshots are captured at 16:9 \u2014 height is derived from width
+// `{n}-{width}w.webp` (e.g. `1-480w.webp`, `1-1280w.webp`) into a
+// `src/assets/projects/{slug}/` subfolder and they show up automatically,
+// in numeric order, for the project whose `slug` matches the folder name.
+// One subfolder per project keeps the asset tree readable at a glance
+// instead of one flat folder of `{slug}-{n}-{width}w` files. No path or
+// extension ever needs to be written here. Vite globs the folder at build
+// time, so files are hashed/optimized like any other imported asset. All
+// screenshots are captured at 16:9 \u2014 height is derived from width
 // rather than stored separately.
+//
+// Two width tiers, deliberately \u2014 480w for mobile, 1280w for
+// everything else. A dropped middle 960w tier would have kept almost none
+// of the srcset benefit (browsers already choose between the two
+// remaining tiers correctly) for a third of the file count; a single
+// tier would regress mobile Lighthouse by serving phones the same bytes
+// as desktop. Confirmed via a Lighthouse mobile run after the tier
+// change (see DESIGN.md) before this became the standing convention.
 //
 // WebP-only, deliberately: there's no browserslist/analytics data in this
 // project indicating any target browser needs a legacy raster fallback, so
@@ -146,9 +156,9 @@ export const skills = [
 // DESIGN.md before adding a second format).
 //
 // `imageAlts` is an optional array of alt text matched by index to the
-// discovered images (imageAlts[0] describes {slug}-1, etc.) \u2014 filenames
-// can't carry meaningful alt text, so this is the only place to add it.
-// Without an entry, a given image falls back to
+// discovered images (imageAlts[0] describes {slug}/1-*, etc.) \u2014
+// filenames can't carry meaningful alt text, so this is the only place to
+// add it. Without an entry, a given image falls back to
 // "<project name> \u2014 screenshot <n>".
 //
 // `images` is a manual override: if a project defines it directly (as an
@@ -160,17 +170,19 @@ export const skills = [
 // flagship project card.
 const ASPECT_RATIO = 9 / 16
 
-const projectImageModules = import.meta.glob('./assets/projects/*.webp', {
+const projectImageModules = import.meta.glob('./assets/projects/*/*.webp', {
   eager: true,
   import: 'default',
 })
 
 const projectImagesBySlug = {}
 for (const [path, url] of Object.entries(projectImageModules)) {
-  const filename = path.split('/').pop()
-  const match = filename.match(/^(.+)-(\d+)-(\d+)w\.webp$/)
+  const parts = path.split('/')
+  const filename = parts.pop()
+  const slug = parts.pop()
+  const match = filename.match(/^(\d+)-(\d+)w\.webp$/)
   if (!match) continue
-  const [, slug, order, width] = match
+  const [, order, width] = match
   const bucket = (projectImagesBySlug[slug] ??= [])
   const orderNum = Number(order)
   let entry = bucket.find((e) => e.order === orderNum)
@@ -378,20 +390,24 @@ export const credentials = [
 // Unlike project screenshots (fixed 16:9, so height is derivable from
 // width alone), credentials mix landscape certificates and portrait
 // letters — no single aspect ratio holds. Both dimensions are read
-// straight from the filename instead: `{slug}-thumb-{w}x{h}.webp` and
-// `{slug}-full-{w}x{h}.webp`, dropped into src/assets/credentials/. An
-// entry only appears in the gallery once both tiers exist for its slug.
-const credentialImageModules = import.meta.glob('./assets/credentials/*.webp', {
+// straight from the filename instead: `thumb-{w}x{h}.webp` and
+// `full-{w}x{h}.webp`, dropped into a `src/assets/credentials/{slug}/`
+// subfolder — one subfolder per credential, same readability reasoning as
+// the per-project subfolders above. An entry only appears in the gallery
+// once both tiers exist for its slug.
+const credentialImageModules = import.meta.glob('./assets/credentials/*/*.webp', {
   eager: true,
   import: 'default',
 })
 
 const credentialImagesBySlug = {}
 for (const [path, url] of Object.entries(credentialImageModules)) {
-  const filename = path.split('/').pop()
-  const match = filename.match(/^(.+)-(thumb|full)-(\d+)x(\d+)\.webp$/)
+  const parts = path.split('/')
+  const filename = parts.pop()
+  const slug = parts.pop()
+  const match = filename.match(/^(thumb|full)-(\d+)x(\d+)\.webp$/)
   if (!match) continue
-  const [, slug, tier, width, height] = match
+  const [, tier, width, height] = match
   const bucket = (credentialImagesBySlug[slug] ??= {})
   bucket[tier] = { url, width: Number(width), height: Number(height) }
 }

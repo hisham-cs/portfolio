@@ -97,6 +97,34 @@ existing hairline-rule grammar (`border-b border-border` between sections,
 already-restrained pattern — keep reusing it for structural dividers, don't
 extend it into new card chrome.
 
+## Image asset pipeline
+
+`src/assets/projects/{slug}/{n}-{width}w.webp` and
+`src/assets/credentials/{slug}/{thumb,full}-{w}x{h}.webp` — one subfolder
+per project/credential, not a flat folder of `{slug}-{n}-{width}w` files.
+27 files across three flat-named projects was unreadable at a glance;
+subfolders make the tree self-organizing as project count grows.
+
+**Two width tiers per project image, not three**: 480w (mobile) and
+1280w (everything else). A middle 960w tier was cut — with only two
+tiers the browser still always has a correctly-sized option on either
+side of the mobile/desktop split, so the tier bought negligible
+real-world benefit for a third of the file count. This is a measured
+decision, not a guess: reducing from three tiers to two took the real
+project images from 27 files to 18, and a post-change Lighthouse mobile
+run against the production build held **96/100 performance, CLS 0** —
+the same floor this project holds everywhere else. If a future change
+ever drops mobile below 95, add the third tier back rather than
+assuming two is always enough.
+
+Credentials keep their existing two tiers (`thumb`/`full`) — those were
+never three, so nothing was cut there, only reorganized into
+per-credential subfolders. Both tiers stay filename-encoded with real
+pixel dimensions (`{w}x{h}`, not a fixed ratio) because, unlike project
+screenshots, credentials mix landscape certificates and portrait
+letters with no single aspect ratio to derive from — see the comment
+above `getCredentialImage` in `data.js`.
+
 ## Section composition patterns
 
 Not every section has to share the same internal grammar. Two Phase 2

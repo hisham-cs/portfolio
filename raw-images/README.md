@@ -18,8 +18,10 @@ projects/telco-churn-3-roc-curve.png
 projects/telco-churn-4-coefficients.png
 ```
 
-Produces `telco-churn-{order}-{480,960,1280}w.webp` — 16:9, cropped to fit
-(saliency-aware) if the source isn't already 16:9.
+Produces `src/assets/projects/telco-churn/{order}-{480,1280}w.webp` — one
+subfolder per project, two width tiers (480w mobile, 1280w everything
+else — a middle 960w tier was dropped as low-value; see DESIGN.md), 16:9,
+cropped to fit (saliency-aware) if the source isn't already 16:9.
 
 ## `credentials/` — certificate images and recommendation letters
 
@@ -34,7 +36,8 @@ credentials/cert-sdaia-fundamentals-ai.png
 credentials/cert-deeplearning-ai-math-ml.png
 ```
 
-Produces `{slug}-thumb-{w}x{h}.webp` (352px on the short edge) and
-`{slug}-full-{w}x{h}.webp` (1600px on the long edge), orientation detected
-automatically — landscape certificates and portrait letters both work,
+Produces `src/assets/credentials/{slug}/thumb-{w}x{h}.webp` (352px on the
+short edge) and `src/assets/credentials/{slug}/full-{w}x{h}.webp` (1600px
+on the long edge) — one subfolder per credential, orientation detected
+automatically, so landscape certificates and portrait letters both work,
 full aspect ratio preserved, no cropping.
