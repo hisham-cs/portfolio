@@ -122,17 +122,16 @@ export default function Projects() {
             accent discipline). Instant filtering: cards are always
             mounted and toggled via `hidden`, never unmounted/remounted,
             so the shared Reveal entrance never replays on a filter
-            click -- no new motion touch. Left-aligned by default, matching
-            the heading and grid -- this site never centers anything else.
-            Centers only in the single-result state, where the grid below
-            also switches to a centered flex row, so the pills matching it
-            reads as "this state is different on purpose," not a permanent
-            deviation from the site's left-anchored language. */}
+            click -- no new motion touch. Always centered, regardless of
+            result count -- deliberately not conditional on the grid's
+            own alignment. See DESIGN.md: positional stability across
+            filter states was judged more important than per-state
+            optical alignment with the grid. */}
         <Reveal delay={40}>
           <div
             role="group"
             aria-label="Filter projects by category"
-            className={`mt-6 flex gap-2 overflow-x-auto pb-1 ${visibleCount === 1 ? 'justify-center' : ''}`}
+            className="mt-6 flex justify-center gap-2 overflow-x-auto pb-1"
           >
             {['All', ...CATEGORIES].map((category) => {
               const isActive = activeCategory === category

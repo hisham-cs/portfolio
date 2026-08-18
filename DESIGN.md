@@ -248,18 +248,29 @@ one back toward consistency-for-its-own-sake:
   again — same reasoning as when this was first proposed for the
   strip: it would quietly reintroduce size-as-importance right after
   the flagship tier was retired specifically to remove that.
-  **The filter pills follow the card's alignment, not the other way
-  around.** They're left-aligned by default (`justify-start`,
-  matching the "Projects" heading and the grid's own left edge) and
-  center (`justify-center`) only when `visibleCount === 1`, mirroring
-  the grid's own state change. An always-centered version was tried
-  first and rejected after screenshotting the default "All" view: this
-  site never centers anything else — Hero, About, Skills, Education,
-  and Projects' own heading are all strictly left-anchored — so a
-  permanently centered pill row floating between two left-anchored
-  neighbors read as a stray inconsistency, not a deliberate toolbar
-  pattern. Centering only in the state where the grid also centers
-  makes it read as "this state is different on purpose" instead.
+  **The filter pills are always centered (`justify-center`), in every
+  state, unconditionally — this went through two revisions before
+  landing here, both logged so a future pass doesn't re-litigate the
+  same ground.** First landed always-centered per the original ask;
+  screenshotting the default "All" view then showed it floating
+  between the left-anchored "Projects" heading and the left-anchored
+  grid — this site never centers anything else, so it read as a stray
+  inconsistency, not a deliberate toolbar. That produced a conditional
+  fix (left-aligned normally, centering only when `visibleCount === 1`
+  to match the grid's own state change). The conditional was then
+  rejected in turn: watching the pill row *shift horizontal position*
+  between filter states was judged more jarring than the original
+  optical misalignment ever was. **The final rule: positional
+  stability across states beats per-state optical alignment with the
+  grid.** The pills' fixed center position is the anchor; the 4-card
+  grid sitting left-aligned underneath uncentered pills is the
+  accepted trade-off, not a bug to compensate for — don't
+  "re-optimize" this back toward conditional or left-aligned without
+  revisiting this note first. The single-result card still centers on
+  its own (`sm:max-w-xl` + `flex justify-center` on the grid
+  container, unchanged from before) and lines up with the pills in
+  that state as a natural consequence of both being centered — not
+  because either was built to track the other.
   **A flexbox gotcha, encountered and left behind with the strip.**
   During the strip attempt, equal card heights broke (three cards
   measured 665/624/621px instead of matching) because the per-card
