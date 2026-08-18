@@ -205,7 +205,7 @@ export const projects = [
     subtitle: 'End-to-end Analysis \u00b7 Power BI Dashboard + ML Model',
     category: 'Data Analysis \u00b7 Machine Learning',
     description:
-      'An end-to-end churn analysis on 7,043 telecom customers: data cleaned in Power Query, explored through a three-page Power BI dashboard, and modeled with logistic regression at 0.849 AUC. The dashboard and the model independently traced the 26.5% churn rate to the same drivers \u2014 contract type, fiber internet, electronic check payment, and low tenure \u2014 and the model surfaced one the manual analysis missed.',
+      'An end-to-end churn analysis on 7,043 telecom customers: data cleaned in Power Query, explored through a three-page Power BI dashboard, and modeled with logistic regression reaching 0.849 AUC and 78% recall on churners. The dashboard and the model independently traced the 26.5% churn rate to the same drivers \u2014 contract type, fiber internet, electronic check payment, and low tenure \u2014 and the model surfaced one the manual analysis missed.',
     slug: 'telco-churn',
     tags: ['Python', 'pandas', 'scikit-learn', 'Power BI', 'Power Query', 'Excel', 'Jupyter'],
     github: 'https://github.com/hisham-cs/telco-churn-analysis',
