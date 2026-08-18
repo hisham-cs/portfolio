@@ -196,13 +196,14 @@ one back toward consistency-for-its-own-sake:
   (`{slug}/1-*.webp`) was already the right screenshot from the
   start — Telco's dashboard overview, Faten's Arabic landing screen.
   **Description lengths at the restored ~540px column, measured
-  directly off the live component:** Telco 5 lines, Smart Complaint 4,
-  Faten 3, Pulmonary Edema 2. Telco is the *longest* now, not the
-  shortest — the shortened copy from the strip attempt (kept: 0.849
-  AUC, 78% recall, the 26.5% churn-rate figure, "independently",
-  contract type and fiber internet as drivers) reads proportionate at
-  this width, not thin. Faten, Pulmonary Edema, and Smart Complaint
-  remain untouched.
+  directly off the live component and confirmed final:** Telco 5
+  lines, Smart Complaint 4, Faten 3, Pulmonary Edema 2. Telco is the
+  *longest* now, not the shortest — the shortened copy from the strip
+  attempt (kept: 0.849 AUC, 78% recall, the 26.5% churn-rate figure,
+  "independently", contract type and fiber internet as drivers) reads
+  proportionate at this width, not thin, and nothing gets restored.
+  Uneven description lengths across cards are accepted as natural —
+  don't pad the shorter ones to force parity with Telco.
 - **Category filter — three pills, and `category` vs. `categoryTag`
   are deliberately not the same field.** Survived the strip revert
   unchanged. Filtering has two real buckets (`category`:
@@ -247,6 +248,18 @@ one back toward consistency-for-its-own-sake:
   again — same reasoning as when this was first proposed for the
   strip: it would quietly reintroduce size-as-importance right after
   the flagship tier was retired specifically to remove that.
+  **The filter pills follow the card's alignment, not the other way
+  around.** They're left-aligned by default (`justify-start`,
+  matching the "Projects" heading and the grid's own left edge) and
+  center (`justify-center`) only when `visibleCount === 1`, mirroring
+  the grid's own state change. An always-centered version was tried
+  first and rejected after screenshotting the default "All" view: this
+  site never centers anything else — Hero, About, Skills, Education,
+  and Projects' own heading are all strictly left-anchored — so a
+  permanently centered pill row floating between two left-anchored
+  neighbors read as a stray inconsistency, not a deliberate toolbar
+  pattern. Centering only in the state where the grid also centers
+  makes it read as "this state is different on purpose" instead.
   **A flexbox gotcha, encountered and left behind with the strip.**
   During the strip attempt, equal card heights broke (three cards
   measured 665/624/621px instead of matching) because the per-card
@@ -273,6 +286,42 @@ one back toward consistency-for-its-own-sake:
   Projects-content regression, just main-thread work scaling with
   how much markup this section builds during the SPA's single
   synchronous initial render.
+- **Pagination — approved design, deliberately not built yet.** At
+  four projects, no pagination UI exists in `Projects.jsx` at all —
+  not hidden, not dormant behind a false condition, just absent from
+  the code. The design below is agreed for whenever a 5th project
+  lands, so implement *this* when the time comes rather than
+  re-deriving it, but don't build it now: shipping pagination for a
+  cardinality that doesn't exist yet means untested code sitting in
+  the repo, and by the time a 5th project actually lands the real
+  requirements may have shifted anyway.
+  - **Trigger:** `projects.length > 4` for the unfiltered view, and
+    independently, the *filtered* count `> 4` for any active category
+    — filtering doesn't exempt a set from pagination if it's grown
+    large enough to need it. Both checks gate whether pagination JSX
+    renders at all; at ≤4 (filtered or not) nothing pagination-related
+    should be in the render tree.
+  - **Page size: 4** — two full grid rows, deliberately matching the
+    trigger threshold so the transition is coherent (5 projects means
+    page 1 shows 4, page 2 shows 1 — and that lone project on page 2
+    gets the single-result centered treatment above for free, no new
+    code needed for that overlap).
+  - **Controls:** Previous/Next only, not numbered pages. Each button
+    renders only when actionable — no Previous on page 1, no Next on
+    the last page — rather than a disabled-but-visible dead control;
+    same "structurally absent, not suppressed" principle as the
+    pagination UI's own existence check above.
+  - **State:** switching filters or pages resets to page 1 of the
+    (possibly new) filtered set. Page slicing reuses the same `hidden`
+    utility toggle already used for filtering — cards stay mounted,
+    nothing unmounts/remounts, so a page turn is instant with zero new
+    motion touch (same mechanism, not a new one).
+  - **Accessibility:** extend the existing `sr-only aria-live="polite"`
+    region to include page context ("Showing 4 of 9 projects, page 1
+    of 3"); Previous/Next are real `<button>`s with `aria-label`. One
+    new icon needed (`ArrowLeftIcon`, mirroring the existing
+    `ArrowRightIcon` in `Icons.jsx` — hand-authored SVG matching that
+    file's existing pattern, not a new dependency).
 - **Education's credentials gallery is a third zone, not its own
   section.** Education already had a proven zone-pivot pattern (degree
   card → certificate list, `mt-10`); the gallery extends that same
