@@ -1,12 +1,12 @@
 // Converts raw source images (PNG/JPG) in raw-images/ into the exact WebP
 // variants and filenames the app's asset-discovery glob expects (see the
-// comments above getProjectImages / getCredentialImage in src/data.js).
+// comments above getProjectImages in src/data.js).
 // Re-run any time; it's a pure function of raw-images/ -> generated WebP,
 // safe to overwrite outputs.
 //
 // Usage: npm run images   (or: node scripts/prepare-images.mjs)
 
-import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -26,9 +26,7 @@ try {
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const RAW_PROJECTS_DIR = join(ROOT, 'raw-images', 'projects')
-const RAW_CREDENTIALS_DIR = join(ROOT, 'raw-images', 'credentials')
 const OUT_PROJECTS_DIR = join(ROOT, 'src', 'assets', 'projects')
-const OUT_CREDENTIALS_DIR = join(ROOT, 'src', 'assets', 'credentials')
 
 const IMAGE_EXT_RE = /\.(png|jpe?g)$/i
 // 480w (mobile) + 1280w (everything else) -- a dropped middle 960w tier
@@ -36,8 +34,6 @@ const IMAGE_EXT_RE = /\.(png|jpe?g)$/i
 // confirmed via a post-change Lighthouse mobile run (see DESIGN.md).
 const PROJECT_WIDTHS = [480, 1280]
 const MOSAIC_HEIGHT_RATIO = 9 / 16 // 16:9 mosaic tiles, matches ASPECT_RATIO in data.js
-const THUMB_SHORT_EDGE = 352
-const FULL_LONG_EDGE = 1600
 const QUALITY = 85
 
 const results = []
@@ -102,62 +98,7 @@ async function processProjectMosaics() {
   }
 }
 
-async function processCredentials() {
-  const files = listRaw(RAW_CREDENTIALS_DIR)
-  if (files.length === 0) return
-
-  for (const file of files) {
-    const match = file.match(/^(cert|letter)-([a-z0-9]+(?:-[a-z0-9]+)*)(?:-.+)?\.(png|jpe?g)$/i)
-    if (!match) {
-      warnings.push(`raw-images/credentials/${file} -- doesn't match {cert|letter}-{slug}.{ext}, skipped`)
-      continue
-    }
-    const [, , slug] = match
-    const srcPath = join(RAW_CREDENTIALS_DIR, file)
-    const slugDir = join(OUT_CREDENTIALS_DIR, slug)
-    if (!existsSync(slugDir)) mkdirSync(slugDir, { recursive: true })
-
-    const meta = await sharp(srcPath).rotate().metadata()
-    const landscape = meta.width >= meta.height
-
-    // Only one axis is ever specified -- sharp scales the other to preserve
-    // the source aspect exactly (no crop), and the real output dimensions
-    // (read back below) are what go in the filename, so the <img
-    // width/height> the app renders can never drift from the actual file.
-    const thumbBuffer = await sharp(srcPath)
-      .rotate()
-      .resize(landscape ? { height: THUMB_SHORT_EDGE } : { width: THUMB_SHORT_EDGE })
-      .webp({ quality: QUALITY })
-      .toBuffer()
-    const thumbDims = await sharp(thumbBuffer).metadata()
-    const thumbName = `thumb-${thumbDims.width}x${thumbDims.height}.webp`
-    writeFileSync(join(slugDir, thumbName), thumbBuffer)
-    results.push({
-      src: file,
-      out: `${slug}/${thumbName}`,
-      dims: `${thumbDims.width}x${thumbDims.height}`,
-      size: kb(thumbBuffer.length),
-    })
-
-    const fullBuffer = await sharp(srcPath)
-      .rotate()
-      .resize(landscape ? { width: FULL_LONG_EDGE } : { height: FULL_LONG_EDGE })
-      .webp({ quality: QUALITY })
-      .toBuffer()
-    const fullDims = await sharp(fullBuffer).metadata()
-    const fullName = `full-${fullDims.width}x${fullDims.height}.webp`
-    writeFileSync(join(slugDir, fullName), fullBuffer)
-    results.push({
-      src: file,
-      out: `${slug}/${fullName}`,
-      dims: `${fullDims.width}x${fullDims.height}`,
-      size: kb(fullBuffer.length),
-    })
-  }
-}
-
 await processProjectMosaics()
-await processCredentials()
 
 if (warnings.length > 0) {
   console.log('Warnings:')
@@ -167,8 +108,8 @@ if (warnings.length > 0) {
 
 if (results.length === 0) {
   console.log(
-    'No raw images found. Drop files into raw-images/projects/ and/or\n' +
-      'raw-images/credentials/ (see raw-images/README.md for naming) and re-run.',
+    'No raw images found. Drop files into raw-images/projects/ (see\n' +
+      'raw-images/README.md for naming) and re-run.',
   )
   process.exit(0)
 }
