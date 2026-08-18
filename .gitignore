@@ -40,6 +40,11 @@ build/
 coverage/
 Thumbs.db
 
+# Raw source images for scripts/prepare-images.mjs -- only the generated
+# WebP variants (src/assets/projects, src/assets/credentials) get committed
+raw-images/*
+!raw-images/README.md
+
 # AI Skills Output
 templates/
 
