@@ -77,11 +77,11 @@ inventing a value.
 | Hero section | `pt-20 sm:pt-24`, `pb-20 sm:pb-24` | `pb` bumped from `pb-16 sm:pb-20` when Hero was resized for its full-width column — the statement needed more closing room under the taller type scale |
 | Hero: title → intro paragraph | `mt-5` | Bumped from `mt-4` after the specialty rotator was deleted — the intro now follows the title paragraph directly instead of the rotator line, so it earns a half-step more room than the old tight follow-on gap had |
 | About / Skills / Experience / Education / Contact | `py-16 sm:py-20` | Tightened from `py-24 sm:py-32` — these were the sections flagged as having excess empty space. New sections should default to this value, not invent one |
-| Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the site's densest section (a scroll strip plus a filter row) and needs slightly more room |
-| Projects: filter pills → card strip | `mt-6` | Tight — the pills are a control on the strip immediately below them, not a separate block |
+| Projects | `py-20 sm:py-28` | Smaller trim than the others; it carries the site's densest card grid plus a filter row and needs slightly more room |
+| Projects: filter pills → card grid | `mt-6` | Tight — the pills are a control on the grid immediately below them, not a separate block |
 | Two-column row gap (Contact) | `gap-10` (stacked/mobile), `lg:gap-x-12` (desktop column gap) | Tightened from a uniform `gap-12`. About no longer uses this grid — see its quote-first pattern below |
 | Skills card grid | `gap-5` | 2-up capability cards |
-| Projects card strip | `gap-6` | Fixed `w-80` cards in a horizontal scroll strip, not a grid — see "Section composition patterns" below |
+| Projects card grid | `gap-6` | 2-up cards — see "Section composition patterns" below for the reverted scroll-strip attempt |
 | Card internal padding | `p-6 sm:p-8` (Skills), `p-6` (Projects, flat — no responsive bump) | Projects cards are uniform; no separate flagship padding exists to differ from |
 | Education: degree card → certificates pivot | `mt-10` | Tightened from `mt-12` — they're one story, not two disconnected blocks |
 | Education: certificate row | `py-5`, hairline `border-b border-border` | Same row grammar as Skills/Projects, not a card |
@@ -164,111 +164,115 @@ one back toward consistency-for-its-own-sake:
   (Experience's achievements) use the mono-dash `–` marker, never numbers
   — numbers are reserved for enumerating sibling entities across a
   section, not sub-points within one.
-- **Projects is a horizontally-scrolling row of uniform cards — not a
-  grid, and not the flagship/compact two-tier pattern.** All four
-  projects render through the same `ProjectCard` in `Projects.jsx`,
-  each a fixed `w-80` (320px), in one `flex snap-x snap-mandatory
-  overflow-x-auto` strip that scrolls natively — no `FlagshipProject`
-  component, no full-width card, no multi-image mosaic grid, and (as
-  of this pass) no 2-up `grid` either; that was itself a transitional
-  step on the way here, not a destination. Priority is expressed by
-  **array order in `data.js`, not by size** — Telco Customer Churn
-  Analysis leads (it's the category Hero's own title promises: "Data
-  Analyst" before "AI Engineer"), Faten follows, then Pulmonary Edema
-  and Smart Complaint. Telco's stat numbers (0.849 AUC, 78% recall,
-  7,043 customers, 26.5% churn rate) live in its description prose;
-  there is no metrics row anywhere in Projects — the `dl`/`dt`/`dd`
-  stat grammar stays exclusively Education's. Multi-image projects
-  (Telco and Faten, four screenshots each) use the same `ProjectMedia`
-  hover-cycle/tap-dot mechanism every project uses; each project's
-  lead (`{slug}/1-*.webp`) was already the right screenshot before any
-  of this — Telco's dashboard overview, Faten's Arabic landing screen.
-  **320px width, measured not guessed:** at `max-w-6xl`'s ~1104px
-  content area, `w-80` + `gap-6` shows 3 full cards (1008px) plus a
-  4th peeking ~96px in — the "3 visible, 4th partial" affordance this
-  was built for. A throwaway test page rendered against the real
-  compiled CSS (not estimated from character counts) measured Telco's
-  original description at 13 wrapped lines at this width against 6
-  for Faten/Smart Complaint and 4 for Pulmonary Edema — since every
-  card in one flex row stretches to the tallest, that outlier alone
-  would have forced all four into a mostly-empty 13-line shape. Telco's
-  description was shortened to fit (9 lines, measured) while keeping
-  the 26.5% churn-rate figure (the scale that makes the model's
-  numbers mean something) and the word "independently" (the
-  difference between "two methods agreed" and "two methods happened
-  to say similar things") — both restored after an initial cut and an
-  explicit call to put them back. Faten, Pulmonary Edema, and Smart
-  Complaint were left untouched; their lengths are normal, not
-  outliers.
+- **Projects is a uniform 2-up grid — the flagship/compact two-tier
+  pattern is retired, and a horizontal scroll-strip was tried and
+  reverted.** All four projects render through the same `ProjectCard`
+  in `Projects.jsx` in a `grid gap-6 sm:grid-cols-2`, stacking to one
+  column below `sm`. There is no `FlagshipProject` component, no
+  full-width card, no multi-image mosaic grid — and, after one
+  attempt, no horizontal `flex snap-x` strip either. **Why the strip
+  failed, specifically:** at the width that made "3 visible, 4th
+  partial" work (`w-80`, 320px), cards became narrow columns —
+  titles wrapped to two lines, category tags wrapped, tech tags
+  scattered across four rows instead of two, the clipped 4th card
+  read as truncated rather than inviting, and the browser's native
+  scrollbar was visible chrome this design system doesn't otherwise
+  have anywhere. The lesson: **these cards are content-rich (title +
+  subtitle + description + tech tags + links) and need the ~540px a
+  2-up grid column gives them at this container width** — a scroll
+  strip's width-per-card trade-off suits sparser content (like
+  Credentials' image thumbnails), not this. Don't re-attempt a
+  horizontal strip for Projects without solving the width problem
+  first. Priority is expressed by **array order in `data.js`, not by
+  size** — Telco Customer Churn Analysis leads (it's the category
+  Hero's own title promises: "Data Analyst" before "AI Engineer"),
+  Faten follows, then Pulmonary Edema and Smart Complaint. Telco's
+  stat numbers (0.849 AUC, 78% recall, 7,043 customers, 26.5% churn
+  rate) live in its description prose; there is no metrics row
+  anywhere in Projects — the `dl`/`dt`/`dd` stat grammar stays
+  exclusively Education's. Multi-image projects (Telco and Faten,
+  four screenshots each) use the same `ProjectMedia` hover-cycle/
+  tap-dot mechanism every project uses; each project's lead
+  (`{slug}/1-*.webp`) was already the right screenshot from the
+  start — Telco's dashboard overview, Faten's Arabic landing screen.
+  **Description lengths at the restored ~540px column, measured
+  directly off the live component:** Telco 5 lines, Smart Complaint 4,
+  Faten 3, Pulmonary Edema 2. Telco is the *longest* now, not the
+  shortest — the shortened copy from the strip attempt (kept: 0.849
+  AUC, 78% recall, the 26.5% churn-rate figure, "independently",
+  contract type and fiber internet as drivers) reads proportionate at
+  this width, not thin. Faten, Pulmonary Edema, and Smart Complaint
+  remain untouched.
 - **Category filter — three pills, and `category` vs. `categoryTag`
-  are deliberately not the same field.** Filtering only has two real
-  buckets now (`category`: `'Data Analysis'` | `'AI'`, one per
-  project, still derived via `Set(projects.map(p => p.category))`
-  rather than hardcoded — a new bucket still appears as a pill for
-  free), but each card's own displayed label stays specific:
-  `categoryTag` is a separate field ("Data Analysis · Machine
-  Learning" for Telco, "AI Systems · Full-Stack" for Faten, "Computer
-  Vision · Medical AI" for Pulmonary Edema, "RAG / LLM Systems" for
-  Smart Complaint — dropped "Machine Learning" from that last one, it
-  was noise once "AI" already covers the bucket). Splitting the two
-  fields apart is what makes a coarse 3-pill filter compatible with
-  specific per-card labels; forcing one field to serve both jobs would
-  have meant either fragmenting the filter back toward one-pill-per-
-  project or flattening every card's label down to "Data Analysis" /
-  "AI" and losing the specificity. Pills reuse the existing chip
-  grammar (`bg-surface`, no border); the active pill inverts to
-  `bg-text-primary text-background`, not the accent — accent
-  discipline holds at exactly four locations. Filtering is instant:
-  cards stay permanently mounted and toggle via the `hidden` utility
-  rather than being filtered out of the array, so the shared Reveal
-  entrance never replays on a filter click. A single-result filter
-  centers the lone card (`justify-center` on the strip) instead of
-  leaving it stranded at the left — it stays the same 320px card
-  either way; widening it for this one case would have quietly
-  reintroduced size-as-importance right after the flagship tier was
-  retired specifically to remove that. An empty filter result is
-  structurally impossible: every pill value is extracted from a real
-  project's `category`, so by construction each pill always matches at
-  least the project it came from. Accessible per the usual bar: real
-  `<button>`s in a `role="group"` with `aria-label`, `aria-pressed`
-  for state, a `sr-only` `aria-live="polite"` region announcing the
-  visible count, and — new this pass — the scroll strip itself carries
-  `role="region"` + `tabIndex={0}` so it's independently
-  keyboard-scrollable, on top of each card's links already being
-  tabbable in document order. At 375px it's the same strip, one card
-  per snap position, native scroll only.
-  **Reused, not reinvented:** the strip is `CredentialsGallery`'s
-  exact scroll-snap + static right-edge fade-mask pattern
-  (`bg-linear-to-l from-background to-transparent`), applied to a
-  second section rather than inventing a different interaction for
-  the same underlying need — no new motion touch either way, since
-  native scroll and a static gradient were never counted against the
-  budget for Credentials and aren't here.
-  **A flexbox gotcha worth remembering:** equal card heights initially
-  broke (Faten/Pulmonary Edema/Smart Complaint measured 665/624/621px
-  instead of matching) because the per-card flex item carried an
-  explicit `h-full` alongside the row's default `align-items: stretch`.
-  On a `display:flex` row with an intrinsic (auto) height, giving the
-  flex item itself a percentage height can make the browser treat it
-  as having an already-definite cross size and skip the automatic
-  stretch pass — CSS Grid's stretch doesn't have this failure mode,
-  which is why the same pattern worked fine on the old 2-up `grid`.
-  Fix: leave the direct flex item's height alone (let default stretch
-  size it), and put `h-full` only on elements nested inside it
-  (`Reveal`, then `ProjectCard`'s root) once the item's own box has a
-  resolved height to reference. If a future flex-row layout shows
-  uneven card heights, check this before anything else.
-  **Measured cost, reported honestly, continued:** this pass's
-  Lighthouse mobile run (2 runs, reproducible) landed at 94/100, LCP
-  2.6s→2.8s, CLS unchanged at 0 — one more point down from the 95
-  already logged and accepted after the filter was first added. Same
-  diagnosis as before: the LCP element is still Hero's eyebrow text,
-  unrelated to Projects, so this is the same category of small
-  main-thread cost (now slightly larger: a scroll region, per-card
-  wrapper/`hidden` markup, and `tabIndex`/`role` attributes) paid
-  during this SPA's single synchronous initial render. Not silently
-  accepted — logged the same way each time so the trend is visible
-  rather than each drop looking like an isolated, unexplained mystery.
+  are deliberately not the same field.** Survived the strip revert
+  unchanged. Filtering has two real buckets (`category`:
+  `'Data Analysis'` | `'AI'`, one per project, still derived via
+  `Set(projects.map(p => p.category))` rather than hardcoded — a new
+  bucket still appears as a pill for free), but each card's own
+  displayed label stays specific: `categoryTag` is a separate field
+  ("Data Analysis · Machine Learning" for Telco, "AI Systems ·
+  Full-Stack" for Faten, "Computer Vision · Medical AI" for Pulmonary
+  Edema, "RAG / LLM Systems" for Smart Complaint — dropped "Machine
+  Learning" from that last one, it was noise once "AI" already covers
+  the bucket). Splitting the two fields apart is what makes a coarse
+  3-pill filter compatible with specific per-card labels. Pills reuse
+  the existing chip grammar (`bg-surface`, no border); the active
+  pill inverts to `bg-text-primary text-background`, not the accent —
+  accent discipline holds at exactly four locations. Filtering is
+  instant: cards stay permanently mounted and toggle via the `hidden`
+  utility rather than being filtered out of the array, so the shared
+  Reveal entrance never replays on a filter click. An empty filter
+  result is structurally impossible: every pill value is extracted
+  from a real project's `category`, so by construction each pill
+  always matches at least the project it came from. Accessible per
+  the usual bar: real `<button>`s in a `role="group"` with
+  `aria-label`, `aria-pressed` for state, a `sr-only`
+  `aria-live="polite"` region announcing the visible count. At 375px
+  the pill row scrolls horizontally rather than wrapping.
+  **Single-result centering, re-solved for grid.** A one-card filter
+  result switches the container from `grid gap-6 sm:grid-cols-2` to
+  `flex justify-center`, and only in that state does the card gain a
+  `sm:max-w-xl` cap (576px, a named Tailwind scale step — not an
+  attempt at exact pixel parity with a real 2-up column, ~540px at
+  this container width, just close enough to read as deliberate) so
+  it has a sane width to center at instead of stretching edge-to-edge
+  or defaulting to `grid`'s empty second cell. The cap is applied
+  conditionally, not globally, so the normal 2-up path carries zero
+  extra constraints versus before any of this — verified a real 2-up
+  column here never exceeds ~540px regardless of viewport (the
+  section's own `max-w-6xl` bounds it), so even if the cap were
+  left on unconditionally it would never bind, but conditional is
+  clearer to read and doesn't rely on that being permanently true.
+  Widening the single card past this cap was considered and rejected
+  again — same reasoning as when this was first proposed for the
+  strip: it would quietly reintroduce size-as-importance right after
+  the flagship tier was retired specifically to remove that.
+  **A flexbox gotcha, encountered and left behind with the strip.**
+  During the strip attempt, equal card heights broke (three cards
+  measured 665/624/621px instead of matching) because the per-card
+  flex item carried an explicit `h-full` alongside the row's default
+  `align-items: stretch` — on a `display:flex` row with an intrinsic
+  (auto) height, giving the flex item itself a percentage height can
+  make the browser treat it as having an already-definite cross size
+  and skip the automatic stretch pass. CSS Grid's stretch doesn't
+  have this failure mode (a grid item's `h-full` on `<div
+  id={slug}>` inside `grid gap-6 sm:grid-cols-2` has always worked
+  correctly here, restored-strip included), which is exactly why it
+  never surfaced before or after the strip. Moot now that the strip
+  is gone, but worth remembering if a horizontal flex row is ever
+  attempted again for anything: put `h-full` on nested elements
+  (`Reveal`, then the card root), not on the direct flex item, or
+  measure heights before assuming stretch is working.
+  **Lighthouse, recovered:** with the strip's scroll-region markup,
+  `tabIndex`/`role` attributes, and fade-mask gone, a mobile run (2
+  runs, reproducible) landed back at 95/100, LCP 2.6s, CLS 0 — up
+  from the strip's 94, matching the number logged right after the
+  filter was first added and before the strip made it worse. Same
+  category of cost as always logged here: the LCP element is Hero's
+  eyebrow text, unrelated to Projects, so this was never an image or
+  Projects-content regression, just main-thread work scaling with
+  how much markup this section builds during the SPA's single
+  synchronous initial render.
 - **Education's credentials gallery is a third zone, not its own
   section.** Education already had a proven zone-pivot pattern (degree
   card → certificate list, `mt-10`); the gallery extends that same

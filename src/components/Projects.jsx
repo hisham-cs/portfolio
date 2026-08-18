@@ -60,7 +60,7 @@ function StatusDot({ status }) {
 
 function ProjectCard({ project, index }) {
   return (
-    <div className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-text-muted hover:shadow-md">
+    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-text-muted hover:shadow-md">
       <ProjectMedia project={project} />
 
       <div className="flex flex-1 flex-col p-6">
@@ -154,40 +154,27 @@ export default function Projects() {
           Showing {visibleCount} of {projects.length} projects
         </p>
 
-        {/* Horizontal row -- same scroll-snap + fade-mask grammar as
-            CredentialsGallery, not a second interaction pattern. Native
-            scroll only (no JS-driven motion). `tabIndex`/`role="region"`
-            make the strip itself keyboard-scrollable independent of
-            tabbing through each card's links, which stay tabbable in
-            document order. A single visible result centers instead of
-            sitting stranded at the left; it stays the same 320px card
-            (`w-80`) either way -- widening it would quietly reintroduce
-            size-as-importance right after the flagship tier was retired. */}
-        <div className="relative mt-6">
-          <div
-            role="region"
-            aria-label="Projects"
-            tabIndex={0}
-            className={`flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 ${
-              visibleCount === 1 ? 'justify-center' : ''
-            }`}
-          >
-            {projects.map((project, i) => (
-              <div
-                key={project.slug}
-                id={project.slug}
-                className={`w-80 shrink-0 snap-start scroll-mt-24 ${matches(project) ? '' : 'hidden'}`}
-              >
-                <Reveal className="h-full" delay={i * 80}>
-                  <ProjectCard project={project} index={i} />
-                </Reveal>
-              </div>
-            ))}
-          </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-linear-to-l from-background to-transparent"
-          />
+        {/* 2-up grid, restored -- the normal path below carries no extra
+            constraints beyond what it had before the strip experiment.
+            A single visible result switches the container to a centered
+            flex row instead of leaving the lone card stranded in the
+            grid's first cell; only in that state does the card gain a
+            `sm:max-w-xl` cap so it has a sane width to center at instead
+            of stretching edge-to-edge (a named scale step, not an exact
+            pixel match to a 2-up column -- close enough that it reads as
+            deliberate, not an attempt at pixel parity). */}
+        <div className={`mt-6 ${visibleCount === 1 ? 'flex justify-center' : 'grid gap-6 sm:grid-cols-2'}`}>
+          {projects.map((project, i) => (
+            <div
+              key={project.slug}
+              id={project.slug}
+              className={`h-full w-full scroll-mt-24 ${visibleCount === 1 ? 'sm:max-w-xl' : ''} ${matches(project) ? '' : 'hidden'}`}
+            >
+              <Reveal className="h-full" delay={i * 80}>
+                <ProjectCard project={project} index={i} />
+              </Reveal>
+            </div>
+          ))}
         </div>
       </div>
     </section>
