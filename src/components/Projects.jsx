@@ -1,26 +1,21 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { projects } from '../data.js'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
 import ProjectMedia from './ProjectMedia.jsx'
 import { GitHubIcon, ExternalLinkIcon } from './Icons.jsx'
 
-// Every project shares one card anatomy now -- no flagship tier. Priority
-// is expressed by array order in data.js (Telco leads deliberately, same
-// reasoning as before: it's the site's title-promised category), not by a
-// bigger card. See "Section composition patterns" in DESIGN.md.
+// Every project shares one card anatomy -- no flagship tier. Priority is
+// expressed by array order in data.js (Telco leads deliberately: it's the
+// site's title-promised category), not by size. See "Section composition
+// patterns" in DESIGN.md.
 //
-// `category` is a single string like "Data Analysis · Machine Learning" --
-// split on the separator to get the atomic tokens the filter pills use.
-// Never hardcoded: a project with a new category token gets a pill for
-// free the next time this runs.
-function splitCategory(category) {
-  if (!category) return []
-  return category
-    .split('·')
-    .map((token) => token.trim())
-    .filter(Boolean)
-}
+// `category` (single value: 'Data Analysis' | 'AI') drives the filter
+// pills -- never hardcoded, a new bucket appears automatically the next
+// time this runs. `categoryTag` is a separate, more specific field for the
+// card's own displayed label (e.g. "Computer Vision · Medical AI") -- the
+// two are deliberately not 1:1 once the filter taxonomy went coarse.
+const CATEGORIES = Array.from(new Set(projects.map((p) => p.category).filter(Boolean)))
 
 function ProjectLinks({ project }) {
   return (
@@ -65,16 +60,16 @@ function StatusDot({ status }) {
 
 function ProjectCard({ project, index }) {
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-text-muted hover:shadow-md">
+    <div className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-text-muted hover:shadow-md">
       <ProjectMedia project={project} />
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex flex-wrap items-center gap-3">
           <span className="font-mono text-xs text-text-muted">{String(index + 1).padStart(2, '0')}</span>
           <StatusDot status={project.status} />
-          {project.category && (
+          {project.categoryTag && (
             <span className="font-mono text-xs tracking-[0.1em] text-text-muted uppercase">
-              · {project.category}
+              · {project.categoryTag}
             </span>
           )}
         </div>
@@ -112,17 +107,7 @@ function ProjectCard({ project, index }) {
 export default function Projects() {
   const [activeCategory, setActiveCategory] = useState('All')
 
-  const categories = useMemo(() => {
-    const seen = new Set()
-    for (const project of projects) {
-      for (const token of splitCategory(project.category)) seen.add(token)
-    }
-    return Array.from(seen)
-  }, [])
-
-  const matches = (project) =>
-    activeCategory === 'All' || splitCategory(project.category).includes(activeCategory)
-
+  const matches = (project) => activeCategory === 'All' || project.category === activeCategory
   const visibleCount = projects.filter(matches).length
 
   return (
@@ -144,7 +129,7 @@ export default function Projects() {
             aria-label="Filter projects by category"
             className="mt-6 flex gap-2 overflow-x-auto pb-1"
           >
-            {['All', ...categories].map((category) => {
+            {['All', ...CATEGORIES].map((category) => {
               const isActive = activeCategory === category
               return (
                 <button
@@ -169,18 +154,40 @@ export default function Projects() {
           Showing {visibleCount} of {projects.length} projects
         </p>
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
-          {projects.map((project, i) => (
-            <div
-              key={project.slug}
-              id={project.slug}
-              className={`h-full scroll-mt-24 ${matches(project) ? '' : 'hidden'}`}
-            >
-              <Reveal className="h-full" delay={i * 80}>
-                <ProjectCard project={project} index={i} />
-              </Reveal>
-            </div>
-          ))}
+        {/* Horizontal row -- same scroll-snap + fade-mask grammar as
+            CredentialsGallery, not a second interaction pattern. Native
+            scroll only (no JS-driven motion). `tabIndex`/`role="region"`
+            make the strip itself keyboard-scrollable independent of
+            tabbing through each card's links, which stay tabbable in
+            document order. A single visible result centers instead of
+            sitting stranded at the left; it stays the same 320px card
+            (`w-80`) either way -- widening it would quietly reintroduce
+            size-as-importance right after the flagship tier was retired. */}
+        <div className="relative mt-6">
+          <div
+            role="region"
+            aria-label="Projects"
+            tabIndex={0}
+            className={`flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 ${
+              visibleCount === 1 ? 'justify-center' : ''
+            }`}
+          >
+            {projects.map((project, i) => (
+              <div
+                key={project.slug}
+                id={project.slug}
+                className={`w-80 shrink-0 snap-start scroll-mt-24 ${matches(project) ? '' : 'hidden'}`}
+              >
+                <Reveal className="h-full" delay={i * 80}>
+                  <ProjectCard project={project} index={i} />
+                </Reveal>
+              </div>
+            ))}
+          </div>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-linear-to-l from-background to-transparent"
+          />
         </div>
       </div>
     </section>
