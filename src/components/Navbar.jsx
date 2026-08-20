@@ -102,7 +102,7 @@ export default function Navbar({ dark, toggleDark }) {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
         scrolled
-          ? 'border-b border-border bg-surface-elevated/80 backdrop-blur-xl'
+          ? 'border-b border-border bg-background/80 backdrop-blur-xl'
           : 'border-b border-transparent bg-transparent'
       }`}
     >

@@ -67,6 +67,24 @@ the moment a future project shipped without a screenshot yet.
 `--color-ink-accent`/`--color-ink-success` reuse the real dark-mode
 accent/success tints verbatim, same as before.
 
+**The scrolled nav's translucent panel blends toward `--color-background`,
+not `--color-surface-elevated` — deliberately, not a default.** `Navbar.jsx`
+turns opaque-ish (`bg-background/80 backdrop-blur-xl`) once `scrolled` is
+true. It used to blend toward `surface-elevated` instead, which produced a
+visible three-tone seam at the top of every section once scrolled: a
+translucent strip in a slightly different shade, then the nav's own
+`border-b`, then the section's true background — measured directly (pixel
+probe, not guessed) at `rgb(253,253,253)` / `rgb(220,222,215)` /
+`rgb(245,246,243)` in light mode. The seam existed under Oxide Ink too, but
+was smaller: `surface-elevated` sits 1.80 OKLCH-L points above `background`
+in that palette's light mode versus 2.84 points in this one (dark mode:
+7.02 vs. 9.39) — this palette's larger `background`↔`surface-elevated`
+gap amplified an existing artifact, it didn't invent one. Blending toward
+`background` instead collapses that gap by construction, since the strip
+and the section behind it now share the same base token. **Don't "upgrade"
+this back to `surface-elevated` for a more elevated/card-like nav** without
+re-checking this seam first — that's exactly the regression this fixes.
+
 ### Accent/success hue separation — a hard constraint, not a coincidence
 
 This palette's accent (olive/moss) and success (green) are both
