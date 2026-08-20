@@ -52,7 +52,7 @@ export const aboutHighlights = [
 
 // One tightened paragraph — identity and approach, not a project recap
 // (Projects now owns that in full detail two sections later).
-export const about = `I'm Hisham Al-Malki, a Computer Science graduate from Umm Al-Qura University. I build AI and data systems the same way every time: understand the problem first, build the simplest solution that works, then test and refine it until it holds up.`
+export const about = `I'm Hisham Al-Malki, a Computer Science graduate from Umm Al-Qura University. I work across the full arc of a data problem — from cleaning and exploring real datasets, through dashboards and predictive models, to deep learning systems. Mostly in Python, SQL, and Power BI, and mostly on problems where the answer has to hold up to scrutiny.`
 
 // Editorial pull-quote for the About section — a distinct statement of
 // working values, not a repeat of the surrounding paragraph.
