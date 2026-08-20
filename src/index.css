@@ -58,9 +58,18 @@
   src: url('/portfolio/fonts/general-sans-700.woff2') format('woff2');
 }
 
-/* ── Design tokens: "Oxide Ink" ─────────────────────────────────
-   One accent hue (a burnt-vermillion oxide), one warm-ink neutral
+/* ── Design tokens: "Moss & Stone" ─────────────────────────────────
+   One accent hue (a desaturated olive/moss), one cool-stone neutral
    family shared by both modes, and a complete semantic state set.
+   Replaces "Oxide Ink" (burnt-vermillion on warm cream) outright — that
+   pairing sat squarely in Anthropic's own brand color space, which reads
+   as "styled like the tool I use" rather than as this person's own
+   identity. Both halves changed, deliberately: swapping only the accent
+   while keeping warm-cream neutrals would have left the more recognizable
+   half of that signature (the warm paper itself) intact. Don't warm the
+   neutrals back up later without revisiting this note — that reintroduces
+   exactly the pairing this system was built to escape.
+
    Every --color-* here is overridden wholesale inside `.dark` below —
    components reference the plain token (e.g. `bg-accent`, `text-
    text-secondary`) with no `dark:` prefix, and the cascade resolves
@@ -72,68 +81,88 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* Surfaces */
-  --color-background: #faf9f6;
-  --color-surface: #f1efe9;
+  --color-background: #f5f6f3;
+  --color-surface: #eaece5;
   --color-surface-elevated: #ffffff;
-  --color-border: #e3e0d8;
+  --color-border: #dcded7;
 
-  /* Text — 3-tier scale derived from one warm-ink hue. Verified ≥4.5:1
-     against --color-background (see `.dark` below for dark-mode pairing):
-     primary 16.5:1, secondary 6.95:1, muted 4.92:1. */
-  --color-text-primary: #1c1a17;
-  --color-text-secondary: #5a564c;
-  --color-text-muted: #736c63;
+  /* Text — 3-tier scale derived from one cool-stone hue. Verified against
+     --color-background (see `.dark` below for dark-mode pairing):
+     primary 16.16:1, secondary 7.86:1 (AAA, body copy), muted 4.83:1. */
+  --color-text-primary: #181a16;
+  --color-text-secondary: #4a4e44;
+  --color-text-muted: #6a6e60;
 
-  /* Accent — single oxide-vermillion hue. accent-hover is the same hue,
-     darker, for hover/active states. accent-contrast is the button-label
+  /* Accent — single desaturated olive/moss hue (oklch hue ~122-123°).
+     accent-hover is the same hue, darker in light mode / lighter in dark
+     mode, for hover/active states. accent-contrast is the button-label
      color that stays legible on top of --color-accent in either mode
-     (white clears AA in light mode; the dark-mode accent tint is too
-     light for white text at 3.15:1, so it takes ink text instead, 5.83:1). */
-  --color-accent: #b8402c;
-  --color-accent-hover: #96331f;
+     (white clears AA in light mode at 5.50:1; the dark-mode accent tint
+     is far too light for white text at 2.02:1, so it takes the dark
+     background color as ink text instead, 9.23:1).
+
+     Chosen over a richer, more saturated olive (oklch(50.3% 0.103 122.3))
+     specifically because that version reads heavy/oppressive as a large
+     button fill: raising lightness to fix it broke AA almost immediately
+     (both text-on-bg and white-on-button fail past ~L56%), but lowering
+     chroma had real headroom and was the actual fix — the heaviness was
+     saturation, not darkness. */
+  --color-accent: #5f6f3a;
+  --color-accent-hover: #465127;
   --color-accent-contrast: #ffffff;
 
-  /* Semantic states */
-  --color-success: #3f7a52;
-  --color-warning: #8f6015;
-  --color-error: #c1332a;
+  /* Semantic states. success sits in the same hue family as accent (both
+     green-adjacent) — see the accent/success separation constraint below
+     the token table in DESIGN.md before changing either. */
+  --color-success: #046b3f;
+  --color-warning: #8a5f12;
+  --color-error: #b73344;
 
   /* Ink terminal — a fixed dark island (Projects empty-state mockup)
      that keeps this exact background/foreground set in BOTH light and
-     dark site modes; never redefined in `.dark`. ink-accent/ink-success
-     are deliberately not the same value as --color-accent/--color-success
-     in light mode: the light-mode accent (#b8402c) and light-mode success
-     (#3f7a52) were tuned for a pale background and only clear 3.15:1 /
-     3.40:1 against this dark ink — the dark-mode tints (#e2704f / #6fbe83)
-     clear 5.51:1 / 7.75:1 here, so those are the ones kept fixed. */
-  --color-ink: #1c1a17;
-  --color-ink-heading: #f4f0e8;
-  --color-ink-text: #b4ac9c;
-  --color-ink-accent: #e2704f;
-  --color-ink-success: #6fbe83;
+     dark site modes; never redefined in `.dark`. Re-hued alongside the
+     rest of this system (was warm, oklch hue ~78-85°, a leftover from
+     Oxide Ink) into the same cool-stone family the real dark mode now
+     uses (oklch hue ~118-133° here vs. ~121-135° for the real dark
+     tokens below — a ~6° gap, matching how tight the original pairing
+     was to the old warm dark background). The placeholder is dormant
+     today (all four real projects have screenshots), but a future
+     project without one would have surfaced a visibly warm panel on a
+     cool site if this had been left alone — fixed now while it's free.
+     ink-accent/ink-success reuse the dark-mode accent/success tints
+     verbatim (8.51:1 / 9.94:1 against this ink background), the same
+     "reuse the tint already tuned for a dark background" pattern the
+     previous palette used. */
+  --color-ink: #191c16;
+  --color-ink-heading: #f0f2ea;
+  --color-ink-text: #a8ae9d;
+  --color-ink-accent: #a8c060;
+  --color-ink-success: #1fe08f;
 }
 
-/* Dark-mode overrides — re-verified against --color-background (#17140f):
-   text-primary 16.2:1, text-secondary 8.15:1, text-muted 5.43:1, accent
-   5.83:1 (as button text/on-background), success 8.19:1, warning 8.00:1,
-   error 5.63:1. All clear the 4.5:1 body-text floor; several clear AAA. */
+/* Dark-mode overrides — verified against --color-background (#111310):
+   text-primary 16.42:1, text-secondary 8.85:1 (AAA, body copy), text-muted
+   5.56:1, accent 9.23:1 (as link text; button label uses accent-contrast,
+   also 9.23:1 since it's the same background color), success 10.78:1,
+   warning 9.09:1, error 6.47:1. All clear the 4.5:1 body-text floor;
+   most clear AAA. */
 .dark {
-  --color-background: #17140f;
-  --color-surface: #201c16;
-  --color-surface-elevated: #29241c;
-  --color-border: #342e24;
+  --color-background: #111310;
+  --color-surface: #1b1e19;
+  --color-surface-elevated: #252a22;
+  --color-border: #2d3129;
 
-  --color-text-primary: #f4f0e8;
-  --color-text-secondary: #b4ac9c;
-  --color-text-muted: #928b7c;
+  --color-text-primary: #eff1ec;
+  --color-text-secondary: #b0b4a9;
+  --color-text-muted: #8a8e7f;
 
-  --color-accent: #e2704f;
-  --color-accent-hover: #ee8b6d;
-  --color-accent-contrast: #17140f;
+  --color-accent: #a8c060;
+  --color-accent-hover: #c0d485;
+  --color-accent-contrast: #111310;
 
-  --color-success: #6fbe83;
-  --color-warning: #d3a356;
-  --color-error: #e4685c;
+  --color-success: #1fe08f;
+  --color-warning: #dcae52;
+  --color-error: #e8757e;
 }
 
 /* ── Scroll reveal (fade-in + slide-up) ─────────────────────── */
