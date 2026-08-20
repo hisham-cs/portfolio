@@ -11,27 +11,99 @@ All tokens live in `src/index.css`. Components reference the plain token
 Never add a one-off `dark:` variant; add the color to both blocks in
 `index.css` instead.
 
-## Color system — "Oxide Ink"
+## Color system — "Moss & Stone"
 
-One accent hue (burnt-vermillion oxide), one warm-ink neutral family shared
-by both light and dark mode, and a semantic state set (success/warning/
-error) that is deliberately **not** the accent color.
+Retired "Oxide Ink" (burnt-vermillion accent on warm cream) outright — that
+pairing sat squarely in Anthropic's own brand color space, which read as
+"styled like the tool I use" rather than as this person's own identity.
+**Both halves changed, not just the accent**: the neutral family moved from
+warm cream to cool stone at the same time the accent moved from vermillion
+to a desaturated olive/moss. That was deliberate, not incidental — the
+brand-adjacency was arguably more about the warm-cream-plus-warm-accent
+*pairing* than about the accent hue alone, so swapping only the accent
+while leaving warm-cream neutrals in place would have left the more
+recognizable half of that signature intact. **Don't warm the neutrals back
+up later without revisiting this note first** — that quietly reintroduces
+the exact pairing this system exists to escape.
+
+One accent hue (desaturated olive/moss), one cool-stone neutral family
+shared by both light and dark mode, and a semantic state set (success/
+warning/error) that is deliberately **not** the accent color — except this
+palette's success sits in the *same hue family* as the accent (both are
+green-adjacent), which is new and load-bearing enough to get its own
+subsection below. Read it before changing either token.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--color-background` | `#faf9f6` | `#17140f` | Page background |
-| `--color-surface` | `#f1efe9` | `#201c16` | Card backgrounds (Skills, Projects, Education) |
-| `--color-surface-elevated` | `#ffffff` | `#29241c` | Hover/elevated state on cards |
-| `--color-border` | `#e3e0d8` | `#342e24` | Hairlines, card borders |
-| `--color-text-primary` | `#1c1a17` | `#f4f0e8` | Headings, primary copy — 16.5:1 / 16.2:1 |
-| `--color-text-secondary` | `#5a564c` | `#b4ac9c` | Body copy — 6.95:1 / 8.15:1 |
-| `--color-text-muted` | `#736c63` | `#928b7c` | Captions, mono labels — 4.92:1 / 5.43:1 |
-| `--color-accent` | `#b8402c` | `#e2704f` | **The one accent — see discipline below** |
-| `--color-success` / `warning` / `error` | — | — | Status dots, semantic states only, never decorative |
+| `--color-background` | `#f5f6f3` | `#111310` | Page background |
+| `--color-surface` | `#eaece5` | `#1b1e19` | Card backgrounds (Skills, Projects, Education) |
+| `--color-surface-elevated` | `#ffffff` | `#252a22` | Hover/elevated state on cards |
+| `--color-border` | `#dcded7` | `#2d3129` | Hairlines, card borders |
+| `--color-text-primary` | `#181a16` | `#eff1ec` | Headings, primary copy — 16.16:1 / 16.42:1 |
+| `--color-text-secondary` | `#4a4e44` | `#b0b4a9` | Body copy — 7.86:1 / 8.85:1 (AAA both modes) |
+| `--color-text-muted` | `#6a6e60` | `#8a8e7f` | Captions, mono labels — 4.83:1 / 5.56:1 |
+| `--color-accent` | `#5f6f3a` | `#a8c060` | **The one accent — see discipline below** |
+| `--color-success` / `warning` / `error` | `#046b3f` / `#8a5f12` / `#b73344` | `#1fe08f` / `#dcae52` / `#e8757e` | Status dots, semantic states only, never decorative |
+
+**Why this exact olive, not a richer/more saturated one**: an earlier,
+more saturated candidate (`oklch(50.3% 0.103 122.3)`, roughly `#5a6d21`)
+read heavy/oppressive as a large button fill. The fix wasn't lightening —
+raising lightness broke AA almost immediately (both text-on-background and
+white-on-button contrast fail past roughly L56%, leaving almost no room).
+*Lowering chroma* had real headroom instead and was the actual fix: the
+heaviness was saturation, not darkness. `--color-accent` is the
+lower-chroma result (`oklch(51.5% 0.079 122.9)`), landing at 5.07:1
+text-on-background and 5.50:1 white-on-button — both comfortably AA, with
+a visibly softer "sage" read than the saturated version had.
 
 `--color-ink*` (in `index.css`) is a fixed dark island used only by the
-Projects placeholder mockup — it does not follow light/dark mode by design,
-so don't "fix" it into the theme system.
+Projects placeholder mockup — it does not follow light/dark mode by
+design, so don't "fix" it into the theme system. It **was** re-hued as
+part of this palette change, though (from a warm hue ~78–85° to the same
+cool-stone family the real dark tokens use, ~118–133°) — the fixed-dark
+*behavior* is the part that's permanent, not the specific old hue, and
+leaving it warm would have put a visibly warm panel inside a cool site
+the moment a future project shipped without a screenshot yet.
+`--color-ink-accent`/`--color-ink-success` reuse the real dark-mode
+accent/success tints verbatim, same as before.
+
+### Accent/success hue separation — a hard constraint, not a coincidence
+
+This palette's accent (olive/moss) and success (green) are both
+green-adjacent in a way "Oxide Ink" never had to worry about (that
+accent was vermillion, nowhere near its own success green). Confusing
+"this is clickable" with "this is a success state" is a real usability
+failure, so the separation between these two tokens was engineered on
+**three independent axes**, not left to hue alone:
+
+1. **Hue: ~34° apart in light mode, ~37° in dark** (accent 122–123°,
+   success 156–158°, OKLCH). This is close to the practical ceiling for a
+   legible, sufficiently-saturated, sRGB-representable green — pushing
+   the hue further toward ~165°+ while keeping real chroma and AA
+   contrast runs into gamut limits and starts reading as teal instead of
+   green. 34–37° is not an arbitrary number that happened to test well;
+   it's close to the most separation achievable while success still
+   reads as unambiguously "green."
+2. **Chroma: success is 40% more saturated in light mode, 45% more in
+   dark** (accent 0.079/0.126, success 0.110/0.183). This exists
+   specifically because hue is the axis most compressed by red-green
+   color vision deficiency — chroma and lightness differences survive
+   CVD much better than hue differences do, so the separation doesn't
+   rest on hue alone.
+3. **Role: accent and success never appear in the same shape.** Accent is
+   always a button fill, a border/underline, or inline link text —
+   always a large-ish shape. Success is exclusively the 6px `bg-success`
+   status dot. A user is never choosing between "clickable" and
+   "succeeded" in the same glance at the same shape; the design system's
+   own grammar does structural work the color alone doesn't have to.
+
+**Verification rule for any future change to either token**: before
+adjusting `--color-accent` or `--color-success` in either mode, recompute
+both and confirm the hue gap stays **≥30°** and the chroma gap stays
+**≥30%**. If a change would drop either below that floor, don't ship it
+without deliberately revisiting this section — a future session nudging
+one token in isolation (brightening success for an unrelated reason, say)
+could quietly collapse a gap that took three axes to establish.
 
 ### Accent discipline
 
