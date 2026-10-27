@@ -277,7 +277,7 @@ button { font: inherit; color: inherit; }
 .row a:hover { text-decoration: underline; color: var(--bd-bg); }
 .row .note { font-size: var(--s-small); letter-spacing: 0; color: var(--dk-muted); text-align: right; max-width: 30ch; line-height: 1.4; }
 footer { padding: 72px var(--margin) 24px; }
-.wordmark { width: 100%; height: auto; display: block; overflow: visible; }
+.wordmark { width: 62%; height: auto; display: block; overflow: visible; } /* the name again, quieter than the hero */
 .wordmark text { fill: var(--dk-ink); font-family: var(--font); font-weight: 600; font-size: 150px; letter-spacing: -6px; }
 .foot { margin-top: 16px; font-size: var(--s-small); color: var(--dk-muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 
@@ -335,7 +335,9 @@ footer { padding: 72px var(--margin) 24px; }
   .map thead th:first-child { width: 26%; }
   .map td { height: auto; padding: 10px 8px; }
   .groups { grid-template-columns: 1fr; }
-  .group button { grid-template-columns: 1fr; } .group button .w { text-align: left; }
+  .group ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+  .group button { grid-template-columns: 1fr; align-content: start; } .group button .w { text-align: left; }
+  .wordmark { width: 100%; }
   .about h2, .about .facts, .about .para, .about .rec-word, .about .rec, .about .rec + .rec { grid-column: 1 / -1; }
   .about { row-gap: 28px; } .about .facts { grid-template-columns: 1fr 1fr; }
   .about .rec, .about .rec-word { margin-top: 0; }
