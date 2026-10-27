@@ -105,7 +105,10 @@ export const certification = {
 // `ratio` is height / width of the scan; `verifyUrl` comes from the
 // certificate itself (printed link or its QR code).
 export const courses = [
-  { title: 'Artificial Intelligence Program', issuer: 'KAUST Academy' },
+  {
+    title: 'Artificial Intelligence Program', issuer: 'KAUST Academy',
+    imageName: 'kaust-ai-program', ratio: 1364 / 1930, publish: true, verifyUrl: '',
+  },
   {
     title: 'Data Science and Machine Learning with Python', issuer: 'Tuwaiq Academy',
     imageName: 'tuwaiq-ds-ml', ratio: 746 / 1057, publish: true, verifyUrl: '',
