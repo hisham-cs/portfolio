@@ -186,6 +186,13 @@ dl.d dd { margin: 0; }
 .cells a + a { background: var(--lt-surface); color: var(--lt-ink); }
 .case:nth-child(odd) .cells a + a { background: var(--lt-bg); }
 .cells a + a:hover { text-decoration: underline; }
+/* Desktop, Telecom and Edema: CaseBlock's useLevel sets these so the
+   details end level with the picture beside them; gaps grow by at most 2x
+   (item gaps 12 -> 24px, Edema heading gap 48 -> 96px), the rest goes above
+   the buttons. Unset (0) below 1100px. */
+.zigzag dl.d, .panel-row dl.d { gap: calc(12px + var(--gx, 0px)); }
+.panel-row > .col { padding-top: var(--hx, 0px); }
+.zigzag .cells, .panel-row .cells { margin-top: calc(28px + var(--bx, 0px)); }
 
 /* Edema: the Grad-CAM reveal. Controls sit on a dark bar so the ochre
    accent keeps its 8.49:1 (it is 1.95:1 on the light field). */

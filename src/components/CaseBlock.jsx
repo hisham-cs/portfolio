@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react'
 import { STAGES } from '../data/projects.js'
 import Frame from './Frame.jsx'
 import RevealSlider from './RevealSlider.jsx'
@@ -40,8 +41,46 @@ function Pic({ frame, caption, show, sizes, ratio, className = '' }) {
   )
 }
 
+// Desktop only: spread a details column so it ends level with the picture
+// beside it (the frame or the slider panel, caption excluded). Space goes to
+// the gaps first, each growing at most 2x (items 12 -> 24px; under the Edema
+// heading 48 -> 96px), then above the buttons. Columns already as tall as
+// their picture keep the base spacing.
+function useLevel(root) {
+  useLayoutEffect(() => {
+    const el = root.current
+    if (!el) return
+    const wide = matchMedia('(min-width: 1101px)')
+    const run = () => {
+      for (const col of el.querySelectorAll('[data-level]')) {
+        for (const k of ['--gx', '--hx', '--bx']) col.style.removeProperty(k)
+        if (!wide.matches) continue
+        const target = col.closest('.c-row').querySelector('button.open, .reveal').getBoundingClientRect().bottom
+        const items = col.querySelectorAll('dl.d > div')
+        const cells = col.querySelector('.cells')
+        const short = target - (cells ?? items[items.length - 1]).getBoundingClientRect().bottom
+        if (short <= 0) continue
+        const head = col.dataset.level === 'head' ? 48 : 0
+        const room = head + 12 * (items.length - 1)
+        const f = Math.min(1, short / room)
+        col.style.setProperty('--hx', `${head * f}px`)
+        col.style.setProperty('--gx', `${12 * f}px`)
+        if (cells) col.style.setProperty('--bx', `${short - room * f}px`)
+      }
+    }
+    run()
+    const ro = new ResizeObserver(run)
+    ro.observe(el)
+    wide.addEventListener('change', run)
+    document.fonts?.ready.then(run)
+    return () => { ro.disconnect(); wide.removeEventListener('change', run) }
+  }, [root])
+}
+
 export default function CaseBlock({ project }) {
   const [show, dialog] = useLightbox()
+  const root = useRef(null)
+  useLevel(root)
   const rows = [
     ...STAGES.map((s) => [s.label, project.stages[s.id].detail]),
     ...project.extra,
@@ -76,11 +115,11 @@ export default function CaseBlock({ project }) {
         {head}
         <div className="c-row r75">
           <Pic {...a} show={show} sizes={`${wide}, 56vw`} />
-          <div className="col" data-reveal><Details rows={first} /></div>
+          <div className="col" data-reveal data-level><Details rows={first} /></div>
         </div>
         <div className="c-row r57">
           <Pic {...b} show={show} sizes={`${wide}, 56vw`} className="right" />
-          <div className="col left" data-reveal><Details rows={rest} />{cells}</div>
+          <div className="col left" data-reveal data-level><Details rows={rest} />{cells}</div>
         </div>
       </>
     )
@@ -92,7 +131,7 @@ export default function CaseBlock({ project }) {
           <RevealSlider reveal={plate.reveal} />
           <figcaption className="credit">{plate.caption}</figcaption>
         </figure>
-        <div className="col" data-reveal><Details rows={rows} />{cells}</div>
+        <div className="col" data-reveal data-level="head"><Details rows={rows} />{cells}</div>
       </div>
     )
   } else {
@@ -113,7 +152,7 @@ export default function CaseBlock({ project }) {
   }
 
   return (
-    <article className={`case ${plate.layout}`} id={`case-${project.id}`} aria-labelledby={`h-${project.id}`}>
+    <article ref={root} className={`case ${plate.layout}`} id={`case-${project.id}`} aria-labelledby={`h-${project.id}`}>
       {body}
       {dialog}
     </article>
