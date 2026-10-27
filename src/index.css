@@ -148,7 +148,9 @@ button { font: inherit; color: inherit; }
    its own ground (no outline), details at 16px with a label column,
    buttons last.
    Fields alternate so the boundary between projects is a change of ground. */
-.case { --col-gap: clamp(20px, 2.4vw, 40px); padding: clamp(56px, 7vw, 96px) var(--margin); container-type: inline-size; }
+/* Case content stops growing at 1280px, centred, so pictures stay a size
+   whose height the details can fill with gaps that still read as one list */
+.case { --col-gap: clamp(20px, 2.4vw, 40px); padding: clamp(56px, 7vw, 96px) max(var(--margin), calc((100% - 1280px) / 2)); container-type: inline-size; }
 .case:nth-child(odd) { background: var(--lt-surface); }
 .case-head { margin-bottom: clamp(28px, 3.4vw, 48px); }
 .case-head h3 { font-size: var(--s-head); }
@@ -186,13 +188,27 @@ dl.d dd { margin: 0; }
 .cells a + a { background: var(--lt-surface); color: var(--lt-ink); }
 .case:nth-child(odd) .cells a + a { background: var(--lt-bg); }
 .cells a + a:hover { text-decoration: underline; }
-/* Desktop, Telecom and Edema: CaseBlock's useLevel sets these so the
-   details end level with the picture beside them; gaps grow by at most 2x
-   (item gaps 12 -> 24px, Edema heading gap 48 -> 96px), the rest goes above
-   the buttons. Unset (0) below 1100px. */
-.zigzag dl.d, .panel-row dl.d { gap: calc(12px + var(--gx, 0px)); }
-.panel-row > .col { padding-top: var(--hx, 0px); }
-.zigzag .cells, .panel-row .cells { margin-top: calc(28px + var(--bx, 0px)); }
+/* Desktop, Telecom and Edema: each details column stretches to the height
+   of its row and spreads its items (space-between, 12px at least), so the
+   last item or the buttons end level with the picture beside it: the frame,
+   or the Edema panel down to its slider bar (captions sit outside, in a
+   subgrid row). Under the Edema heading the space grows like one item gap. */
+@media (min-width: 1101px) {
+  .zigzag .c-row { grid-template-rows: auto auto; row-gap: 8px; align-items: stretch; }
+  .zigzag .pic { grid-row: 1 / span 2; grid-template-rows: subgrid; }
+  .zigzag .pic button.open { align-self: start; }
+  .zigzag .col { grid-row: 1; }
+  .zigzag .col, .panel-row > .col { display: flex; flex-direction: column; }
+  .zigzag dl.d, .panel-row dl.d { display: flex; flex-direction: column; justify-content: space-between; flex: 1 1 auto; }
+  .panel-row { grid-template-rows: auto 1fr auto; align-items: stretch; }
+  .panel-row > .panel-fig { grid-row: 1 / span 3; grid-template-rows: subgrid; row-gap: 0; }
+  .panel-row > .panel-fig > .reveal { grid-row: 1 / span 2; align-self: start; }
+  .panel-row > .panel-fig > figcaption { grid-row: 3; margin-top: 8px; }
+  .panel-row > .case-head { align-self: start; }
+  .panel-row > .col { grid-row: 2; }
+  .panel-row > .col::before { content: ''; flex: 1 1 0; } /* under the heading: one share, */
+  .panel-row dl.d { flex-grow: 5; }                            /* like each of the 5 item gaps */
+}
 
 /* Edema: the Grad-CAM reveal. Controls sit on a dark bar so the ochre
    accent keeps its 8.49:1 (it is 1.95:1 on the light field). */
