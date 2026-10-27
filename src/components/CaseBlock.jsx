@@ -3,11 +3,44 @@ import Frame from './Frame.jsx'
 import RevealSlider from './RevealSlider.jsx'
 import useLightbox from './Lightbox.jsx'
 
-// A project in full, the same structure for every project: its heading,
-// then one lead picture beside the details (buttons last), then a strip of
-// further evidence as thumbnails that open full size. On tablets and phones
-// it reads straight down, and the strip becomes a row you swipe.
-export default function CaseBlock({ project, flip }) {
+// A project in full, in one of the three approved layouts (see
+// design-exploration/round-4/case-layouts.html):
+//   zigzag: heading; picture 1 beside the first details; the rest of the
+//           details and the buttons beside picture 2.
+//   panel:  heading, details and buttons in one column; the dark slider
+//           panel beside them.
+//   pair:   heading; two pictures side by side at one height; the details
+//           in two columns, buttons last.
+// The source order is the phone order; wide screens place the parts in
+// columns. Every picture is shown whole and opens full size.
+
+function Details({ rows }) {
+  return (
+    <dl className="d">
+      {rows.map(([dt, dd]) => (
+        <div key={dt}>
+          <dt>{dt}</dt>
+          <dd>{dd}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+function Pic({ frame, caption, show, sizes, ratio, className = '' }) {
+  return (
+    <figure className={`pic ${className}`} data-reveal>
+      <button type="button" className="open" onClick={() => show(frame.image, frame.alt)}
+        style={ratio ? { '--ar': ratio } : undefined}>
+        <Frame frame={frame} sizes={sizes} />
+        <span className="sr-only">Open full size</span>
+      </button>
+      <figcaption>{caption}</figcaption>
+    </figure>
+  )
+}
+
+export default function CaseBlock({ project }) {
   const [show, dialog] = useLightbox()
   const rows = [
     ...STAGES.map((s) => [s.label, project.stages[s.id].detail]),
@@ -16,65 +49,72 @@ export default function CaseBlock({ project, flip }) {
     ['Stack', project.stack],
   ]
   const { plate } = project
-  const lead = project.stages[plate.stage].frame
-  const evidence = plate.evidence ?? []
+  const [first, rest] = [rows.slice(0, plate.split), rows.slice(plate.split)]
+  const head = (
+    <header className="case-head" data-reveal>
+      <h3 id={`h-${project.id}`}>{project.name}</h3>
+      <p className="kind">{project.kind}</p>
+      <p className="lead">{project.question}</p>
+    </header>
+  )
+  const cells = (
+    <div className="cells">
+      {project.links.map((l) => (
+        <a key={l.href} href={l.href} rel="noopener">
+          {l.label}<span className="sr-only">, {project.name}</span>
+        </a>
+      ))}
+    </div>
+  )
+  const wide = '(max-width: 1100px) calc(100vw - 2rem)'
+
+  let body
+  if (plate.layout === 'zigzag') {
+    const [a, b] = plate.figures
+    body = (
+      <>
+        {head}
+        <div className="c-row r75">
+          <Pic {...a} show={show} sizes={`${wide}, 56vw`} />
+          <div className="col" data-reveal><Details rows={first} /></div>
+        </div>
+        <div className="c-row r57">
+          <Pic {...b} show={show} sizes={`${wide}, 56vw`} className="right" />
+          <div className="col left" data-reveal><Details rows={rest} />{cells}</div>
+        </div>
+      </>
+    )
+  } else if (plate.layout === 'panel') {
+    body = (
+      <div className="c-row r57 panel-row">
+        {head}
+        <figure className="panel-fig" data-reveal>
+          <RevealSlider reveal={plate.reveal} />
+          <figcaption className="credit">{plate.caption}</figcaption>
+        </figure>
+        <div className="col" data-reveal><Details rows={rows} />{cells}</div>
+      </div>
+    )
+  } else {
+    // pair: both frames take the taller picture's ratio, so they share a height
+    const ratio = Math.min(...plate.figures.map((f) => f.frame.image.width / f.frame.image.height))
+    body = (
+      <>
+        {head}
+        <div className="c-row r66">
+          {plate.figures.map((f) => <Pic key={f.caption} {...f} show={show} ratio={ratio} sizes={`${wide}, 48vw`} className="fixed" />)}
+        </div>
+        <div className="c-row r66">
+          <div className="col" data-reveal><Details rows={first} /></div>
+          <div className="col" data-reveal><Details rows={rest} />{cells}</div>
+        </div>
+      </>
+    )
+  }
 
   return (
-    <article className={`case${flip ? ' flip' : ''}`} id={`case-${project.id}`} aria-labelledby={`h-${project.id}`}>
-      <header className="case-head" data-reveal>
-        <h3 id={`h-${project.id}`}>{project.name}</h3>
-        <p className="kind">{project.kind}</p>
-        <p className="lead">{project.question}</p>
-      </header>
-
-      <figure className="lead-fig" data-reveal style={plate.reveal ? undefined : { '--w': `${lead.image.width}px` }}>
-        {plate.reveal ? (
-          <RevealSlider reveal={plate.reveal} />
-        ) : (
-          <button type="button" className="open" onClick={() => show(lead.image, lead.alt)}>
-            <Frame frame={lead} sizes="(max-width: 1100px) min(calc(100vw - 2rem), 720px), 56vw" />
-            <span className="sr-only">Open full size</span>
-          </button>
-        )}
-        <figcaption className={plate.reveal ? 'credit' : undefined}>{plate.caption}</figcaption>
-      </figure>
-
-      <div className="text">
-        <dl data-reveal>
-          {rows.map(([dt, dd]) => (
-            <div key={dt}>
-              <dt>{dt}</dt>
-              <dd>{dd}</dd>
-            </div>
-          ))}
-        </dl>
-        <div className="cells" data-reveal style={{ '--i': 1 }}>
-          {project.links.map((l) => (
-            <a key={l.href} href={l.href} rel="noopener">
-              {l.label}<span className="sr-only">, {project.name}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {evidence.length > 0 && (
-        <ul className="evidence" aria-label={`More from ${project.name}`} data-reveal>
-          {evidence.map(({ frame, caption }) => (
-            <li key={caption}>
-              <figure>
-                <button type="button" className="open" onClick={() => show(frame.image, frame.alt)}>
-                  <span className="frame" style={{ background: frame.fill }}>
-                    <img src={frame.image.src} srcSet={frame.image.srcSet} sizes="(max-width: 1100px) min(78vw, 360px), 24vw"
-                      width={frame.image.width} height={frame.image.height} alt={frame.alt} loading="lazy" decoding="async" />
-                  </span>
-                  <span className="sr-only">Open full size</span>
-                </button>
-                <figcaption>{caption}</figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
-      )}
+    <article className={`case ${plate.layout}`} id={`case-${project.id}`} aria-labelledby={`h-${project.id}`}>
+      {body}
       {dialog}
     </article>
   )

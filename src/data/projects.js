@@ -3,8 +3,8 @@ import { screenshot, natural } from './images.js'
 // Edema imagery all derives from one CC0 radiograph (credited in site.js):
 // the X-ray itself, the app's own Grad-CAM overlay from each model for it
 // (pixel-aligned with the X-ray), and two app screenshots with that same
-// X-ray loaded. Probabilities are the
-// app's sidebar values for this one image, not accuracy figures.
+// X-ray loaded. Probabilities are the app's sidebar values for this one
+// image, not accuracy figures.
 const EDEMA_RATIO = 626 / 697
 const edemaXray = natural('edema-xray', EDEMA_RATIO)
 const edemaCams = [
@@ -16,7 +16,6 @@ const edemaCams = [
 ].map((m) => ({ ...m, image: natural(`edema-cam-${m.id}`, EDEMA_RATIO) }))
 const edemaReport = screenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
 const edemaVotes = screenshot('pulmonary-edema', 2, 883 / 1897)
-
 const edemaVotesFrame = {
   kind: 'image',
   image: edemaVotes,
@@ -30,20 +29,6 @@ const telcoOverview = {
   alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
   fill: '#f2f2f0',
 }
-const telcoDrivers = {
-  kind: 'image',
-  image: screenshot('telco-churn', 2, 712 / 1275),
-  alt: 'Power BI page “What drives churn”: churn rate by contract and internet service, by payment method and contract, by number of services, and with and without tech support',
-  fill: '#f2f2f0',
-}
-// The notebook's own ROC plot (repo images/roc_curve.png), for the final
-// model trained without CLTV: AUC-ROC 0.8489 on 1,409 test customers.
-const telcoRoc = {
-  kind: 'image',
-  image: screenshot('telco-churn', 6, 454 / 448),
-  alt: 'ROC curve of the logistic regression model against the random baseline, AUC 0.85',
-  fill: '#ffffff',
-}
 const telcoActions = {
   kind: 'image',
   image: screenshot('telco-churn', 5, 711 / 1262),
@@ -51,19 +36,18 @@ const telcoActions = {
   alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
 }
 
-// Two more Faten screens from the app (badge-free copies of the old site's
-// screenshots, see raw-images/projects/faten-*).
+const fatenDashboard = {
+  kind: 'image',
+  image: screenshot('faten', 2, 605 / 1280),
+  alt: 'Faten dashboard in Arabic with GPA cards, a GPA trend chart and the university calendar',
+  fill: '#ffffff',
+}
+// The Faten chat: a badge-free copy of the old site's faten-3 screenshot.
 const fatenChat = {
   kind: 'image',
   image: screenshot('faten', 3, 646 / 1280),
   alt: 'Faten’s chat in Arabic: the agent answers a question about a course with its grading breakdown and final exam dates',
   fill: '#ffffff',
-}
-const fatenMap = {
-  kind: 'image',
-  image: screenshot('faten', 4, 609 / 1280),
-  alt: 'Faten’s indoor navigation: a route drawn on the ground-floor map of the faculty building, with the distance and walking time beside it',
-  fill: '#e4e6e7',
 }
 
 // The three stages every project is shown through. Sections read this list,
@@ -83,9 +67,10 @@ export const STAGES = [
 // used wherever a frame is wider or taller than the picture.
 //   { kind: 'table', columns: [...], optional?, optionalNarrow?, rows: [[...], ...], foot }
 //   { kind: 'list', title, items: [...], foot, code?, rtl? }
-// `map` holds the short labels for the skill table; `plate` picks the stage
-// whose frame is the case block's lead picture (or a `reveal` slider), its
-// caption, and the `evidence` thumbnails shown under it.
+// `map` holds the short labels for the skill table; `plate` sets the case
+// block: `layout` 'zigzag' (each figure beside part of the details),
+// 'panel' (the `reveal` slider beside the details) or 'pair' (two figures
+// side by side over the details); `split` is how many detail rows go first.
 // Facts here are verified against the repositories or owner-stated from the CV.
 // ---------------------------------------------------------------------------
 export const projects = [
@@ -156,24 +141,19 @@ export const projects = [
     ],
     map: { data: '7,043 customer rows', model: 'Logistic regression', product: 'Power BI dashboard' },
     plate: {
-      stage: 'product',
-      caption: 'Dashboard page 1, “Customer churn overview”',
-      evidence: [
-        {
-          frame: telcoDrivers,
-          caption:
-            'Dashboard page 2, “What drives churn”: contract against internet service and payment method, bundling and tech support, to see which drivers hold up once the others are controlled for.',
-        },
+      // Each picture beside the text it supports: page 1 by Data/Model/Product,
+      // page 3 by Finding to Stack. Page 2 and the ROC curve stay out; their
+      // numbers are in the text.
+      layout: 'zigzag',
+      figures: [
+        { frame: telcoOverview, caption: 'Dashboard page 1, “Customer churn overview”' },
         {
           frame: telcoActions,
           caption:
             'Dashboard page 3, “Where to act first”. Churn Score is IBM’s pre-computed score: the dashboard uses it to describe customers; the model excludes it as target leakage.',
         },
-        {
-          frame: telcoRoc,
-          caption: 'Model results: ROC curve of the final logistic regression on the 1,409-customer test set, AUC-ROC 0.849 (the legend rounds it to 0.85).',
-        },
       ],
+      split: 3, // detail rows beside the first picture
     },
   },
   {
@@ -230,13 +210,10 @@ export const projects = [
     ],
     map: { data: '10,803 chest X-rays', model: 'Four CNNs, Grad-CAM', product: 'Streamlit app' },
     plate: {
-      stage: 'data',
+      layout: 'panel',
       reveal: { base: edemaXray, layers: edemaCams, label: 'Grad-CAM overlay', ratio: EDEMA_RATIO },
       caption:
         'Example input, not training data: “Chest radiograph of a lung with Kerley B lines” by Mikael Häggström, CC0, via Wikimedia Commons. Each heatmap is the app’s own Grad-CAM output for this image.',
-      evidence: [
-        { frame: edemaVotesFrame, caption: 'The app’s per-model votes for the example X-ray, above its research-only disclaimer' },
-      ],
     },
   },
   {
@@ -289,12 +266,7 @@ export const projects = [
         line: 'An Arabic-first Next.js app on a FastAPI backend.',
         detail:
           'A Next.js app with chat, GPA analytics, AI study planning, a Pomodoro timer, transcript import and indoor navigation across 89+ rooms; FastAPI backend with Firebase.',
-        frame: {
-          kind: 'image',
-          image: screenshot('faten', 2, 605 / 1280),
-          alt: 'Faten dashboard in Arabic with GPA cards, a GPA trend chart and the university calendar',
-          fill: '#ffffff',
-        },
+        frame: fatenDashboard,
       },
     },
     extra: [],
@@ -304,12 +276,14 @@ export const projects = [
     links: [{ label: 'Repository', href: 'https://github.com/Saleh67676/Faten' }],
     map: { data: 'Records, regulations', model: 'LLM agent, 24 tools', product: 'Next.js and FastAPI' },
     plate: {
-      stage: 'product',
-      caption: 'Faten dashboard: GPA, progress and the university calendar',
-      evidence: [
-        { frame: fatenChat, caption: 'The chat agent answering a course question in Arabic: grading breakdown and exam dates' },
-        { frame: fatenMap, caption: 'Indoor navigation: a route on the ground-floor map of the faculty building' },
+      // The dashboard and the chat side by side, the same height. Both are
+      // landscape screens, so they split 6 : 6 to stay readable.
+      layout: 'pair',
+      figures: [
+        { frame: fatenDashboard, caption: 'Faten dashboard: GPA, progress and the university calendar' },
+        { frame: fatenChat, caption: 'The agent answering a course question' },
       ],
+      split: 3,
     },
   },
 ]

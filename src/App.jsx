@@ -19,9 +19,7 @@ export default function App() {
         <Range />
         <WorkIndex />
         <div className="cases light">
-          {projects.map((p, i) => (
-            <CaseBlock key={p.id} project={p} flip={i % 2 === 1} />
-          ))}
+          {projects.map((p) => <CaseBlock key={p.id} project={p} />)}
         </div>
         <Skills />
         <About />
