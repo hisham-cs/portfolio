@@ -26,6 +26,7 @@ All content lives in two files; no component needs to change for ordinary edits.
 Drop source files into `raw-images/` and run `npm run images` (needs `npm install --no-save sharp` once; sharp is a local tool and never ships):
 
 - `raw-images/projects/{slug}-{n}-{label}.png` → `src/assets/projects/{slug}/{n}-{480,1280}w.webp` (16:9)
+  - except slugs in `KEEP_WHOLE` in the script (the edema app screens): kept whole at their natural ratio as `{n}-1280w.webp` only, read with `wholeScreenshot()`; frames crop them in CSS
 - `raw-images/credentials/{name}.png` → `src/assets/credentials/{name}-{480,1280}w.webp` (natural ratio)
 - `raw-images/figures/{name}.jpg` → `src/assets/figures/{name}-{480,1280}w.webp` (natural ratio)
 

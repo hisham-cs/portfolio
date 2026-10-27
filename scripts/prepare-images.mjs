@@ -35,6 +35,11 @@ const IMAGE_EXT_RE = /\.(png|jpe?g)$/i
 const PROJECT_WIDTHS = [480, 1280]
 const MOSAIC_HEIGHT_RATIO = 9 / 16 // 16:9 mosaic tiles, matches ASPECT_RATIO in data.js
 const QUALITY = 85
+// Screenshots kept whole at their natural ratio instead of cropped to 16:9:
+// wide app screens where an automatic crop would cut a panel that matters.
+// The frames crop them in CSS (object-position) per context instead, and
+// only the 1280w file is made (see wholeScreenshot in src/data/images.js).
+const KEEP_WHOLE = new Set(['pulmonary-edema'])
 
 const results = []
 const warnings = []
@@ -77,20 +82,26 @@ async function processProjectMosaics() {
     if (!existsSync(slugDir)) mkdirSync(slugDir, { recursive: true })
 
     for (const [order, srcPath] of Object.entries(orders)) {
-      for (const width of PROJECT_WIDTHS) {
-        const height = Math.round(width * MOSAIC_HEIGHT_RATIO)
+      const whole = KEEP_WHOLE.has(slug)
+      // Frames magnify a whole wide screen when they crop it, so it only
+      // needs the large file.
+      for (const width of whole ? [PROJECT_WIDTHS.at(-1)] : PROJECT_WIDTHS) {
         const outName = `${order}-${width}w.webp`
         const outPath = join(slugDir, outName)
-        const buffer = await sharp(srcPath)
+        const { data: buffer, info } = await sharp(srcPath)
           .rotate() // auto-orient per EXIF, then strip the tag
-          .resize(width, height, { fit: 'cover', position: 'attention' })
+          .resize(
+            whole
+              ? { width, withoutEnlargement: true }
+              : { width, height: Math.round(width * MOSAIC_HEIGHT_RATIO), fit: 'cover', position: 'attention' },
+          )
           .webp({ quality: QUALITY })
-          .toBuffer()
+          .toBuffer({ resolveWithObject: true })
         writeFileSync(outPath, buffer)
         results.push({
           src: basename(srcPath),
           out: `${slug}/${outName}`,
-          dims: `${width}x${height}`,
+          dims: `${info.width}x${info.height}`,
           size: kb(buffer.length),
         })
       }
