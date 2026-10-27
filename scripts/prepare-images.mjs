@@ -87,14 +87,19 @@ async function processProjectMosaics() {
 
     for (const [order, srcPath] of Object.entries(orders)) {
       const trim = TRIM_LEFT[basename(srcPath)] ?? 0
-      const meta = trim ? await sharp(srcPath).metadata() : null
-      for (const width of SCREENSHOT_WIDTHS) {
+      const meta = await sharp(srcPath).metadata()
+      // Only the tiers the source can fill, plus one file at its own width
+      // (capped at the top tier), so every name states the file's real width.
+      const srcWidth = meta.width - trim
+      const top = Math.min(srcWidth, SCREENSHOT_WIDTHS.at(-1))
+      const widths = [...new Set([...SCREENSHOT_WIDTHS.filter((w) => w < top), top])]
+      for (const width of widths) {
         const outName = `${order}-${width}w.webp`
         const outPath = join(slugDir, outName)
         let img = sharp(srcPath).rotate() // auto-orient per EXIF, then strip the tag
         if (trim) img = img.extract({ left: trim, top: 0, width: meta.width - trim, height: meta.height })
         const { data: buffer, info } = await img
-          .resize({ width, withoutEnlargement: true })
+          .resize({ width })
           .webp({ quality: QUALITY })
           .toBuffer({ resolveWithObject: true })
         writeFileSync(outPath, buffer)

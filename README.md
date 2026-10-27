@@ -25,7 +25,7 @@ All content lives in two files; no component needs to change for ordinary edits.
 
 Drop source files into `raw-images/` and run `npm run images` (needs `npm install --no-save sharp` once; sharp is a local tool and never ships):
 
-- `raw-images/projects/{slug}-{n}-{label}.png` → `src/assets/projects/{slug}/{n}-{480,800,1280}w.webp` (natural ratio, never cropped; pass the ratio to `screenshot()`)
+- `raw-images/projects/{slug}-{n}-{label}.png` → `src/assets/projects/{slug}/{n}-{480,800,1280}w.webp` (natural ratio, never cropped or enlarged: a narrower source stops at its own width, e.g. `6-448w.webp`; pass the ratio to `screenshot()`)
 - `raw-images/credentials/{name}.png` → `src/assets/credentials/{name}-{480,1280}w.webp` (natural ratio)
 - `raw-images/figures/{name}.jpg` → `src/assets/figures/{name}-{480,1280}w.webp` (natural ratio)
 

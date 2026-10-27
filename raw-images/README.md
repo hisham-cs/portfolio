@@ -18,8 +18,9 @@ projects/telco-churn-4-coefficients.png
 ```
 
 Produces `src/assets/projects/telco-churn/{order}-{480,800,1280}w.webp` — one
-subfolder per project, three width tiers (480w, 800w for phones at 2x,
-1280w everything else), at the
+subfolder per project, up to three width tiers (480w, 800w for phones at
+2x, 1280w everything else), never enlarged: a source narrower than a tier
+stops at its own width (a 448px chart gives only `6-448w.webp`), at the
 source's natural ratio. Nothing is cropped; the site shows every screenshot
 whole. The one exception is TRIM_LEFT in the script, which cuts the app's
 sidebar from the edema report screen on purpose.
