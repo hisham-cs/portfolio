@@ -1,98 +1,53 @@
 # Hisham Al-Malki — Portfolio
 
+Personal site of Hisham Al-Malki, Computer Science graduate of Umm Al-Qura University: three projects, each taken from raw data to a model to a working product.
 
-Personal portfolio website showcasing my projects, skills, education, and certifications in data analytics, AI, and software engineering.
+**Live:** [hisham-cs.github.io/portfolio](https://hisham-cs.github.io/portfolio/)
 
-**Live Website:** [hisham-cs.github.io/portfolio](https://hisham-cs.github.io/portfolio/)
+## Projects shown
 
-## Features
+- **Telecom churn analysis** — Excel / Power Query cleaning, a three-page Power BI dashboard, and a logistic regression model (0.849 ROC-AUC) on IBM's public Telco sample dataset. [Repository](https://github.com/hisham-cs/telco-churn-analysis)
+- **Pulmonary edema detector** — a four-CNN soft-voting ensemble with Grad-CAM, served as a Streamlit app; research and education only. [Repository](https://github.com/hisham-cs/AI-Pulmonary-Edema-Detector) · [Live app](https://ai-pulmonary-edema-detector-n2mdhebrvfowgvbobyfo4j.streamlit.app/)
+- **Faten** — an Arabic-first AI academic assistant (graduation project) with an LLM agent, Next.js and FastAPI. [Repository](https://github.com/Saleh67676/Faten)
 
-- Responsive personal portfolio
-- Modern UI with smooth animations and transitions
-- About, skills, projects, education, certifications, and contact sections
-- External links for GitHub, LinkedIn, live demos, and project repositories
+## Stack
 
-## Tech Stack
+React 19 and Vite 8, plain CSS with design tokens (`src/index.css`), no UI library. One self-hosted variable font (Bricolage Grotesque). See [DESIGN.md](DESIGN.md) for the design system.
 
-- React 19
-- Vite
-- Tailwind CSS v4
-- JavaScript
+## Editing content
 
-## Focus Areas
+All content lives in two files; no component needs to change for ordinary edits.
 
-- **Data Analytics** — Turning raw data into dashboards, insights, and clear decisions using Python, SQL, and BI tools.
-- **Computer Vision** — Working with image classification, medical imaging, segmentation, and model evaluation.
-- **Software & AI Systems** — Building practical tools such as academic assistants, support chatbots, prediction systems, and automation workflows.
+- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, and short labels for the skill map. Every section (hero, "Hand me a problem", work index, case blocks, skill map) renders from this list.
+- `src/data/site.js` — profile, skills (each pointing at the stages that prove it), about, experience, education, certification and courses, picture credits.
 
-## Selected Projects
+### Images
 
-- **Faten — UQU Academic Assistant**
-  An AI-powered academic assistant that helps students access university services, ask academic questions, manage study plans, calculate GPA, and organize their academic workflow in one platform.
-  [GitHub](https://github.com/Saleh67676/Faten.git)
+Drop source files into `raw-images/` and run `npm run images` (needs `npm install --no-save sharp` once; sharp is a local tool and never ships):
 
-- **Pulmonary Edema Detection**
-  A medical imaging AI system that classifies chest X-ray images and provides Grad-CAM visual explanations to support model interpretability.
-  [GitHub](https://github.com/hisham-cs/AI-Pulmonary-Edema-Detector.git) · [Live Demo](https://ai-pulmonary-edema-detector-n2mdhebrvfowgvbobyfo4j.streamlit.app/)
+- `raw-images/projects/{slug}-{n}-{label}.png` → `src/assets/projects/{slug}/{n}-{480,1280}w.webp` (16:9)
+- `raw-images/credentials/{name}.png` → `src/assets/credentials/{name}-{480,1280}w.webp` (natural ratio)
+- `raw-images/figures/{name}.jpg` → `src/assets/figures/{name}-{480,1280}w.webp` (natural ratio)
 
-- **Smart Complaint System**
-  A domain-specific chatbot for university IT support that understands user complaints, searches verified solutions using similarity search, and provides accurate responses or escalates unresolved cases for human review.
-  [GitHub](https://github.com/Saleh67676/Smart-Complaint-System.git)
+`raw-images/` and `incoming/` are gitignored.
 
-## Education
+### Certificates
 
-**Bachelor of Computer Science** — Umm Al-Qura University, College of Computers
-Graduated: 2026 · GPA: 3.48 / 4.0 · Second Class Honours
+The NVIDIA certificate is shown. Course certificates are listed as text until their scans are approved for publication (several carry QR codes or certificate IDs). To show one: put its scan in `raw-images/credentials/` under the `imageName` given in `src/data/site.js`, run `npm run images`, and set `publish: true` on that course. To link the NVIDIA verification page, fill `certification.verifyUrl`.
 
-## Certifications
-
-- KAUST Academy — Advanced Artificial Intelligence (2026)
-- KAUST Academy — Introduction to Artificial Intelligence (2026)
-- Hash Plus — Data Analytics Bootcamp (2026)
-- DeepLearning.AI — Mathematics for ML and Data Science (2025)
-- DataCamp — Python Data Fundamentals (2025)
-- SDAIA — Fundamentals of Artificial Intelligence (2025)
-
-## Getting Started
-
-Install dependencies:
+## Develop
 
 ```bash
 npm install
-```
-
-Run locally:
-
-```bash
-npm run dev
-```
-
-Build for production:
-
-```bash
+npm run dev       # http://localhost:5173/portfolio/
 npm run build
-```
-
-Preview the production build:
-
-```bash
-npm run preview
+npm run preview   # serves dist/ under /portfolio/, as GitHub Pages does
 ```
 
 ## Deployment
 
-This portfolio is deployed using GitHub Pages. To deploy manually:
-
-```bash
-npm run deploy
-```
+GitHub Pages deploys from the Actions workflow `.github/workflows/deploy.yml` on every push to `main` (the repository has no `gh-pages` branch). `vite.config.js` sets `base: '/portfolio/'`.
 
 ## Contact
 
-- **Email:** [hasalmalki@outlook.com](mailto:hasalmalki@outlook.com)
-- **GitHub:** [github.com/hisham-cs](https://github.com/hisham-cs)
-- **LinkedIn:** [linkedin.com/in/hisham-a-almalki](https://www.linkedin.com/in/hisham-a-almalki)
-
-## License
-
-This project is for personal portfolio use.
+[hasalmalki@outlook.com](mailto:hasalmalki@outlook.com) · [GitHub](https://github.com/hisham-cs) · [LinkedIn](https://www.linkedin.com/in/hisham-a-almalki)
