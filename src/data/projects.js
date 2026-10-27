@@ -1,11 +1,19 @@
 import { screenshot, wholeScreenshot, natural } from './images.js'
 
 // Edema imagery all derives from one CC0 radiograph (credited in site.js):
-// the X-ray itself, the app's Ensemble CAM output for it, and two app
-// screenshots with that same X-ray loaded, kept whole by the image pipeline.
+// the X-ray itself, the app's own Grad-CAM overlay from each model for it
+// (pixel-aligned with the X-ray), and two app screenshots with that same
+// X-ray loaded, kept whole by the image pipeline. Probabilities are the
+// app's sidebar values for this one image, not accuracy figures.
 const EDEMA_RATIO = 626 / 697
 const edemaXray = natural('edema-xray', EDEMA_RATIO)
-const edemaCam = natural('edema-gradcam', EDEMA_RATIO)
+const edemaCams = [
+  { id: 'ensemble', label: 'Ensemble', probability: '95.99%', agreement: 'high' },
+  { id: 'densenet121', label: 'DenseNet121', probability: '94.7%' },
+  { id: 'efficientnet-b0', label: 'EfficientNet-B0', probability: '99.8%' },
+  { id: 'resnet50', label: 'ResNet50', probability: '100.0%' },
+  { id: 'convnext-tiny', label: 'ConvNeXt-Tiny', probability: '89.5%' },
+].map((m) => ({ ...m, image: natural(`edema-cam-${m.id}`, EDEMA_RATIO) }))
 const edemaReport = wholeScreenshot('pulmonary-edema', 1, 882 / 1889)
 const edemaVotes = wholeScreenshot('pulmonary-edema', 2, 883 / 1897)
 
@@ -160,9 +168,9 @@ export const projects = [
     map: { data: '10,803 chest X-rays', model: 'Four CNNs, Grad-CAM', product: 'Streamlit app' },
     plate: {
       stage: 'data',
-      reveal: { base: edemaXray, overlay: edemaCam, label: 'Grad-CAM overlay', ratio: EDEMA_RATIO },
+      reveal: { base: edemaXray, layers: edemaCams, label: 'Grad-CAM overlay', ratio: EDEMA_RATIO },
       caption:
-        'Example input, not training data: “Chest radiograph of a lung with Kerley B lines” by Mikael Häggström, CC0, via Wikimedia Commons. The heatmap is the app’s Ensemble CAM for this image.',
+        'Example input, not training data: “Chest radiograph of a lung with Kerley B lines” by Mikael Häggström, CC0, via Wikimedia Commons. Each heatmap is the app’s own Grad-CAM output for this image.',
     },
     layout: 'split',
   },

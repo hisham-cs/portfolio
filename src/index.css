@@ -172,9 +172,23 @@ button { font: inherit; color: inherit; }
 
 /* Edema: the Grad-CAM reveal. Controls sit on a dark bar so the ochre
    accent keeps its 8.49:1 (it is 1.95:1 on the light field). */
+.reveal-top { padding: 16px; }
+.models { border: 0; padding: 0; margin: 0; min-width: 0; }
+.models legend { padding: 0; margin-bottom: 8px; font-weight: 500; }
+.models-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.models label { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; background: var(--dk-surface); font-size: var(--s-small); font-weight: 500; cursor: pointer;
+                transition: background-color var(--t-hover) ease, color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+.models label:active { transform: scale(0.98); }
+.models label.on { background: var(--bd-bg); color: var(--bd-ink); }
+.models input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.models label:has(input:focus-visible) { outline: 2px solid var(--f-dk); outline-offset: 3px; }
+.model-read { margin-top: 16px; }
+.model-read b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.model-note { margin-top: 6px; font-size: var(--s-small); color: var(--dk-muted); max-width: 60ch; }
 .reveal-stage { position: relative; overflow: hidden; background: #000000; }
 .reveal-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.reveal-overlay { clip-path: inset(0 calc(100% - var(--p)) 0 0); }
+.reveal-overlay { clip-path: inset(0 calc(100% - var(--p)) 0 0); opacity: 0; transition: opacity 160ms ease; }
+.reveal-overlay.on { opacity: 1; }
 .reveal-edge { position: absolute; top: 0; bottom: 0; left: var(--p); width: 4px; margin-left: -2px; background: var(--bd-bg); }
 .reveal-bar { display: grid; grid-template-columns: auto 1fr 4ch; align-items: center; gap: 16px; padding: 12px 16px; }
 .reveal-bar label { font-weight: 500; }

@@ -1,20 +1,50 @@
 import { useId, useState } from 'react'
 
-// The plain film with the model's heatmap wiped across it. Both images are
-// the app's real output at the same size, so they overlay at zero offset;
-// nothing here draws or alters the heatmap.
+// The plain film with a model's heatmap wiped across it. Every layer is the
+// app's real output at the same size as the X-ray, so they overlay at zero
+// offset; nothing here draws or alters a heatmap. All layers are stacked and
+// only the chosen one is shown, so switching model is instant and keeps the
+// slider where it is.
 export default function RevealSlider({ reveal, initial = 50 }) {
   const [value, setValue] = useState(initial)
+  const [chosen, setChosen] = useState(reveal.layers[0].id)
   const id = useId()
-  const { base, overlay, label, ratio } = reveal
+  const { base, layers, label, ratio } = reveal
+  const layer = layers.find((l) => l.id === chosen)
+  const sizes = '(max-width: 760px) 92vw, 46vw'
   return (
     <div className="reveal" style={{ '--p': `${value}%` }}>
+      <div className="reveal-top dark">
+        <fieldset className="models">
+          <legend>Heatmap from</legend>
+          <div className="models-row">
+            {layers.map((l) => (
+              <label key={l.id} className={l.id === chosen ? 'on' : undefined}>
+                <input type="radio" name={`${id}-model`} value={l.id} checked={l.id === chosen} onChange={() => setChosen(l.id)} />
+                {l.label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <p className="model-read" aria-live="polite">
+          <b>{layer.probability}</b> edema probability from {layer.label} on this example image
+          {layer.agreement && <>; model agreement: {layer.agreement}</>}
+        </p>
+        <p className="model-note">
+          Each network looks at different regions; the ensemble averages them. Outputs on one image, not accuracy. For research and education, not diagnosis.
+        </p>
+      </div>
       <div className="reveal-stage" style={{ aspectRatio: `${1 / ratio}` }}>
-        <img src={base.src} srcSet={base.srcSet} sizes="(max-width: 760px) 92vw, 46vw" width={base.width} height={base.height}
+        <img src={base.src} srcSet={base.srcSet} sizes={sizes} width={base.width} height={base.height}
           alt="Chest X-ray, the example input" loading="lazy" decoding="async" />
-        <img className="reveal-overlay" src={overlay.src} srcSet={overlay.srcSet} sizes="(max-width: 760px) 92vw, 46vw"
-          width={overlay.width} height={overlay.height} loading="lazy" decoding="async"
-          alt={`The same X-ray under the ensemble Grad-CAM heatmap, shown across ${value}% of the image`} />
+        {layers.map((l) => {
+          const on = l.id === chosen
+          return (
+            <img key={l.id} className={`reveal-overlay${on ? ' on' : ''}`} src={l.image.src} srcSet={l.image.srcSet} sizes={sizes}
+              width={l.image.width} height={l.image.height} loading="lazy" decoding="async" aria-hidden={on ? undefined : true}
+              alt={on ? `The same X-ray under the ${l.label} Grad-CAM heatmap, shown across ${value}% of the image` : ''} />
+          )
+        })}
         <span className="reveal-edge" aria-hidden="true" />
       </div>
       <div className="reveal-bar dark">
