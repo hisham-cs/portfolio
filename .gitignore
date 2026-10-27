@@ -48,3 +48,6 @@ raw-images/*
 # AI Skills Output
 templates/
 
+
+# Owner-supplied originals (certificates with personal data) -- never commit
+incoming/
