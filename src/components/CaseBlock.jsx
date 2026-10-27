@@ -19,7 +19,7 @@ export default function CaseBlock({ project, flip }) {
       <figure className="plate" data-reveal>
         {project.plate.reveal
           ? <RevealSlider reveal={project.plate.reveal} />
-          : <Frame frame={plateFrame} className="drift" sizes={wide ? '100vw' : '(max-width: 760px) 92vw, 46vw'} />}
+          : <Frame frame={plateFrame} sizes={wide ? '100vw' : '(max-width: 760px) 92vw, 46vw'} />}
         <figcaption className={project.plate.reveal ? 'credit' : undefined}>{project.plate.caption}</figcaption>
       </figure>
       <div className="text">

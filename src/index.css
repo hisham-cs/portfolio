@@ -72,8 +72,10 @@ button { font: inherit; color: inherit; }
 .btn.on-light:hover { background: var(--bl-hover); } .btn.on-light:active { background: var(--bl-active); }
 
 /* ---------- Frames: real pieces of the projects ---------- */
-.frame { position: relative; overflow: hidden; background: var(--ui-bg); color: var(--ui-ink); }
-.frame > img { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms var(--ease-out); }
+/* Every picture is shown whole: frames in a row share one ratio and the
+   picture sits inside on its own edge colour (the frame's inline fill). */
+.frame { position: relative; overflow: hidden; background: var(--ui-bg); color: var(--ui-ink); container-type: inline-size; }
+.frame > img { width: 100%; height: 100%; object-fit: contain; }
 [data-ui].ui { height: 100%; padding: clamp(14px, 2vw, 24px); font: 400 var(--s-small)/1.4 var(--font); display: flex; flex-direction: column; gap: 10px; }
 [data-ui] .ui-title { font-weight: 600; }
 [data-ui] .ui-foot { margin-top: auto; color: var(--ui-muted); }
@@ -81,6 +83,10 @@ button { font: inherit; color: inherit; }
 [data-ui] table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
 [data-ui] th, [data-ui] td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--ui-edge); white-space: nowrap; }
 [data-ui] th { font-weight: 600; }
+/* Narrow frames drop the optional columns rather than cut any */
+@container (max-width: 560px) { [data-ui] .opt { display: none; } }
+@container (max-width: 480px) { [data-ui] table { font-size: 0.8125rem; } [data-ui] th, [data-ui] td { padding: 4px 6px; } }
+@container (max-width: 400px) { [data-ui] .opt-narrow { display: none; } }
 [data-ui] ol, [data-ui] ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
 [data-ui] ul[dir='rtl'] { padding: 0 1.2em 0 0; font-family: var(--font-ar); }
 [data-ui] li span { color: var(--ui-muted); }
@@ -105,7 +111,6 @@ button { font: inherit; color: inherit; }
 .proof .frame { aspect-ratio: 16 / 9; }
 .proof .cap { display: block; font-size: var(--s-small); margin-top: 8px; color: var(--dk-muted); }
 .proof .cap b { color: var(--dk-ink); font-weight: 500; }
-.proof-link:hover .frame > img { transform: scale(1.03); }
 .proof-link:hover .cap b { text-decoration: underline; }
 
 /* ---------- 2. Hand me a problem ---------- */
@@ -119,7 +124,7 @@ button { font: inherit; color: inherit; }
 .pick input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .pick label:has(input:focus-visible) { outline: 2px solid var(--f-ac); outline-offset: 3px; }
 .chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
-.chain .frame { aspect-ratio: 4 / 3; }
+.chain .frame { aspect-ratio: 3 / 2; }
 .chain-cap { margin-top: 12px; }
 .chain-cap b { display: block; font-weight: 600; }
 .stage-tabs { display: none; }
@@ -143,7 +148,7 @@ button { font: inherit; color: inherit; }
 .case.split.flip .plate { order: 2; }
 .case:nth-child(even) { background: var(--lt-surface); }
 .plate { margin: 0; padding: var(--margin); display: grid; align-content: center; }
-.case.split .plate .frame { aspect-ratio: 1; }
+.plate .frame > img, .row-fig .frame > img { height: auto; } /* natural ratio */
 .plate figcaption { font-size: var(--s-small); margin-top: 8px; color: var(--lt-muted); }
 .text { padding: 56px var(--margin) var(--margin); display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
 .text h3 { font-size: var(--s-head); }
@@ -154,7 +159,6 @@ button { font: inherit; color: inherit; }
 .text dt { color: var(--lt-muted); } .text dd { margin: 0; }
 .row-fig { margin: 16px 0 0; }
 .row-fig a { display: block; }
-.row-fig .frame { aspect-ratio: 16 / 9; }
 .row-fig figcaption { font-size: var(--s-small); margin-top: 8px; color: var(--lt-muted); }
 .cells { display: grid; grid-template-columns: 1fr 1fr; }
 .cells.one { grid-template-columns: 1fr; }
@@ -168,7 +172,6 @@ button { font: inherit; color: inherit; }
 /* The one break in the series: a wide block */
 .case.wide { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); padding: var(--margin) var(--margin) 0; }
 .case.wide .plate { grid-column: 1 / -1; padding: 0; }
-.case.wide .plate .frame { aspect-ratio: 21 / 9; }
 .case.wide .text { grid-column: 1 / -1; padding: 48px 0 var(--margin); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
 .case.wide .head { grid-column: 1 / span 5; }
 .case.wide dl { grid-column: 7 / -1; }
@@ -286,11 +289,6 @@ footer { padding: 72px var(--margin) 24px; }
 .motion [data-reveal] { transition: transform var(--t-reveal) var(--ease-expo); transition-delay: calc(var(--i, 0) * 80ms); }
 .motion [data-reveal]:not(.in) { transform: translateY(24px); }
 .motion .chain li { animation: rise 560ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms); }
-/* The one moving picture: case plates settle as they cross the screen */
-@supports (animation-timeline: view()) {
-  .motion .drift > img { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% cover 60%; }
-  @keyframes settle { from { transform: scale(1.08) translateY(-2%); } to { transform: none; } }
-}
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1100px) {
@@ -307,6 +305,12 @@ footer { padding: 72px var(--margin) 24px; }
 }
 
 @media (max-width: 900px) {
+  /* One large frame, with the three stages as controls */
+  .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 12px; }
+  .stage-tabs button { min-height: 48px; border: 0; background: var(--ac-tint); color: var(--ac-ink); font-weight: 500; cursor: pointer; }
+  .stage-tabs button[aria-pressed='true'] { background: var(--ac-sel-bg); color: var(--ac-sel-ink); }
+  .chain { grid-template-columns: minmax(0, 1fr); }
+  .chain li:not(.on) { display: none; }
   .case.split { grid-template-columns: 1fr; } .case.split.flip .plate { order: 0; }
   .case.split .plate { max-width: 640px; }
   .plate figcaption:not(.credit) { display: none; } /* a caption above a stacked title reads as an eyebrow */
@@ -321,20 +325,14 @@ footer { padding: 72px var(--margin) 24px; }
   .hero-nav a:not(.keep) { display: none; }
   .hero-name .b-wrap { bottom: 18px; }
   .proof { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
-  .proof .frame { aspect-ratio: 21 / 9; }
-  /* One large frame, with the three stages as controls */
-  .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 12px; }
-  .stage-tabs button { min-height: 48px; border: 0; background: var(--ac-tint); color: var(--ac-ink); font-weight: 500; cursor: pointer; }
-  .stage-tabs button[aria-pressed='true'] { background: var(--ac-sel-bg); color: var(--ac-sel-ink); }
-  .chain { grid-template-columns: minmax(0, 1fr); }
-  .chain li:not(.on) { display: none; }
+  .proof .frame { aspect-ratio: 16 / 9; }
   .chain .frame { aspect-ratio: 4 / 3; }
   .names a { grid-template-columns: 1fr; row-gap: 4px; }
   .case.split { grid-template-columns: 1fr; } .case.split.flip .plate { order: 0; }
   .plate { padding: 20px var(--margin) 0; }
   .text { padding: 28px var(--margin) 40px; }
   .text dl > div { grid-template-columns: 1fr; row-gap: 2px; }
-  .case.wide { padding: 20px var(--margin) 0; } .case.wide .plate .frame { aspect-ratio: 4 / 3; }
+  .case.wide { padding: 20px var(--margin) 0; }
   .map { font-size: var(--s-small); border-spacing: 4px; margin: -4px; }
   .map thead th:first-child { width: 26%; }
   .map td { height: auto; padding: 10px 8px; }

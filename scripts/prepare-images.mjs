@@ -33,13 +33,9 @@ const IMAGE_EXT_RE = /\.(png|jpe?g)$/i
 // kept almost none of the srcset benefit for a third of the file count;
 // confirmed via a post-change Lighthouse mobile run (see DESIGN.md).
 const PROJECT_WIDTHS = [480, 1280]
-const MOSAIC_HEIGHT_RATIO = 9 / 16 // 16:9 mosaic tiles, matches ASPECT_RATIO in data.js
 const QUALITY = 85
-// Screenshots kept whole at their natural ratio instead of cropped to 16:9:
-// wide app screens where an automatic crop would cut a panel that matters.
-// The frames crop them in CSS (object-position) per context instead, and
-// only the 1280w file is made (see wholeScreenshot in src/data/images.js).
-const KEEP_WHOLE = new Set(['pulmonary-edema'])
+// Screenshots are never cropped: each keeps its natural ratio, and the site
+// shows it whole (object-fit: contain) on a fill that matches its edge.
 // Pixels cut from the left edge of a raw screenshot before resizing. The
 // edema report screen loses the app's sidebar (0-293px), whose "Final
 // diagnosis" label the site never shows; the X-ray starts at 373px.
@@ -86,22 +82,15 @@ async function processProjectMosaics() {
     if (!existsSync(slugDir)) mkdirSync(slugDir, { recursive: true })
 
     for (const [order, srcPath] of Object.entries(orders)) {
-      const whole = KEEP_WHOLE.has(slug)
-      // Frames magnify a whole wide screen when they crop it, so it only
-      // needs the large file.
       const trim = TRIM_LEFT[basename(srcPath)] ?? 0
       const meta = trim ? await sharp(srcPath).metadata() : null
-      for (const width of whole ? [PROJECT_WIDTHS.at(-1)] : PROJECT_WIDTHS) {
+      for (const width of PROJECT_WIDTHS) {
         const outName = `${order}-${width}w.webp`
         const outPath = join(slugDir, outName)
         let img = sharp(srcPath).rotate() // auto-orient per EXIF, then strip the tag
         if (trim) img = img.extract({ left: trim, top: 0, width: meta.width - trim, height: meta.height })
         const { data: buffer, info } = await img
-          .resize(
-            whole
-              ? { width, withoutEnlargement: true }
-              : { width, height: Math.round(width * MOSAIC_HEIGHT_RATIO), fit: 'cover', position: 'attention' },
-          )
+          .resize({ width, withoutEnlargement: true })
           .webp({ quality: QUALITY })
           .toBuffer({ resolveWithObject: true })
         writeFileSync(outPath, buffer)

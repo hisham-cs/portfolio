@@ -3,9 +3,9 @@
 // (table rules, monospace identifiers) are kept inside them.
 export default function Frame({ frame, sizes = '(max-width: 760px) 90vw, 40vw', className = '', eager = false }) {
   if (frame.kind === 'image') {
-    const { image, alt, position } = frame
+    const { image, alt, fill } = frame
     return (
-      <div className={`frame ${className}`}>
+      <div className={`frame ${className}`} style={fill ? { background: fill } : undefined}>
         <img
           src={image.src}
           srcSet={image.srcSet}
@@ -16,24 +16,25 @@ export default function Frame({ frame, sizes = '(max-width: 760px) 90vw, 40vw', 
           loading={eager ? 'eager' : 'lazy'}
           fetchPriority={eager ? 'high' : undefined}
           decoding="async"
-          style={position ? { objectPosition: position } : undefined}
         />
       </div>
     )
   }
 
   if (frame.kind === 'table') {
+    const col = frame.columns
+    const opt = (i) => (frame.optional?.includes(col[i]) ? 'opt' : frame.optionalNarrow?.includes(col[i]) ? 'opt-narrow' : undefined)
     return (
       <div className={`frame ${className}`}>
         <div data-ui className="ui" role="figure" aria-label={frame.label}>
           <div className="ui-scroll">
             <table>
               <thead>
-                <tr>{frame.columns.map((c) => <th key={c} scope="col">{c}</th>)}</tr>
+                <tr>{frame.columns.map((c, i) => <th key={c} scope="col" className={opt(i)}>{c}</th>)}</tr>
               </thead>
               <tbody>
                 {frame.rows.map((row) => (
-                  <tr key={row[0]}>{row.map((cell, i) => <td key={i}>{cell}</td>)}</tr>
+                  <tr key={row[0]}>{row.map((cell, i) => <td key={i} className={opt(i)}>{cell}</td>)}</tr>
                 ))}
               </tbody>
             </table>

@@ -1,9 +1,9 @@
-import { screenshot, wholeScreenshot, natural } from './images.js'
+import { screenshot, natural } from './images.js'
 
 // Edema imagery all derives from one CC0 radiograph (credited in site.js):
 // the X-ray itself, the app's own Grad-CAM overlay from each model for it
 // (pixel-aligned with the X-ray), and two app screenshots with that same
-// X-ray loaded, kept whole by the image pipeline. Probabilities are the
+// X-ray loaded. Probabilities are the
 // app's sidebar values for this one image, not accuracy figures.
 const EDEMA_RATIO = 626 / 697
 const edemaXray = natural('edema-xray', EDEMA_RATIO)
@@ -14,8 +14,8 @@ const edemaCams = [
   { id: 'resnet50', label: 'ResNet50', probability: '100.0%' },
   { id: 'convnext-tiny', label: 'ConvNeXt-Tiny', probability: '89.5%' },
 ].map((m) => ({ ...m, image: natural(`edema-cam-${m.id}`, EDEMA_RATIO) }))
-const edemaReport = wholeScreenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
-const edemaVotes = wholeScreenshot('pulmonary-edema', 2, 883 / 1897)
+const edemaReport = screenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
+const edemaVotes = screenshot('pulmonary-edema', 2, 883 / 1897)
 
 // The three stages every project is shown through. Sections read this list,
 // so the "Hand me a problem" chain, the case blocks and the skill map all stay
@@ -29,8 +29,10 @@ export const STAGES = [
 // ---------------------------------------------------------------------------
 // Projects. To add one, append an entry with the same shape; no section needs
 // to change. Frames are one of three kinds:
-//   { kind: 'image', image: screenshot(...) | natural(...), alt, position? }
-//   { kind: 'table', columns: [...], rows: [[...], ...], foot }
+//   { kind: 'image', image: screenshot(...) | natural(...), alt, fill }
+// Images are always shown whole; `fill` is the colour of the image's own edge,
+// used wherever a frame is wider or taller than the picture.
+//   { kind: 'table', columns: [...], optional?, optionalNarrow?, rows: [[...], ...], foot }
 //   { kind: 'list', title, items: [...], foot, code?, rtl? }
 // An `extra` row may carry a third item, an image frame shown under its text.
 // `map` holds the short labels for the skill table; `plate` picks which
@@ -55,6 +57,8 @@ export const projects = [
           kind: 'table',
           label: 'First rows of the customer table',
           columns: ['CustomerID', 'Tenure', 'Contract', 'Internet', 'Payment', 'Monthly', 'Churn'],
+          optional: ['CustomerID', 'Payment'], // dropped when the frame is narrow, never cut
+          optionalNarrow: ['Internet'], // dropped too on the narrowest frames
           rows: [
             ['3668-QPYBK', '2', 'Month-to-month', 'DSL', 'Mailed check', '53.85', 'Yes'],
             ['9237-HQITU', '2', 'Month-to-month', 'Fiber optic', 'Electronic check', '70.70', 'Yes'],
@@ -72,8 +76,9 @@ export const projects = [
           'Logistic regression with class weighting on a stratified 80/20 split: 0.849 ROC-AUC, 0.645 AUC-PR, 78% recall on churners (291 of 374) and 51% precision. Its coefficients confirmed the drivers found in the dashboard.',
         frame: {
           kind: 'image',
-          image: screenshot('telco-churn', 4),
+          image: screenshot('telco-churn', 4, 1080 / 1920),
           alt: 'Logistic regression coefficients ranked by their effect on churn',
+          fill: '#ffffff',
         },
       },
       product: {
@@ -83,9 +88,9 @@ export const projects = [
           'A three-page Power BI dashboard with DAX measures, sizing churn losses at $139K in monthly revenue at a 26.5% churn rate.',
         frame: {
           kind: 'image',
-          image: screenshot('telco-churn', 1),
+          image: screenshot('telco-churn', 1, 708 / 1270),
           alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
-          position: 'left top',
+          fill: '#f2f2f0',
         },
       },
     },
@@ -99,7 +104,8 @@ export const projects = [
         'Three, in priority order: move month-to-month fiber customers onto term contracts; bundle tech support into fiber plans (41.6% churn without support, 15.2% with); reach electronic-check payers first.',
         {
           kind: 'image',
-          image: screenshot('telco-churn', 5),
+          image: screenshot('telco-churn', 5, 711 / 1262),
+          fill: '#f2f2f0',
           alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
           caption: 'Dashboard page 3, “Where to act first”',
         },
@@ -132,7 +138,7 @@ export const projects = [
           kind: 'image',
           image: edemaXray,
           alt: 'Chest radiograph with Kerley B lines, a sign of pulmonary edema',
-          position: 'center',
+          fill: '#b1b1b1',
         },
       },
       model: {
@@ -144,7 +150,7 @@ export const projects = [
           kind: 'image',
           image: edemaVotes,
           alt: 'The app’s per-model votes for the example X-ray: EfficientNet-B0 99.8%, ResNet50 100.0% and ConvNeXt-Tiny 89.5% edema probability, above its research-only disclaimer',
-          position: 'left center',
+          fill: '#0e1117',
         },
       },
       product: {
@@ -155,7 +161,7 @@ export const projects = [
           kind: 'image',
           image: edemaReport,
           alt: 'The Streamlit app with the example chest X-ray loaded beside its Ensemble Grad-CAM heatmap',
-          position: 'center',
+          fill: '#0d1116',
         },
       },
     },
@@ -233,9 +239,9 @@ export const projects = [
           'A Next.js app with chat, GPA analytics, AI study planning, a Pomodoro timer, transcript import and indoor navigation across 89+ rooms; FastAPI backend with Firebase.',
         frame: {
           kind: 'image',
-          image: screenshot('faten', 2),
+          image: screenshot('faten', 2, 605 / 1280),
           alt: 'Faten dashboard in Arabic with GPA cards, a GPA trend chart and the university calendar',
-          position: 'right top',
+          fill: '#ffffff',
         },
       },
     },

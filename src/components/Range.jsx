@@ -6,7 +6,7 @@ import Frame from './Frame.jsx'
 // to a model to a product. On a phone the three stages become a swipe row.
 export default function Range() {
   const [id, setId] = useState(projects[0].id)
-  const [stage, setStage] = useState(STAGES[0].id) // phones show one stage at a time
+  const [stage, setStage] = useState(STAGES[0].id) // tablets and phones show one stage at a time
   const project = projects.find((p) => p.id === id)
 
   return (
