@@ -40,6 +40,10 @@ const QUALITY = 85
 // The frames crop them in CSS (object-position) per context instead, and
 // only the 1280w file is made (see wholeScreenshot in src/data/images.js).
 const KEEP_WHOLE = new Set(['pulmonary-edema'])
+// Pixels cut from the left edge of a raw screenshot before resizing. The
+// edema report screen loses the app's sidebar (0-293px), whose "Final
+// diagnosis" label the site never shows; the X-ray starts at 373px.
+const TRIM_LEFT = { 'pulmonary-edema-1-app.png': 300 }
 
 const results = []
 const warnings = []
@@ -85,11 +89,14 @@ async function processProjectMosaics() {
       const whole = KEEP_WHOLE.has(slug)
       // Frames magnify a whole wide screen when they crop it, so it only
       // needs the large file.
+      const trim = TRIM_LEFT[basename(srcPath)] ?? 0
+      const meta = trim ? await sharp(srcPath).metadata() : null
       for (const width of whole ? [PROJECT_WIDTHS.at(-1)] : PROJECT_WIDTHS) {
         const outName = `${order}-${width}w.webp`
         const outPath = join(slugDir, outName)
-        const { data: buffer, info } = await sharp(srcPath)
-          .rotate() // auto-orient per EXIF, then strip the tag
+        let img = sharp(srcPath).rotate() // auto-orient per EXIF, then strip the tag
+        if (trim) img = img.extract({ left: trim, top: 0, width: meta.width - trim, height: meta.height })
+        const { data: buffer, info } = await img
           .resize(
             whole
               ? { width, withoutEnlargement: true }

@@ -14,7 +14,7 @@ const edemaCams = [
   { id: 'resnet50', label: 'ResNet50', probability: '100.0%' },
   { id: 'convnext-tiny', label: 'ConvNeXt-Tiny', probability: '89.5%' },
 ].map((m) => ({ ...m, image: natural(`edema-cam-${m.id}`, EDEMA_RATIO) }))
-const edemaReport = wholeScreenshot('pulmonary-edema', 1, 882 / 1889)
+const edemaReport = wholeScreenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
 const edemaVotes = wholeScreenshot('pulmonary-edema', 2, 883 / 1897)
 
 // The three stages every project is shown through. Sections read this list,
@@ -148,7 +148,7 @@ export const projects = [
           kind: 'image',
           image: edemaReport,
           alt: 'The Streamlit app with the example chest X-ray loaded beside its Ensemble Grad-CAM heatmap',
-          position: '72% center',
+          position: 'center',
         },
       },
     },
