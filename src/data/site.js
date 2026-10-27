@@ -1,9 +1,9 @@
 import { natural } from './images.js'
 
 export const profile = {
-  name: 'Hisham Al-Malki',
+  name: 'Hisham Almalki',
   first: 'Hisham',
-  last: 'Al‑Malki', // non-breaking hyphen keeps the surname on one line
+  last: 'Almalki',
   intro:
     'I’m a Computer Science graduate of Umm Al-Qura University. I take a problem from raw data to a model to a product people use, and I’m looking for data analyst and AI engineer roles.',
   fact: 'Based in Makkah. BSc Computer Science, Umm Al-Qura University, 2026.',

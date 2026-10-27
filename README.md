@@ -1,6 +1,6 @@
-# Hisham Al-Malki — Portfolio
+# Hisham Almalki — Portfolio
 
-Personal site of Hisham Al-Malki, Computer Science graduate of Umm Al-Qura University: three projects, each taken from raw data to a model to a working product.
+Personal site of Hisham Almalki, Computer Science graduate of Umm Al-Qura University: three projects, each taken from raw data to a model to a working product.
 
 **Live:** [hisham-cs.github.io/portfolio](https://hisham-cs.github.io/portfolio/)
 
