@@ -11,7 +11,7 @@ export default function RevealSlider({ reveal, initial = 50 }) {
   const id = useId()
   const { base, layers, label, ratio } = reveal
   const layer = layers.find((l) => l.id === chosen)
-  const sizes = '(max-width: 900px) min(calc(100vw - 2rem), 720px), 56vw'
+  const sizes = '(max-width: 1100px) min(calc(100vw - 2rem), 720px), 56vw'
   return (
     <div className="reveal" style={{ '--p': `${value}%` }}>
       <div className="reveal-top dark">

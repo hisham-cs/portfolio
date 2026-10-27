@@ -23,6 +23,20 @@ const telcoOverview = {
   alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
   fill: '#f2f2f0',
 }
+const telcoDrivers = {
+  kind: 'image',
+  image: screenshot('telco-churn', 2, 712 / 1275),
+  alt: 'Power BI page “What drives churn”: churn rate by contract and internet service, by payment method and contract, by number of services, and with and without tech support',
+  fill: '#f2f2f0',
+}
+// The notebook's own ROC plot (repo images/roc_curve.png), for the final
+// model trained without CLTV: AUC-ROC 0.8489 on 1,409 test customers.
+const telcoRoc = {
+  kind: 'image',
+  image: screenshot('telco-churn', 6, 454 / 448),
+  alt: 'ROC curve of the logistic regression model against the random baseline, AUC 0.85',
+  fill: '#ffffff',
+}
 const telcoActions = {
   kind: 'image',
   image: screenshot('telco-churn', 5, 711 / 1262),
@@ -122,12 +136,23 @@ export const projects = [
     plate: {
       // Both dashboard pages, large enough to read, each linking to its full-size file
       figures: [
-        { frame: telcoOverview, caption: 'Dashboard page 1, the overview', full: true },
+        { frame: telcoOverview, caption: 'Dashboard page 1, “Customer churn overview”', full: true },
+        {
+          frame: telcoDrivers,
+          caption:
+            'Dashboard page 2, “What drives churn”: contract against internet service and payment method, bundling and tech support, to see which drivers hold up once the others are controlled for.',
+          full: true,
+        },
         {
           frame: telcoActions,
           caption:
             'Dashboard page 3, “Where to act first”. Churn Score is IBM’s pre-computed score: the dashboard uses it to describe customers; the model excludes it as target leakage.',
           full: true,
+        },
+        {
+          frame: telcoRoc,
+          caption: 'Model results: ROC curve of the final logistic regression on the 1,409-customer test set, AUC-ROC 0.849 (the legend rounds it to 0.85).',
+          side: true, // set beside the details on wide screens, after the dashboard on phones
         },
       ],
     },
