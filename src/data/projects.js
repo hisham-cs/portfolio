@@ -17,6 +17,19 @@ const edemaCams = [
 const edemaReport = screenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
 const edemaVotes = screenshot('pulmonary-edema', 2, 883 / 1897)
 
+const telcoOverview = {
+  kind: 'image',
+  image: screenshot('telco-churn', 1, 708 / 1270),
+  alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
+  fill: '#f2f2f0',
+}
+const telcoActions = {
+  kind: 'image',
+  image: screenshot('telco-churn', 5, 711 / 1262),
+  fill: '#f2f2f0',
+  alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
+}
+
 // The three stages every project is shown through. Sections read this list,
 // so the "Hand me a problem" chain, the case blocks and the skill map all stay
 // in step with it.
@@ -34,9 +47,9 @@ export const STAGES = [
 // used wherever a frame is wider or taller than the picture.
 //   { kind: 'table', columns: [...], optional?, optionalNarrow?, rows: [[...], ...], foot }
 //   { kind: 'list', title, items: [...], foot, code?, rtl? }
-// An `extra` row may carry a third item, an image frame shown under its text.
 // `map` holds the short labels for the skill table; `plate` picks which
-// stage's frame fills the case block's picture; `layout` is 'split' or 'wide'.
+// stage's frame is the case block's picture (or lists `figures`, or a
+// `reveal`); `layout` is 'split' or 'wide'.
 // Facts here are verified against the repositories or owner-stated from the CV.
 // ---------------------------------------------------------------------------
 export const projects = [
@@ -86,12 +99,7 @@ export const projects = [
         line: 'A three-page Power BI dashboard with DAX.',
         detail:
           'A three-page Power BI dashboard with DAX measures, sizing churn losses at $139K in monthly revenue at a 26.5% churn rate.',
-        frame: {
-          kind: 'image',
-          image: screenshot('telco-churn', 1, 708 / 1270),
-          alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
-          fill: '#f2f2f0',
-        },
+        frame: telcoOverview,
       },
     },
     extra: [
@@ -102,13 +110,6 @@ export const projects = [
       [
         'Actions',
         'Three, in priority order: move month-to-month fiber customers onto term contracts; bundle tech support into fiber plans (41.6% churn without support, 15.2% with); reach electronic-check payers first.',
-        {
-          kind: 'image',
-          image: screenshot('telco-churn', 5, 711 / 1262),
-          fill: '#f2f2f0',
-          alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
-          caption: 'Dashboard page 3, “Where to act first”',
-        },
       ],
     ],
     myPart: 'Everything; a solo project.',
@@ -118,7 +119,18 @@ export const projects = [
       { label: 'The notebook', href: 'https://github.com/hisham-cs/telco-churn-analysis/blob/main/churn_model.ipynb' },
     ],
     map: { data: '7,043 customer rows', model: 'Logistic regression', product: 'Power BI dashboard' },
-    plate: { stage: 'product', caption: 'Power BI overview page' },
+    plate: {
+      // Both dashboard pages, large enough to read, each linking to its full-size file
+      figures: [
+        { frame: telcoOverview, caption: 'Dashboard page 1, the overview', full: true },
+        {
+          frame: telcoActions,
+          caption:
+            'Dashboard page 3, “Where to act first”. Churn Score is IBM’s pre-computed score: the dashboard uses it to describe customers; the model excludes it as target leakage.',
+          full: true,
+        },
+      ],
+    },
     layout: 'split',
   },
   {
