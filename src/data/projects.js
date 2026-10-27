@@ -32,6 +32,7 @@ export const STAGES = [
 //   { kind: 'image', image: screenshot(...) | natural(...), alt, position? }
 //   { kind: 'table', columns: [...], rows: [[...], ...], foot }
 //   { kind: 'list', title, items: [...], foot, code?, rtl? }
+// An `extra` row may carry a third item, an image frame shown under its text.
 // `map` holds the short labels for the skill table; `plate` picks which
 // stage's frame fills the case block's picture; `layout` is 'split' or 'wide'.
 // Facts here are verified against the repositories or owner-stated from the CV.
@@ -96,6 +97,12 @@ export const projects = [
       [
         'Actions',
         'Three, in priority order: move month-to-month fiber customers onto term contracts; bundle tech support into fiber plans (41.6% churn without support, 15.2% with); reach electronic-check payers first.',
+        {
+          kind: 'image',
+          image: screenshot('telco-churn', 5),
+          alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
+          caption: 'Dashboard page 3, “Where to act first”',
+        },
       ],
     ],
     myPart: 'Everything; a solo project.',

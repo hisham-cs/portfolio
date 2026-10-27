@@ -29,10 +29,21 @@ export default function CaseBlock({ project, flip }) {
           <p className="lead">{project.question}</p>
         </div>
         <dl data-reveal style={{ '--i': 1 }}>
-          {rows.map(([dt, dd]) => (
+          {rows.map(([dt, dd, frame]) => (
             <div key={dt}>
               <dt>{dt}</dt>
-              <dd>{dd}</dd>
+              <dd>
+                {dd}
+                {frame && (
+                  <figure className="row-fig">
+                    <a href={frame.image.src}>
+                      <Frame frame={frame} sizes="(max-width: 760px) 92vw, 40vw" />
+                      <span className="sr-only">Open full size</span>
+                    </a>
+                    <figcaption>{frame.caption}</figcaption>
+                  </figure>
+                )}
+              </dd>
             </div>
           ))}
         </dl>

@@ -152,6 +152,10 @@ button { font: inherit; color: inherit; }
 .text dl { margin: 0; display: grid; gap: 14px; max-width: 70ch; }
 .text dl > div { display: grid; grid-template-columns: 7.5rem 1fr; column-gap: 20px; }
 .text dt { color: var(--lt-muted); } .text dd { margin: 0; }
+.row-fig { margin: 16px 0 0; }
+.row-fig a { display: block; }
+.row-fig .frame { aspect-ratio: 16 / 9; }
+.row-fig figcaption { font-size: var(--s-small); margin-top: 8px; color: var(--lt-muted); }
 .cells { display: grid; grid-template-columns: 1fr 1fr; }
 .cells.one { grid-template-columns: 1fr; }
 .cells a { min-height: 72px; display: flex; align-items: center; padding: 0 24px; text-decoration: none; font-weight: 500; transition: background-color var(--t-hover) ease; }
