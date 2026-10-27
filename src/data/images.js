@@ -39,8 +39,15 @@ const pack = (list, ratio) => {
 /** A 16:9 project screenshot: screenshot('telco-churn', 1) */
 export const screenshot = (slug, n) => pack(shots[`${slug}/${n}`], 9 / 16)
 
-/** Like screenshot(), but null when the file has not been generated yet. */
-export const optionalScreenshot = (slug, n) => (shots[`${slug}/${n}`] ? screenshot(slug, n) : null)
+/**
+ * A screenshot the pipeline kept whole (KEEP_WHOLE), with its real ratio.
+ * Frames cover-crop these wide screens, magnifying them beyond what `sizes`
+ * says, so only the largest file is offered.
+ */
+export const wholeScreenshot = (slug, n, ratio) => {
+  const image = pack(shots[`${slug}/${n}`], ratio)
+  return { ...image, srcSet: undefined }
+}
 
 /** A natural-ratio image from src/assets/credentials or src/assets/figures. */
 export const natural = (name, ratio) => pack(naturals[name], ratio)

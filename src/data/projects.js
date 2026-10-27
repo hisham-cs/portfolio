@@ -1,13 +1,13 @@
-import { screenshot, optionalScreenshot, natural } from './images.js'
+import { screenshot, wholeScreenshot, natural } from './images.js'
 
 // Edema imagery all derives from one CC0 radiograph (credited in site.js):
-// the X-ray itself, the app's Ensemble CAM output for it, and, once
-// `raw-images/projects/pulmonary-edema-1-app.png` exists and `npm run images`
-// has run, the app screenshot with that same X-ray loaded.
+// the X-ray itself, the app's Ensemble CAM output for it, and two app
+// screenshots with that same X-ray loaded, kept whole by the image pipeline.
 const EDEMA_RATIO = 626 / 697
 const edemaXray = natural('edema-xray', EDEMA_RATIO)
 const edemaCam = natural('edema-gradcam', EDEMA_RATIO)
-const edemaApp = optionalScreenshot('pulmonary-edema', 1)
+const edemaReport = wholeScreenshot('pulmonary-edema', 1, 882 / 1889)
+const edemaVotes = wholeScreenshot('pulmonary-edema', 2, 883 / 1897)
 
 // The three stages every project is shown through. Sections read this list,
 // so the "Hand me a problem" chain, the case blocks and the skill map all stay
@@ -126,35 +126,22 @@ export const projects = [
         detail:
           'DenseNet121 (TorchXRayVision), ResNet50, EfficientNet-B0 and ConvNeXt-Tiny, each fine-tuned for normal versus edema, averaged in a soft-voting ensemble with an agreement indicator and Grad-CAM for every model.',
         frame: {
-          kind: 'list',
-          title: 'Ensemble, soft vote',
-          ordered: true,
-          items: [
-            ['DenseNet121', 'TorchXRayVision'],
-            ['ResNet50', 'torchvision'],
-            ['EfficientNet-B0', 'torchvision'],
-            ['ConvNeXt-Tiny', 'torchvision'],
-          ],
-          foot: '0.974–0.979 ROC-AUC per model on a held-out test set (team-reported)',
+          kind: 'image',
+          image: edemaVotes,
+          alt: 'The app’s per-model votes for the example X-ray: EfficientNet-B0 99.8%, ResNet50 100.0% and ConvNeXt-Tiny 89.5% edema probability, above its research-only disclaimer',
+          position: 'left center',
         },
       },
       product: {
         verb: 'Shipped',
         line: 'A Streamlit app with a heatmap for every prediction.',
         detail: 'A live Streamlit app that classifies an uploaded chest X-ray and explains each prediction with Grad-CAM.',
-        frame: edemaApp
-          ? {
-              kind: 'image',
-              image: edemaApp,
-              alt: 'The Streamlit app with the example chest X-ray loaded, showing its ensemble prediction and Grad-CAM heatmap',
-            }
-          : {
-              kind: 'image',
-              image: edemaCam,
-              alt: 'The app’s Ensemble CAM: the Grad-CAM heatmap of all four networks over the example chest X-ray',
-              position: 'center',
-              caption: 'Ensemble Grad-CAM output', // says what the picture is until the app screenshot exists
-            },
+        frame: {
+          kind: 'image',
+          image: edemaReport,
+          alt: 'The Streamlit app with the example chest X-ray loaded beside its Ensemble Grad-CAM heatmap',
+          position: '72% center',
+        },
       },
     },
     extra: [
