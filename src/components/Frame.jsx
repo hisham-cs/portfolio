@@ -5,7 +5,7 @@ export default function Frame({ frame, sizes = '(max-width: 760px) 90vw, 40vw', 
   if (frame.kind === 'image') {
     const { image, alt, fill } = frame
     return (
-      <div className={`frame ${className}`} style={fill ? { background: fill } : undefined}>
+      <span className={`frame ${className}`} style={fill ? { background: fill } : undefined}>
         <img
           src={image.src}
           srcSet={image.srcSet}
@@ -17,7 +17,7 @@ export default function Frame({ frame, sizes = '(max-width: 760px) 90vw, 40vw', 
           fetchPriority={eager ? 'high' : undefined}
           decoding="async"
         />
-      </div>
+      </span>
     )
   }
 

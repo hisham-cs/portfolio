@@ -29,4 +29,4 @@ No eyebrow labels, no monospace outside real code, no 01/02/03 numbering, no hai
 
 ## Motion
 
-Name halves rise out of a mask on load (900 ms, expo out); section parts enter in reading order (80 ms stagger, 24 px rise, once); case plates settle on scroll where `animation-timeline: view()` exists. Transform and opacity only. `prefers-reduced-motion: reduce` removes all animation and shows everything in place; content is never hidden unless script runs (`.motion` class).
+Name halves rise out of a mask on load (900 ms, expo out); section parts enter in reading order (80 ms stagger, 24 px rise, once). Pictures never scale or move inside their frames, so nothing is ever cropped, even mid-animation. Transform and opacity only. `prefers-reduced-motion: reduce` removes all animation and shows everything in place; content is never hidden unless script runs (`.motion` class).

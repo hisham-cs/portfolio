@@ -1,62 +1,45 @@
 import { STAGES } from '../data/projects.js'
 import Frame from './Frame.jsx'
 import RevealSlider from './RevealSlider.jsx'
+import useLightbox from './Lightbox.jsx'
 
-// One picture of the project, never wider than its file; `full` links it to
-// the full-size image.
-function Figure({ frame, caption, full, sizes }) {
-  return (
-    <figure data-reveal style={{ maxWidth: frame.image.width }}>
-      {full ? (
-        <a href={frame.image.src} className="full">
-          <Frame frame={frame} sizes={sizes} />
-          <span className="sr-only">Open full size</span>
-        </a>
-      ) : (
-        <Frame frame={frame} sizes={sizes} />
-      )}
-      <figcaption>{caption}</figcaption>
-    </figure>
-  )
-}
-
-// A project in full, always in reading order: its heading first, then its
-// pictures, then the details. 'split' sets the pictures beside the details;
-// 'wide' gives the picture the whole width once, to break the rhythm. A
-// `side` figure opens the details column, so on phones it still comes after
-// the other pictures and before the details.
+// A project in full, the same structure for every project: its heading,
+// then one lead picture beside the details (buttons last), then a strip of
+// further evidence as thumbnails that open full size. On tablets and phones
+// it reads straight down, and the strip becomes a row you swipe.
 export default function CaseBlock({ project, flip }) {
+  const [show, dialog] = useLightbox()
   const rows = [
     ...STAGES.map((s) => [s.label, project.stages[s.id].detail]),
     ...project.extra,
     ['My part', project.myPart],
     ['Stack', project.stack],
   ]
-  const wide = project.layout === 'wide'
-  const sizes = wide ? '(max-width: 1280px) 100vw, 1280px' : '(max-width: 1100px) min(calc(100vw - 2rem), 720px), 56vw'
-  const figures = project.plate.figures ?? [{ frame: project.stages[project.plate.stage].frame, caption: project.plate.caption }]
-  const main = figures.filter((f) => !f.side)
-  const side = figures.filter((f) => f.side)
+  const { plate } = project
+  const lead = project.stages[plate.stage].frame
+  const evidence = plate.evidence ?? []
 
   return (
-    <article className={`case ${wide ? 'wide' : 'split'}${flip ? ' flip' : ''}`} id={`case-${project.id}`} aria-labelledby={`h-${project.id}`}>
+    <article className={`case${flip ? ' flip' : ''}`} id={`case-${project.id}`} aria-labelledby={`h-${project.id}`}>
       <header className="case-head" data-reveal>
         <h3 id={`h-${project.id}`}>{project.name}</h3>
         <p className="kind">{project.kind}</p>
         <p className="lead">{project.question}</p>
       </header>
-      <div className="plate">
-        {project.plate.reveal ? (
-          <figure data-reveal>
-            <RevealSlider reveal={project.plate.reveal} />
-            <figcaption className="credit">{project.plate.caption}</figcaption>
-          </figure>
+
+      <figure className="lead-fig" data-reveal style={plate.reveal ? undefined : { '--w': `${lead.image.width}px` }}>
+        {plate.reveal ? (
+          <RevealSlider reveal={plate.reveal} />
         ) : (
-          main.map((f) => <Figure key={f.caption} {...f} sizes={sizes} />)
+          <button type="button" className="open" onClick={() => show(lead.image, lead.alt)}>
+            <Frame frame={lead} sizes="(max-width: 1100px) min(calc(100vw - 2rem), 720px), 56vw" />
+            <span className="sr-only">Open full size</span>
+          </button>
         )}
-      </div>
+        <figcaption className={plate.reveal ? 'credit' : undefined}>{plate.caption}</figcaption>
+      </figure>
+
       <div className="text">
-        {side.map((f) => <Figure key={f.caption} {...f} sizes="448px" />)}
         <dl data-reveal>
           {rows.map(([dt, dd]) => (
             <div key={dt}>
@@ -65,7 +48,7 @@ export default function CaseBlock({ project, flip }) {
             </div>
           ))}
         </dl>
-        <div className={`cells${project.links.length === 1 ? ' one' : ''}`} data-reveal style={{ '--i': 1 }}>
+        <div className="cells" data-reveal style={{ '--i': 1 }}>
           {project.links.map((l) => (
             <a key={l.href} href={l.href} rel="noopener">
               {l.label}<span className="sr-only">, {project.name}</span>
@@ -73,6 +56,26 @@ export default function CaseBlock({ project, flip }) {
           ))}
         </div>
       </div>
+
+      {evidence.length > 0 && (
+        <ul className="evidence" aria-label={`More from ${project.name}`} data-reveal>
+          {evidence.map(({ frame, caption }) => (
+            <li key={caption}>
+              <figure>
+                <button type="button" className="open" onClick={() => show(frame.image, frame.alt)}>
+                  <span className="frame" style={{ background: frame.fill }}>
+                    <img src={frame.image.src} srcSet={frame.image.srcSet} sizes="(max-width: 1100px) min(78vw, 360px), 24vw"
+                      width={frame.image.width} height={frame.image.height} alt={frame.alt} loading="lazy" decoding="async" />
+                  </span>
+                  <span className="sr-only">Open full size</span>
+                </button>
+                <figcaption>{caption}</figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )}
+      {dialog}
     </article>
   )
 }

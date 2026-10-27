@@ -1,21 +1,11 @@
-import { useRef, useState } from 'react'
 import { certification, courses } from '../data/site.js'
 import { natural } from '../data/images.js'
+import useLightbox from './Lightbox.jsx'
 
 // Certification first and largest; courses as a list. Every image is a
 // thumbnail that opens full size in a native <dialog>.
 export default function Credentials() {
-  const dialog = useRef(null)
-  const [open, setOpen] = useState(null)
-  const show = (image, alt) => {
-    setOpen({ image, alt })
-    const d = dialog.current
-    if (!d) return
-    d.showModal()
-    // Focus the dialog, not its Close button: the rest of the Enter keypress
-    // that opened it would otherwise land on Close and shut it at once.
-    d.focus()
-  }
+  const [show, dialog] = useLightbox('Certificate')
 
   const items = courses.map((c) => ({
     ...c,
@@ -63,11 +53,7 @@ export default function Credentials() {
         ))}
       </ul>
 
-      <dialog ref={dialog} className="lightbox" tabIndex={-1} aria-label={open?.alt || 'Certificate'} onClose={() => setOpen(null)}
-        onClick={(e) => { if (e.target === dialog.current) dialog.current.close() }}>
-        {open && <img src={open.image.src} width={open.image.width} height={open.image.height} alt={open.alt} />}
-        <form method="dialog"><button className="btn on-light">Close</button></form>
-      </dialog>
+      {dialog}
     </section>
   )
 }

@@ -11,7 +11,6 @@ import { projects } from './data/projects.js'
 
 export default function App() {
   useReveal()
-  let splits = 0
   return (
     <>
       <a className="skip" href="#main">Skip to content</a>
@@ -20,8 +19,8 @@ export default function App() {
         <Range />
         <WorkIndex />
         <div className="cases light">
-          {projects.map((p) => (
-            <CaseBlock key={p.id} project={p} flip={p.layout === 'split' && splits++ % 2 === 1} />
+          {projects.map((p, i) => (
+            <CaseBlock key={p.id} project={p} flip={i % 2 === 1} />
           ))}
         </div>
         <Skills />

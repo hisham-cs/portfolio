@@ -18,7 +18,7 @@ React 19 and Vite 8, plain CSS with design tokens (`src/index.css`), no UI libra
 
 All content lives in two files; no component needs to change for ordinary edits.
 
-- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, and short labels for the skill map. Every section (hero, "Hand me a problem", work index, case blocks, skill map) renders from this list.
+- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, short labels for the skill map, and a `plate`: which stage's frame leads the case block, its caption, and any `evidence` thumbnails (each opens full size). Every section (hero, "Hand me a problem", work index, case blocks, skill map) renders from this list.
 - `src/data/site.js` — profile, skills (each pointing at the stages that prove it), about, experience, education, certification and courses, picture credits.
 
 ### Images

@@ -17,6 +17,13 @@ const edemaCams = [
 const edemaReport = screenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
 const edemaVotes = screenshot('pulmonary-edema', 2, 883 / 1897)
 
+const edemaVotesFrame = {
+  kind: 'image',
+  image: edemaVotes,
+  alt: 'The app’s per-model votes for the example X-ray: EfficientNet-B0 99.8%, ResNet50 100.0% and ConvNeXt-Tiny 89.5% edema probability, above its research-only disclaimer',
+  fill: '#0e1117',
+}
+
 const telcoOverview = {
   kind: 'image',
   image: screenshot('telco-churn', 1, 708 / 1270),
@@ -44,6 +51,21 @@ const telcoActions = {
   alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
 }
 
+// Two more Faten screens from the app (badge-free copies of the old site's
+// screenshots, see raw-images/projects/faten-*).
+const fatenChat = {
+  kind: 'image',
+  image: screenshot('faten', 3, 646 / 1280),
+  alt: 'Faten’s chat in Arabic: the agent answers a question about a course with its grading breakdown and final exam dates',
+  fill: '#ffffff',
+}
+const fatenMap = {
+  kind: 'image',
+  image: screenshot('faten', 4, 609 / 1280),
+  alt: 'Faten’s indoor navigation: a route drawn on the ground-floor map of the faculty building, with the distance and walking time beside it',
+  fill: '#e4e6e7',
+}
+
 // The three stages every project is shown through. Sections read this list,
 // so the "Hand me a problem" chain, the case blocks and the skill map all stay
 // in step with it.
@@ -61,9 +83,9 @@ export const STAGES = [
 // used wherever a frame is wider or taller than the picture.
 //   { kind: 'table', columns: [...], optional?, optionalNarrow?, rows: [[...], ...], foot }
 //   { kind: 'list', title, items: [...], foot, code?, rtl? }
-// `map` holds the short labels for the skill table; `plate` picks which
-// stage's frame is the case block's picture (or lists `figures`, or a
-// `reveal`); `layout` is 'split' or 'wide'.
+// `map` holds the short labels for the skill table; `plate` picks the stage
+// whose frame is the case block's lead picture (or a `reveal` slider), its
+// caption, and the `evidence` thumbnails shown under it.
 // Facts here are verified against the repositories or owner-stated from the CV.
 // ---------------------------------------------------------------------------
 export const projects = [
@@ -134,29 +156,25 @@ export const projects = [
     ],
     map: { data: '7,043 customer rows', model: 'Logistic regression', product: 'Power BI dashboard' },
     plate: {
-      // Both dashboard pages, large enough to read, each linking to its full-size file
-      figures: [
-        { frame: telcoOverview, caption: 'Dashboard page 1, “Customer churn overview”', full: true },
+      stage: 'product',
+      caption: 'Dashboard page 1, “Customer churn overview”',
+      evidence: [
         {
           frame: telcoDrivers,
           caption:
             'Dashboard page 2, “What drives churn”: contract against internet service and payment method, bundling and tech support, to see which drivers hold up once the others are controlled for.',
-          full: true,
         },
         {
           frame: telcoActions,
           caption:
             'Dashboard page 3, “Where to act first”. Churn Score is IBM’s pre-computed score: the dashboard uses it to describe customers; the model excludes it as target leakage.',
-          full: true,
         },
         {
           frame: telcoRoc,
           caption: 'Model results: ROC curve of the final logistic regression on the 1,409-customer test set, AUC-ROC 0.849 (the legend rounds it to 0.85).',
-          side: true, // set beside the details on wide screens, after the dashboard on phones
         },
       ],
     },
-    layout: 'split',
   },
   {
     id: 'edema',
@@ -183,12 +201,7 @@ export const projects = [
         line: 'Four CNNs in a soft-voting ensemble; Grad-CAM shows where each looked.',
         detail:
           'DenseNet121 (TorchXRayVision), ResNet50, EfficientNet-B0 and ConvNeXt-Tiny, each fine-tuned for normal versus edema, averaged in a soft-voting ensemble with an agreement indicator and Grad-CAM for every model.',
-        frame: {
-          kind: 'image',
-          image: edemaVotes,
-          alt: 'The app’s per-model votes for the example X-ray: EfficientNet-B0 99.8%, ResNet50 100.0% and ConvNeXt-Tiny 89.5% edema probability, above its research-only disclaimer',
-          fill: '#0e1117',
-        },
+        frame: edemaVotesFrame,
       },
       product: {
         verb: 'Shipped',
@@ -221,8 +234,10 @@ export const projects = [
       reveal: { base: edemaXray, layers: edemaCams, label: 'Grad-CAM overlay', ratio: EDEMA_RATIO },
       caption:
         'Example input, not training data: “Chest radiograph of a lung with Kerley B lines” by Mikael Häggström, CC0, via Wikimedia Commons. Each heatmap is the app’s own Grad-CAM output for this image.',
+      evidence: [
+        { frame: edemaVotesFrame, caption: 'The app’s per-model votes for the example X-ray, above its research-only disclaimer' },
+      ],
     },
-    layout: 'split',
   },
   {
     id: 'faten',
@@ -288,8 +303,14 @@ export const projects = [
     stack: 'Next.js, React, TypeScript, FastAPI, Python, Firebase, OpenAI API',
     links: [{ label: 'Repository', href: 'https://github.com/Saleh67676/Faten' }],
     map: { data: 'Records, regulations', model: 'LLM agent, 24 tools', product: 'Next.js and FastAPI' },
-    plate: { stage: 'product', caption: 'Faten dashboard: GPA, progress and the university calendar' },
-    layout: 'wide',
+    plate: {
+      stage: 'product',
+      caption: 'Faten dashboard: GPA, progress and the university calendar',
+      evidence: [
+        { frame: fatenChat, caption: 'The chat agent answering a course question in Arabic: grading breakdown and exam dates' },
+        { frame: fatenMap, caption: 'Indoor navigation: a route on the ground-floor map of the faculty building' },
+      ],
+    },
   },
 ]
 
