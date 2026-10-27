@@ -1,85 +1,41 @@
-import { profile } from '../data.js'
-import SectionHeading from './SectionHeading.jsx'
-import Reveal from './Reveal.jsx'
-import { GitHubIcon, LinkedInIcon, DownloadIcon } from './Icons.jsx'
+import { profile, credits } from '../data/site.js'
 
+// Contact in display rows, then the name fitted to the full width.
 export default function Contact() {
-  const hasCv = profile.showCv && profile.cv
-
+  const rows = [
+    { href: `mailto:${profile.email}`, label: <>hasalmalki@<wbr />outlook.com</> },
+    { href: profile.linkedin, label: 'LinkedIn', note: 'linkedin.com/in/hisham-a-almalki' },
+    { href: profile.github, label: 'GitHub', note: 'github.com/hisham-cs' },
+    { href: `${import.meta.env.BASE_URL}${profile.cv}`, label: 'Download my CV', note: 'PDF' },
+  ]
   return (
-    <section id="contact" className="scroll-mt-20 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <Reveal>
-          <SectionHeading eyebrow="Open to opportunities" title="Let's put data to work." align="left" />
-        </Reveal>
-
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
-          {/* Left: closing statement + the primary channel, given real visual weight */}
-          <Reveal className="lg:col-span-8">
-            <p className="max-w-[65ch] text-lg leading-[1.7] text-text-secondary">
-              I'm open to Data Analytics & AI roles, internships, and collaborations — reach out
-              if you'd like to connect.
-            </p>
-
-            <div className="mt-8">
-              <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
-                Email
-              </p>
-              {/* Approved accent spot (d) */}
-              <a
-                href={`mailto:${profile.email}`}
-                className="group mt-2 inline-flex min-h-11 items-center gap-3 font-display text-2xl font-semibold tracking-[-0.01em] text-accent transition-colors hover:text-accent-hover sm:text-3xl lg:text-4xl"
-              >
-                {profile.email}
-                <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-              </a>
-            </div>
-          </Reveal>
-
-          {/* Right: mono ledger of other channels */}
-          <Reveal
-            delay={100}
-            className="lg:col-span-4 lg:border-l lg:border-border lg:pl-12"
-          >
-            <p className="font-mono text-xs tracking-[0.14em] text-text-muted uppercase">
-              Elsewhere
-            </p>
-            <div className="mt-4 flex flex-col items-start gap-2">
-              <a
-                href={profile.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
-              >
-                <LinkedInIcon className="h-4 w-4" />
-                LinkedIn
-                <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-              </a>
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
-              >
-                <GitHubIcon className="h-4 w-4" />
-                GitHub
-                <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-              </a>
-              {hasCv && (
-                <a
-                  href={`${import.meta.env.BASE_URL}${profile.cv}`}
-                  download
-                  className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-text-primary transition-colors hover:text-text-secondary"
-                >
-                  <DownloadIcon className="h-4 w-4" />
-                  Download CV
-                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-                </a>
-              )}
-            </div>
-          </Reveal>
+    <>
+      <section className="contact dark" id="contact" aria-labelledby="contact-h">
+        <div className="row">
+          <h2 id="contact-h">Get in touch</h2>
+          <span className="note">For data analyst and AI engineer roles. I reply from Makkah, UTC+3.</span>
         </div>
-      </div>
-    </section>
+        {rows.map((r) => (
+          <div className="row" key={r.href}>
+            <a href={r.href} rel={r.href.startsWith('http') ? 'noopener' : undefined}>{r.label}</a>
+            {r.note && <span className="note">{r.note}</span>}
+          </div>
+        ))}
+      </section>
+      <footer className="dark">
+        <svg className="wordmark" viewBox="0 0 1000 148" role="img" aria-label={profile.name}>
+          <text x="0" y="122" textLength="1000" lengthAdjust="spacingAndGlyphs">{profile.first} {profile.last}</text>
+        </svg>
+        <div className="foot">
+          <span>© 2026 {profile.name}</span>
+          <span>
+            Picture credit:{' '}
+            {credits.map((c) => (
+              <span key={c.href}><a href={c.href} rel="noopener">“{c.what}”</a> by {c.who}, {c.licence}, via Wikimedia Commons.</span>
+            ))}
+          </span>
+        </div>
+      </footer>
+    </>
   )
 }

@@ -1,78 +1,81 @@
-import { skills } from '../data.js'
-import SectionHeading from './SectionHeading.jsx'
-import Reveal from './Reveal.jsx'
+import { useMemo, useState } from 'react'
+import { projects, STAGES, otherEvidence } from '../data/projects.js'
+import { skillGroups, untraced } from '../data/site.js'
 
+const ALL_CELLS = projects.flatMap((p) => STAGES.map((s) => `${p.id}-${s.id}`))
+const expand = (cells) => (cells.includes('*') ? [...ALL_CELLS, ...cells.filter((c) => c !== '*')] : cells)
+
+function whereUsed(cells) {
+  const names = []
+  for (const p of projects) if (cells.some((c) => c.startsWith(`${p.id}-`))) names.push(p.name)
+  for (const e of otherEvidence) if (cells.includes(e.id)) names.push(e.name)
+  return names.length === projects.length + otherEvidence.length ? 'Everywhere' : names.join(', ')
+}
+
+// "Trace a skill": choose a skill and the map lights the exact stages that
+// used it. The "where" text is always visible, so nothing depends on clicking.
 export default function Skills() {
+  const [chosen, setChosen] = useState(skillGroups[1].skills[0][0]) // Python
+  const lit = useMemo(() => {
+    for (const g of skillGroups) for (const [name, cells] of g.skills) if (name === chosen) return expand(cells)
+    return []
+  }, [chosen])
+  const stageCount = lit.filter((c) => ALL_CELLS.includes(c)).length
+
   return (
-    <section id="skills" className="scroll-mt-20 border-b border-border py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <Reveal>
-          <SectionHeading eyebrow="What I work with" title="Skills" align="left" />
-        </Reveal>
+    <section className="skills dark" id="skills" aria-labelledby="skills-h">
+      <h2 id="skills-h" data-reveal>Every skill, traced to where I used it</h2>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          {skills.map((group, i) => {
-            return (
-              <Reveal key={group.category} delay={i * 60}>
-                <div className="group/card flex h-full flex-col rounded-2xl border border-transparent bg-surface p-6 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-surface-elevated hover:shadow-md sm:p-8">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs text-text-muted">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <h3 className="font-display text-lg font-semibold tracking-[-0.01em] text-text-primary">
-                      {group.category}
-                    </h3>
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {group.primary.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-lg bg-surface-elevated px-3 py-1.5 text-sm font-semibold text-text-primary transition-colors duration-200 group-hover/card:bg-background"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-
-                  {group.secondary.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2">
-                      {group.secondary.map((skill, j) => (
-                        <span key={skill} className="flex items-center gap-3">
-                          {j > 0 && (
-                            <span className="text-border" aria-hidden="true">
-                              /
-                            </span>
-                          )}
-                          <span className="font-mono text-xs text-text-secondary">{skill}</span>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {group.proof && (
-                    <div className="mt-auto border-t border-border pt-4">
-                      {group.proof.slug ? (
-                        <a
-                          href={`#${group.proof.slug}`}
-                          className="group/link inline-flex min-h-11 items-center gap-1.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
-                        >
-                          Proven in {group.proof.label}
-                          <span className="transition-transform duration-200 group-hover/link:translate-x-0.5">
-                            →
-                          </span>
-                        </a>
-                      ) : (
-                        <p className="text-sm text-text-muted">{group.proof.label}</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </Reveal>
-            )
-          })}
-        </div>
+      <div className="map-wrap" data-reveal>
+        <table className="map">
+          <caption>Lit cells used the chosen skill: <b>{chosen}</b>, {stageCount} of {ALL_CELLS.length} project stages{lit.some((c) => !ALL_CELLS.includes(c)) ? ', and the co-op' : ''}.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Project</th>
+              {STAGES.map((s) => <th key={s.id} scope="col">{s.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {projects.map((p) => (
+              <tr key={p.id}>
+                <th scope="row">{p.name}</th>
+                {STAGES.map((s) => {
+                  const on = lit.includes(`${p.id}-${s.id}`)
+                  return <td key={s.id} className={on ? 'lit' : undefined}>{p.map[s.id]}<span className="sr-only">{on ? ' (used)' : ''}</span></td>
+                })}
+              </tr>
+            ))}
+            {otherEvidence.map((e) => {
+              const on = lit.includes(e.id)
+              return (
+                <tr key={e.id} className="other">
+                  <th scope="row">{e.name}</th>
+                  <td colSpan={STAGES.length} className={on ? 'lit' : undefined}>{e.label}<span className="sr-only">{on ? ' (used)' : ''}</span></td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       </div>
+
+      <div className="groups">
+        {skillGroups.map((g, gi) => (
+          <div className="group" key={g.name} data-reveal style={{ '--i': gi }}>
+            <h3>{g.name}</h3>
+            <ul>
+              {g.skills.map(([name, cells]) => (
+                <li key={name}>
+                  <button type="button" aria-pressed={name === chosen} onClick={() => setChosen(name)}>
+                    <span className="s">{name}</span>
+                    <span className="w">{whereUsed(expand(cells))}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p className="also" data-reveal><b>{untraced.label}:</b> {untraced.text}</p>
     </section>
   )
 }

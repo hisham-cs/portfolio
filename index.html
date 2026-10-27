@@ -1,32 +1,51 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/portfolio/favicon.svg" />
-    <meta name="description" content="Hisham Al-Malki — Computer Science graduate specializing in AI, Machine Learning, Computer Vision, and Data Analysis. Portfolio showcasing medical imaging AI, academic assistants, and analytics dashboards." />
-    <meta name="theme-color" content="#17140f" />
-    <!-- Self-hosted (see src/index.css @font-face + DESIGN.md) — this is
-         the primary text face, preloaded since it's the LCP-critical font
-         for the hero and body copy. -->
-    <link
-      rel="preload"
-      href="/fonts/plus-jakarta-sans-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <title>Hisham Al-Malki | Portfolio</title>
-    <script>
-      // Apply saved theme before first paint to avoid a flash of wrong theme.
-      const theme = localStorage.getItem('theme')
-      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark')
+    <title>Hisham Al-Malki · data, models and the products around them</title>
+    <meta name="description" content="Hisham Al-Malki, Computer Science graduate of Umm Al-Qura University. Projects that go from raw data to a model to a working product: telecom churn analysis, a chest X-ray deep-learning ensemble, and Faten, an AI academic assistant." />
+    <link rel="canonical" href="https://hisham-cs.github.io/portfolio/" />
+    <meta name="theme-color" content="#111111" />
+    <meta name="color-scheme" content="light" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hisham-cs.github.io/portfolio/" />
+    <meta property="og:title" content="Hisham Al-Malki" />
+    <meta property="og:description" content="From raw data to a model to a working product. Data analysis, machine learning and AI products." />
+    <meta property="og:image" content="https://hisham-cs.github.io/portfolio/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Hisham Al-Malki, with one product from each of three projects" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hisham Al-Malki" />
+    <meta name="twitter:description" content="From raw data to a model to a working product." />
+    <meta name="twitter:image" content="https://hisham-cs.github.io/portfolio/og-image.jpg" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Hisham Al-Malki",
+        "url": "https://hisham-cs.github.io/portfolio/",
+        "email": "mailto:hasalmalki@outlook.com",
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Umm Al-Qura University" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Makkah", "addressCountry": "SA" },
+        "knowsAbout": ["Data analysis", "Machine learning", "Deep learning", "Power BI", "Python", "LLM applications"],
+        "sameAs": ["https://github.com/hisham-cs", "https://www.linkedin.com/in/hisham-a-almalki"]
       }
     </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding:24px;font:18px/1.5 system-ui,sans-serif">Hisham Al-Malki, Computer Science graduate. This site needs JavaScript. Reach me at hasalmalki@outlook.com, github.com/hisham-cs or linkedin.com/in/hisham-a-almalki.</p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
