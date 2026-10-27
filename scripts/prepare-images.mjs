@@ -98,7 +98,37 @@ async function processProjectMosaics() {
   }
 }
 
+// Credentials (certificate scans) and figures (single illustrative images)
+// keep their natural aspect ratio -- cropping a certificate to 16:9 would cut
+// text off it. Name each file `{slug}.{png,jpg}`; output is
+// `src/assets/{credentials,figures}/{slug}-{480,1280}w.webp`.
+async function processNatural(rawDir, outDir, label) {
+  const files = listRaw(rawDir)
+  if (files.length === 0) return
+  if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })
+  for (const file of files) {
+    const slug = file.replace(IMAGE_EXT_RE, '')
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      warnings.push(`raw-images/${label}/${file} -- name must be {slug}.{png,jpg}, skipped`)
+      continue
+    }
+    for (const width of PROJECT_WIDTHS) {
+      const outName = `${slug}-${width}w.webp`
+      const { data, info } = await sharp(join(rawDir, file))
+        .rotate()
+        .flatten({ background: '#ffffff' }) // certificates with alpha get a white page, not black
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality: QUALITY })
+        .toBuffer({ resolveWithObject: true })
+      writeFileSync(join(outDir, outName), data)
+      results.push({ src: file, out: `${label}/${outName}`, dims: `${info.width}x${info.height}`, size: kb(data.length) })
+    }
+  }
+}
+
 await processProjectMosaics()
+await processNatural(join(ROOT, 'raw-images', 'credentials'), join(ROOT, 'src', 'assets', 'credentials'), 'credentials')
+await processNatural(join(ROOT, 'raw-images', 'figures'), join(ROOT, 'src', 'assets', 'figures'), 'figures')
 
 if (warnings.length > 0) {
   console.log('Warnings:')
