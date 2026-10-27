@@ -32,7 +32,7 @@ export default function Range() {
       <ol className="chain" key={id} aria-label={`${project.name}: data, model and product`}>
         {STAGES.map((s, i) => (
           <li key={s.id} style={{ '--i': i }} className={s.id === stage ? 'on' : undefined}>
-            <Frame frame={project.stages[s.id].frame} sizes="(max-width: 760px) 82vw, 31vw" />
+            <Frame frame={project.stages[s.id].frame} sizes="(max-width: 900px) calc(100vw - 2rem), 31vw" />
             <p className="chain-cap">
               <b>{project.stages[s.id].verb}</b>
               {project.stages[s.id].line}

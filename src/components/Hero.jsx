@@ -36,7 +36,7 @@ export default function Hero() {
         {projects.map((p, i) => (
           <li key={p.id} style={{ '--i': i }}>
             <a href={`#case-${p.id}`} className="proof-link">
-              <Frame frame={p.stages.product.frame} sizes="(max-width: 760px) 80vw, 31vw" eager={i === 0} />
+              <Frame frame={p.stages.product.frame} sizes="(max-width: 760px) calc(100vw - 2rem), 31vw" eager={i === 0} />
               <span className="cap"><b>{p.stages.product.frame.caption || p.map.product}</b>, {p.name}</span>
             </a>
           </li>

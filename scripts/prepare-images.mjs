@@ -33,6 +33,10 @@ const IMAGE_EXT_RE = /\.(png|jpe?g)$/i
 // kept almost none of the srcset benefit for a third of the file count;
 // confirmed via a post-change Lighthouse mobile run (see DESIGN.md).
 const PROJECT_WIDTHS = [480, 1280]
+// Screenshots add an 800w tier: a phone at 1.75-2x density needs 600-750px
+// for a full-width frame, and jumping from 480w to 1280w cost Lighthouse
+// mobile LCP once the case pictures grew (see the round-1 review run).
+const SCREENSHOT_WIDTHS = [480, 800, 1280]
 const QUALITY = 85
 // Screenshots are never cropped: each keeps its natural ratio, and the site
 // shows it whole (object-fit: contain) on a fill that matches its edge.
@@ -84,7 +88,7 @@ async function processProjectMosaics() {
     for (const [order, srcPath] of Object.entries(orders)) {
       const trim = TRIM_LEFT[basename(srcPath)] ?? 0
       const meta = trim ? await sharp(srcPath).metadata() : null
-      for (const width of PROJECT_WIDTHS) {
+      for (const width of SCREENSHOT_WIDTHS) {
         const outName = `${order}-${width}w.webp`
         const outPath = join(slugDir, outName)
         let img = sharp(srcPath).rotate() // auto-orient per EXIF, then strip the tag

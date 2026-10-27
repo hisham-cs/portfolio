@@ -13,7 +13,7 @@ export default function CaseBlock({ project, flip }) {
     ['Stack', project.stack],
   ]
   const wide = project.layout === 'wide'
-  const sizes = wide ? '(max-width: 1280px) 100vw, 1280px' : '(max-width: 900px) 92vw, 56vw'
+  const sizes = wide ? '(max-width: 1280px) 100vw, 1280px' : '(max-width: 900px) min(calc(100vw - 2rem), 720px), 56vw'
   const figures = project.plate.figures ?? [{ frame: project.stages[project.plate.stage].frame, caption: project.plate.caption }]
 
   return (
