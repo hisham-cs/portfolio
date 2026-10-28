@@ -2,7 +2,8 @@
 
 Drop PNG/JPG source files here, then run `npm run images` (or `node
 scripts/prepare-images.mjs`). This folder itself is gitignored — only the
-generated WebP files under `src/assets/projects/` get committed.
+generated WebP files under `src/assets/{projects,credentials,figures}/` get
+committed. The build needs only those; this folder is for regenerating them.
 
 ## `projects/` — project card screenshots
 
@@ -13,8 +14,8 @@ reference.
 ```
 projects/telco-churn-1-overview.png
 projects/telco-churn-2-drivers.png
-projects/telco-churn-3-roc-curve.png
 projects/telco-churn-4-coefficients.png
+projects/telco-churn-5-reasons.png
 ```
 
 Produces `src/assets/projects/telco-churn/{order}-{480,800,1280}w.webp` — one

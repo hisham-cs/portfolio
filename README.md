@@ -18,7 +18,7 @@ React 19 and Vite 8, plain CSS with design tokens (`src/index.css`), no UI libra
 
 All content lives in two files; no component needs to change for ordinary edits.
 
-- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, short labels for the skill map, and a `plate`: the case block's layout (`zigzag`, `panel` or `pair`, as approved in `design-exploration/round-4/case-layouts.html`), its pictures with captions (each opens full size), and how many detail rows go first. Every section (hero, "Hand me a problem", case blocks, skill map) renders from this list; `proof` picks the hero picture when it should differ from the product frame.
+- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, short labels for the skill map, and a `plate`: the case block's layout (`zigzag`, `panel` or `pair`), its pictures with captions (each opens full size), and how many detail rows go first. Every section (hero, "Hand me a problem", case blocks, skill map) renders from this list; `proof` picks the hero picture when it should differ from the product frame.
 - `src/data/site.js` — profile, skills (each pointing at the stages that prove it), about, experience, education, certification and courses.
 
 ### Images
@@ -33,7 +33,7 @@ Drop source files into `raw-images/` and run `npm run images` (needs `npm instal
 
 ### Certificates
 
-The NVIDIA certificate is shown. Course certificates are listed as text until their scans are approved for publication (several carry QR codes or certificate IDs). To show one: put its scan in `raw-images/credentials/` under the `imageName` given in `src/data/site.js`, run `npm run images`, and set `publish: true` on that course. To link the NVIDIA verification page, fill `certification.verifyUrl`.
+The NVIDIA certification and the four course certificates are shown as scans; each opens full size. To add one: put its scan in `raw-images/credentials/`, run `npm run images`, and add the entry to `certification` or `courses` in `src/data/site.js` with that file name as its `imageName`, the scan's `ratio` and `publish: true`. `verifyUrl` adds a Verify link.
 
 ## Develop
 

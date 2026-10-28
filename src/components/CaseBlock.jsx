@@ -3,8 +3,7 @@ import Frame from './Frame.jsx'
 import RevealSlider from './RevealSlider.jsx'
 import useLightbox from './Lightbox.jsx'
 
-// A project in full, in one of the three approved layouts (see
-// design-exploration/round-4/case-layouts.html):
+// A project in full, in one of the three approved layouts:
 //   zigzag: heading; picture 1 beside the first details; the rest of the
 //           details and the buttons beside picture 2.
 //   panel:  heading, details and buttons in one column; the dark slider

@@ -41,7 +41,7 @@ coverage/
 Thumbs.db
 
 # Raw source images for scripts/prepare-images.mjs -- only the generated
-# WebP variants (src/assets/projects, src/assets/credentials) get committed
+# WebP variants (src/assets/projects, credentials, figures) get committed
 raw-images/*
 !raw-images/README.md
 
@@ -51,3 +51,9 @@ templates/
 
 # Owner-supplied originals (certificates with personal data) -- never commit
 incoming/
+
+# Local tooling and design history -- kept outside the public repo
+.agents/
+.claude/
+skills-lock.json
+design-exploration/

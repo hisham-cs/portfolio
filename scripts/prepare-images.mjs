@@ -1,6 +1,6 @@
 // Converts raw source images (PNG/JPG) in raw-images/ into the exact WebP
-// variants and filenames the app's asset-discovery glob expects (see the
-// comments above getProjectImages in src/data.js).
+// variants and filenames the app's asset-discovery glob expects (see
+// src/data/images.js).
 // Re-run any time; it's a pure function of raw-images/ -> generated WebP,
 // safe to overwrite outputs.
 //

@@ -1,6 +1,6 @@
 /* Hisham Almalki — direction M (the name as a monument), Ochre colour system.
-   Every colour is a token below; values and their measured WCAG ratios come
-   from design-exploration/round-3/palettes.mjs and contrast.md. */
+   Every colour is a token below; each text pairing was measured to WCAG AA
+   or better. */
 
 @font-face {
   font-family: 'Bricolage Grotesque';
@@ -158,7 +158,7 @@ button { font: inherit; color: inherit; }
 
 
 /* ---------- 4. Case blocks ---------- */
-/* The approved layouts (design-exploration/round-4/case-layouts.html):
+/* The approved layouts:
    rows of 7 : 5, 5 : 7 or 6 : 6 on one column gap, each picture whole on
    its own ground (no outline), details at 16px with a label column,
    buttons last.

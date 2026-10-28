@@ -1,6 +1,6 @@
 # Design system
 
-Direction **M, the name as a monument**, with the **Ochre** colour system. Chosen through the design-taste-frontend skill (dealt direction, then three exploration rounds; the record is in `design-exploration/` locally). If a change conflicts with a rule below, revisit the rule first.
+Direction **M, the name as a monument**, with the **Ochre** colour system. Chosen through the design-taste-frontend skill (dealt direction, then three exploration rounds). If a change conflicts with a rule below, revisit the rule first.
 
 ## Idea
 
@@ -11,7 +11,7 @@ The site presents one technologist, not one role: every project is shown at the 
 | Role | Tokens | Values |
 | --- | --- | --- |
 | Dark field (hero, skills, contact, footer) | `--dk-bg / -surface / -ink / -muted` | `#111111 / #1c1c1c / #f0f0ed / #a3a39e` |
-| Light field (work, cases, about, credentials) | `--lt-bg / -surface / -ink / -muted` | `#f0f0ed / #e3e3df / #111111 / #5a5a56` |
+| Light field (cases, about, credentials) | `--lt-bg / -surface / -ink / -muted` | `#f0f0ed / #e3e3df / #111111 / #5a5a56` |
 | Accent field ("Hand me a problem" only) | `--ac-bg / -ink / -muted / -tint / -sel-bg / -sel-ink` | `#d9a62a / #111111 / #3b2e0c / #c99a27 / #111111 / #d9a62a` |
 | Button on dark / on light | `--bd-*` / `--bl-*` | ochre on soot / soot on chalk |
 | Interface frames | `--ui-bg / -ink / -muted / -edge` | `#f7f7f5 / #111111 / #5a5a56 / #cfcfca` |
