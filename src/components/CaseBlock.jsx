@@ -27,6 +27,13 @@ function Details({ rows }) {
   )
 }
 
+// A caption with one phrase linked (plate.captionLink), the rest as written.
+function Caption({ text, link }) {
+  if (!link) return text
+  const [before, after] = text.split(link.text)
+  return <>{before}<a href={link.href} rel="noopener">{link.text}</a>{after}</>
+}
+
 function Pic({ frame, caption, show, sizes, ratio, className = '' }) {
   return (
     <figure className={`pic ${className}`} data-reveal>
@@ -90,7 +97,7 @@ export default function CaseBlock({ project }) {
         {head}
         <figure className="panel-fig" data-reveal>
           <RevealSlider reveal={plate.reveal} />
-          <figcaption className="credit">{plate.caption}</figcaption>
+          <figcaption className="credit"><Caption text={plate.caption} link={plate.captionLink} /></figcaption>
         </figure>
         <div className="col" data-reveal><Details rows={rows} />{cells}</div>
       </div>

@@ -230,6 +230,11 @@ export const projects = [
       reveal: { base: edemaXray, layers: edemaCams, label: 'Grad-CAM overlay', ratio: EDEMA_RATIO },
       caption:
         'Example input, not training data: “Chest radiograph of a lung with Kerley B lines” by Mikael Häggström, CC0, via Wikimedia Commons. Each heatmap is the app’s own Grad-CAM output for this image.',
+      // the image title links to its Commons file page, so the source can be checked
+      captionLink: {
+        text: 'Chest radiograph of a lung with Kerley B lines',
+        href: 'https://commons.wikimedia.org/wiki/File:Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg',
+      },
     },
   },
   {
