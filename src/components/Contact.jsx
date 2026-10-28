@@ -23,7 +23,7 @@ export default function Contact() {
         ))}
       </section>
       <footer className="dark">
-        <svg className="wordmark" viewBox="0 0 1000 148" role="img" aria-label={profile.name}>
+        <svg className="wordmark" viewBox="0 0 1000 160" role="img" aria-label={profile.name}>
           <text x="0" y="122" textLength="1000" lengthAdjust="spacingAndGlyphs">{profile.first} {profile.last}</text>
         </svg>
         <div className="foot">

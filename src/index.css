@@ -29,21 +29,24 @@
 
   --font: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
   --font-ar: 'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Naskh Arabic', sans-serif;
-  /* Text grows with wide screens, so it keeps pace with the pictures:
-     --grow is 0 up to a 1280px window and stops at 2560px; --r sets the
-     growth (1 would scale text exactly with the window), and --grow2 adds
-     --r2 more from 1920px, where the margins stop growing and the pictures
-     outpace the window. Below 1280 every size is as before. */
-  --grow: clamp(0px, 100vw - 1280px, 1280px);
-  --grow2: clamp(0px, 100vw - 1920px, 640px);
+  /* Fluid from the point where cases sit side by side (82.5rem, 1320px at
+     the default text size) to a 160rem (2560px) page, then fixed. Everything
+     is in rem, so the browser's text-size setting scales text and layout
+     together, and zoom simply moves along this curve. --r sets the growth
+     (1 scales text exactly with the window), --r2 adds more from 120rem. */
+  --grow: clamp(0rem, 100vw - 82.5rem, 77.5rem);
+  --grow2: clamp(0rem, 100vw - 120rem, 40rem);
   --r: 0.85;
   --r2: 0.3;
-  /* Five sizes, no more (plus the 16px case details) */
-  --s-small: calc(clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem) + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.01163);
-  --s-body: calc(clamp(1.125rem, 1.08rem + 0.15vw, 1.1875rem) + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.01484);
-  --s-detail: calc(1rem + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.0125);
-  --g: calc(var(--grow) * var(--r) + var(--grow2) * var(--r2)); /* the growth as a length, for one-off sizes */
-  --s-note: calc(0.875rem + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.01094);
+  --g: calc(var(--grow) * var(--r) + var(--grow2) * var(--r2)); /* the growth as a length */
+  /* Five sizes (plus the case details and notes), each growing with --g */
+  --s-small: calc(clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem) + var(--g) * 0.01163);
+  --s-body: calc(clamp(1.125rem, 1.08rem + 0.15vw, 1.1875rem) + var(--g) * 0.01484);
+  --s-detail: calc(1rem + var(--g) * 0.0125);
+  --s-note: calc(0.875rem + var(--g) * 0.01094);
+  /* Sections share one edge; past a 160rem page their content stays 160rem
+     wide, centred, while the bands run full width */
+  --pad-x: max(var(--margin), calc((100% - 160rem) / 2 + var(--margin)));
   --s-head: clamp(2.25rem, 1.2rem + 3.6vw, 4.5rem);
   --s-name: clamp(3.5rem, 9vw, 8.75rem);
   --margin: clamp(1rem, 2vw, 1.75rem);
@@ -72,7 +75,7 @@ button { font: inherit; color: inherit; }
 .accent { background: var(--ac-bg); color: var(--ac-ink); }
 .accent :focus-visible { outline-color: var(--f-ac); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.skip { position: absolute; left: var(--margin); top: 12px; z-index: 100; background: var(--bd-bg); color: var(--bd-ink); padding: 12px 18px; font-weight: 500; text-decoration: none; }
+.skip { position: absolute; left: var(--pad-x); top: 12px; z-index: 100; background: var(--bd-bg); color: var(--bd-ink); padding: 12px 18px; font-weight: 500; text-decoration: none; }
 .skip:not(:focus) { width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; font-weight: 500; text-decoration: none; border: 0; cursor: pointer;
@@ -97,21 +100,22 @@ button { font: inherit; color: inherit; }
 [data-ui] th { font-weight: 600; }
 /* Narrow frames drop the optional columns rather than cut any */
 /* In em of the frame's text, so columns drop as the text grows on wide screens */
-@container (max-width: 29.5em) { [data-ui] .opt { display: none; } }
+@container (max-width: 36em) { [data-ui] .opt { display: none; } }
 @container (max-width: 25.25em) { [data-ui] table { font-size: 0.8125rem; } [data-ui] th, [data-ui] td { padding: 4px 6px; } }
 @container (max-width: 21em) { [data-ui] .opt-narrow { display: none; } }
+@container (max-width: 17.5em) { [data-ui] .opt-tiny { display: none; } [data-ui] table { font-size: 0.75rem; } [data-ui] th, [data-ui] td { padding: 3px 5px; } }
 [data-ui] ol, [data-ui] ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
 [data-ui] ul[dir='rtl'] { padding: 0 1.2em 0 0; font-family: var(--font-ar); }
 [data-ui] li span { color: var(--ui-muted); }
 [data-ui] code { font-family: ui-monospace, Consolas, monospace; } /* real identifiers are code */
 
 /* ---------- 1. Hero ---------- */
-.hero { position: relative; min-height: max(100svh, 760px); padding: 24px var(--margin) calc(var(--s-name) * 0.9 + 40px);
+.hero { position: relative; min-height: max(100svh, 760px); padding: 24px var(--pad-x) calc(var(--s-name) * 0.9 + 40px);
         display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: auto auto 1fr; column-gap: var(--gutter); row-gap: 28px; align-content: start; }
 .hero-name { grid-column: 1 / span 7; grid-row: 1; font-size: var(--s-name); letter-spacing: -0.045em; line-height: 0.85; white-space: nowrap; }
 .hero-name .mask { display: inline-block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; vertical-align: top; }
 .hero-name .a, .hero-name .b { display: inline-block; }
-.hero-name .b-wrap { position: absolute; right: var(--margin); bottom: 22px; }
+.hero-name .b-wrap { position: absolute; right: var(--pad-x); bottom: 22px; }
 .hero-nav { grid-column: 8 / -1; grid-row: 1; justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; font-size: var(--s-small); }
 .hero-nav a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
 .hero-nav a:hover { text-decoration: underline; }
@@ -127,7 +131,7 @@ button { font: inherit; color: inherit; }
 .proof-link:hover .cap b { text-decoration: underline; }
 
 /* ---------- 2. Hand me a problem ---------- */
-.range { padding: var(--gap-section) var(--margin); }
+.range { padding: var(--gap-section) var(--pad-x); }
 .range-sub { margin: 20px 0 32px; max-width: 56ch; }
 .pick { border: 0; padding: 0; margin: 0 0 40px; display: flex; flex-wrap: wrap; gap: 8px; }
 .pick label { position: relative; display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; background: var(--ac-tint); font-weight: 500; cursor: pointer;
@@ -138,12 +142,17 @@ button { font: inherit; color: inherit; }
 .pick label:has(input:focus-visible) { outline: 2px solid var(--f-ac); outline-offset: 3px; }
 .chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
 .chain .frame { aspect-ratio: 3 / 2; }
+.chain li { container-type: inline-size; }
+/* Very narrow (or large text on a small phone): square frames give the
+   data table and the lists the height they need */
+@container (max-width: 17em) { .chain li .frame { aspect-ratio: 1 / 1; } } /* beats the phone 4:3 rule */
+@container (max-width: 14em) { .chain li .frame { aspect-ratio: 4 / 5; } }
 .chain-cap { margin-top: 12px; }
 .chain-cap b { display: block; font-weight: 600; }
 .stage-tabs { display: none; }
 
 /* ---------- 3. Selected work ---------- */
-.work { padding: var(--gap-section) var(--margin) clamp(56px, 6vw, 96px); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
+.work { padding: var(--gap-section) var(--pad-x) clamp(56px, 6vw, 96px); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
 .work h2 { grid-column: 1 / -1; margin-bottom: 32px; }
 .names { grid-column: 1 / span 8; list-style: none; margin: 0; padding: 0; }
 .names a { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 28px; padding: 14px 0; text-decoration: none; color: var(--lt-muted); transition: color 200ms ease; }
@@ -161,7 +170,7 @@ button { font: inherit; color: inherit; }
    its own ground (no outline), details at 16px with a label column,
    buttons last.
    Fields alternate so the boundary between projects is a change of ground. */
-.case { --col-gap: clamp(20px, 2.4vw, 40px); padding: clamp(56px, 7vw, 96px) var(--margin); container-type: inline-size; }
+.case { --col-gap: clamp(1.25rem, 2.4vw, 2.5rem); padding: clamp(56px, 7vw, 96px) var(--pad-x); container-type: inline-size; }
 .case:nth-child(odd) { background: var(--lt-surface); }
 .case-head { margin-bottom: clamp(28px, 3.4vw, 48px); }
 .case-head h3 { font-size: var(--s-head); }
@@ -204,7 +213,7 @@ dl.d dd { margin: 0; }
    last item or the buttons end level with the picture beside it: the frame,
    or the Edema panel down to its slider bar (captions sit outside, in a
    subgrid row). Under the Edema heading the space grows like one item gap. */
-@media (min-width: 1101px) {
+@media (min-width: 82.5625em) {
   .zigzag .c-row { grid-template-rows: auto auto; row-gap: 8px; align-items: stretch; }
   .zigzag .pic { grid-row: 1 / span 2; grid-template-rows: subgrid; }
   .zigzag .pic button.open { align-self: start; }
@@ -219,6 +228,14 @@ dl.d dd { margin: 0; }
   .panel-row > .col { grid-row: 2; }
   .panel-row > .col::before { content: ''; flex: 1 1 0; } /* under the heading: one share, */
   .panel-row dl.d { flex-grow: 5; }                            /* like each of the 5 item gaps */
+  /* Blocks with buttons give part of the spare height to the space above
+     the buttons (Telecom row 2, with the least text: 3 shares to 1 for the
+     gaps; Edema: 2 to 5), so their lists keep the rhythm of Telecom row 1
+     and the buttons still end level */
+  .panel-row > .col::after { content: ''; order: 2; flex: 2 1 0; }
+  .panel-row .cells { order: 3; }
+  .zigzag .r57 .col::after { content: ''; order: 2; flex: 3 1 0; }
+  .zigzag .r57 .cells { order: 3; }
 }
 
 /* Edema: the Grad-CAM reveal. Controls sit on a dark bar so the ochre
@@ -248,7 +265,7 @@ dl.d dd { margin: 0; }
 .reveal-bar input[type='range']:focus-visible { outline: 2px solid var(--f-dk); outline-offset: 2px; }
 
 /* ---------- 5. Skills ---------- */
-.skills { padding: var(--gap-section) var(--margin); }
+.skills { padding: var(--gap-section) var(--pad-x); }
 .skills h2 { max-width: 16ch; }
 .map-wrap { margin-top: 64px; }
 .map { width: 100%; border-collapse: separate; border-spacing: 6px; margin: -6px; table-layout: fixed; font-size: var(--s-body); }
@@ -272,7 +289,7 @@ dl.d dd { margin: 0; }
 .also b { color: var(--dk-ink); font-weight: 500; }
 
 /* ---------- 6. About ---------- */
-.about { padding: var(--gap-section) var(--margin); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 48px; }
+.about { padding: var(--gap-section) var(--pad-x); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 48px; }
 .about h2 { grid-column: 4 / -1; }
 .about .facts { grid-column: 1 / span 2; margin: 0; display: grid; gap: 20px; align-content: start; font-size: var(--s-small); }
 .about .facts dt { color: var(--lt-muted); } .about .facts dd { margin: 0; }
@@ -286,7 +303,7 @@ dl.d dd { margin: 0; }
 .about .rec ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
 
 /* ---------- 7. Certification and courses ---------- */
-.creds { padding: 0 var(--margin) var(--gap-section); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+.creds { padding: 0 var(--pad-x) var(--gap-section); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
 .creds h2 { grid-column: 1 / -1; margin-bottom: 48px; }
 .cert { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: center; background: var(--lt-surface); padding: var(--margin); }
 .thumb { all: unset; box-sizing: border-box; cursor: zoom-in; display: block; background: #ffffff; }
@@ -312,13 +329,14 @@ dl.d dd { margin: 0; }
 .lightbox[open] { animation: rise 260ms var(--ease-out); }
 
 /* ---------- 8. Contact and footer ---------- */
-.row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; min-height: 140px; padding: 0 var(--margin) 22px; font-size: var(--s-head); letter-spacing: -0.04em; line-height: 1; }
+.row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; min-height: 140px; padding: 0 var(--pad-x) 22px; font-size: var(--s-head); letter-spacing: -0.04em; line-height: 1; }
 .row:nth-child(even) { background: var(--dk-surface); }
-.contact > .row:first-child { min-height: 0; padding-top: var(--gap-section); } /* same space above as every other section heading */
+.contact > .row:first-child { min-height: 0; padding-top: var(--gap-section); justify-content: flex-start; column-gap: clamp(1.5rem, 4vw, 6rem); } /* same space above as every other heading; the note follows the heading, not the far edge */
+.contact > .row:first-child .note { text-align: left; }
 .row a { text-decoration: none; overflow-wrap: anywhere; transition: color var(--t-hover) ease; }
 .row a:hover { text-decoration: underline; color: var(--bd-bg); }
 .row .note { font-size: var(--s-small); letter-spacing: 0; color: var(--dk-muted); text-align: right; max-width: 30ch; line-height: 1.4; }
-footer { padding: 72px var(--margin) 24px; }
+footer { padding: 72px var(--pad-x) 24px; }
 .wordmark { width: 62%; height: auto; display: block; overflow: visible; } /* the name again, quieter than the hero */
 .wordmark text { fill: var(--dk-ink); font-family: var(--font); font-weight: 600; font-size: 150px; letter-spacing: -6px; }
 .foot { margin-top: 16px; font-size: var(--s-small); color: var(--dk-muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -336,7 +354,15 @@ footer { padding: 72px var(--margin) 24px; }
 .motion .chain li { animation: rise 560ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms); }
 
 /* ---------- Tablet ---------- */
-@media (max-width: 1100px) {
+@media (max-width: 68.75em) {
+  /* One large frame, with the three stages as controls (three frames
+     side by side are too small for the data table below this) */
+  .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 12px; }
+  .stage-tabs button { min-height: 48px; border: 0; background: var(--ac-tint); color: var(--ac-ink); font-weight: 500; cursor: pointer; }
+  .stage-tabs button[aria-pressed='true'] { background: var(--ac-sel-bg); color: var(--ac-sel-ink); }
+  .chain { grid-template-columns: minmax(0, 1fr); max-width: 45rem; }
+  .stage-tabs { max-width: 45rem; }
+  .chain li:not(.on) { display: none; }
   .hero { min-height: auto; }
   .proof { align-self: start; margin-top: 24px; }
   .intro { grid-column: 1 / -1; grid-row: 2; max-width: 48ch; }
@@ -345,28 +371,24 @@ footer { padding: 72px var(--margin) 24px; }
   .groups { grid-template-columns: 1fr 1fr; }
   .cert-text { grid-column: 1 / -1; margin-top: 28px; } .thumb.big { grid-column: 1 / -1; }
   .courses-h, .courses { grid-column: 1 / -1; } .courses { margin-top: 16px; }
-  /* Below this a text column is too narrow to end level with the pictures */
-  /* One column in source order: header, pictures, details, buttons */
-  .r75, .r57, .r66 { grid-template-columns: minmax(0, 1fr); }
+}
+/* Cases sit side by side only from 82.5rem (1320px at the default text
+   size): below it a details column at 16px is taller than the picture
+   beside it, so each case reads in one column, in source order: header,
+   pictures, details, buttons, at most 45rem wide. */
+@media (max-width: 82.5em) {
+  .r75, .r57, .r66, .panel-row { grid-template-columns: minmax(0, 1fr); max-width: 45rem; }
   .r57 > .right, .r57 > .left, .panel-row > .case-head, .panel-row > .panel-fig, .panel-row > .col { grid-column: 1; grid-row: auto; }
   .panel-row { row-gap: var(--col-gap); }
   .panel-row > .case-head { margin-bottom: 0; }
-  .cells { --btn: 50cqw; }
+  .cells { --btn: min(50cqw, 22.5rem); }
 }
 
-@media (max-width: 900px) {
-  /* One large frame, with the three stages as controls */
-  .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 12px; }
-  .stage-tabs button { min-height: 48px; border: 0; background: var(--ac-tint); color: var(--ac-ink); font-weight: 500; cursor: pointer; }
-  .stage-tabs button[aria-pressed='true'] { background: var(--ac-sel-bg); color: var(--ac-sel-ink); }
-  .chain { grid-template-columns: minmax(0, 1fr); }
-  .chain li:not(.on) { display: none; }
-}
 
 /* ---------- Phone: its own composition ---------- */
-@media (max-width: 760px) {
+@media (max-width: 47.5em) {
   :root { --s-name: 15vw; }
-  .hero { min-height: auto; padding: 20px var(--margin) calc(var(--s-name) * 0.9 + 32px); row-gap: 24px; }
+  .hero { min-height: auto; padding: 20px var(--pad-x) calc(var(--s-name) * 0.9 + 32px); row-gap: 24px; }
   .hero-name { grid-column: 1 / span 8; }
   .hero-nav { grid-column: 9 / -1; gap: 4px 14px; }
   .hero-nav a:not(.keep) { display: none; }

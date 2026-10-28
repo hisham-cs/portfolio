@@ -65,7 +65,7 @@ export const STAGES = [
 //   { kind: 'image', image: screenshot(...) | natural(...), alt, fill }
 // Images are always shown whole; `fill` is the colour of the image's own edge,
 // used wherever a frame is wider or taller than the picture.
-//   { kind: 'table', columns: [...], optional?, optionalNarrow?, rows: [[...], ...], foot }
+//   { kind: 'table', columns: [...], optional?, optionalNarrow?, optionalTiny?, rows: [[...], ...], foot }
 //   { kind: 'list', title, items: [...], foot, code?, rtl? }
 // `map` holds the short labels for the skill table; `plate` sets the case
 // block: `layout` 'zigzag' (each figure beside part of the details),
@@ -92,7 +92,8 @@ export const projects = [
           label: 'First rows of the customer table',
           columns: ['CustomerID', 'Tenure', 'Contract', 'Internet', 'Payment', 'Monthly', 'Churn'],
           optional: ['CustomerID', 'Payment'], // dropped when the frame is narrow, never cut
-          optionalNarrow: ['Internet'], // dropped too on the narrowest frames
+          optionalNarrow: ['Internet'], // dropped too on narrow frames
+          optionalTiny: ['Tenure'], // and on the narrowest (large text on a small phone)
           rows: [
             ['3668-QPYBK', '2', 'Month-to-month', 'DSL', 'Mailed check', '53.85', 'Yes'],
             ['9237-HQITU', '2', 'Month-to-month', 'Fiber optic', 'Electronic check', '70.70', 'Yes'],

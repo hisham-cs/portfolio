@@ -23,7 +23,10 @@ export default function Frame({ frame, sizes = '(max-width: 760px) 90vw, 40vw', 
 
   if (frame.kind === 'table') {
     const col = frame.columns
-    const opt = (i) => (frame.optional?.includes(col[i]) ? 'opt' : frame.optionalNarrow?.includes(col[i]) ? 'opt-narrow' : undefined)
+    const opt = (i) =>
+      frame.optional?.includes(col[i]) ? 'opt'
+        : frame.optionalNarrow?.includes(col[i]) ? 'opt-narrow'
+          : frame.optionalTiny?.includes(col[i]) ? 'opt-tiny' : undefined
     return (
       <div className={`frame ${className}`}>
         <div data-ui className="ui" role="figure" aria-label={frame.label}>

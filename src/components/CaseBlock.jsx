@@ -66,7 +66,7 @@ export default function CaseBlock({ project }) {
       ))}
     </div>
   )
-  const wide = '(max-width: 1100px) calc(100vw - 2rem)'
+  const wide = '(max-width: 82.5em) min(calc(100vw - 2rem), 45rem)'
 
   let body
   if (plate.layout === 'zigzag') {
