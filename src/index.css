@@ -29,9 +29,21 @@
 
   --font: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
   --font-ar: 'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Naskh Arabic', sans-serif;
-  /* Five sizes, no more */
-  --s-small: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
-  --s-body: clamp(1.125rem, 1.08rem + 0.15vw, 1.1875rem);
+  /* Text grows with wide screens, so it keeps pace with the pictures:
+     --grow is 0 up to a 1280px window and stops at 2560px; --r sets the
+     growth (1 would scale text exactly with the window), and --grow2 adds
+     --r2 more from 1920px, where the margins stop growing and the pictures
+     outpace the window. Below 1280 every size is as before. */
+  --grow: clamp(0px, 100vw - 1280px, 1280px);
+  --grow2: clamp(0px, 100vw - 1920px, 640px);
+  --r: 0.85;
+  --r2: 0.3;
+  /* Five sizes, no more (plus the 16px case details) */
+  --s-small: calc(clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem) + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.01163);
+  --s-body: calc(clamp(1.125rem, 1.08rem + 0.15vw, 1.1875rem) + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.01484);
+  --s-detail: calc(1rem + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.0125);
+  --g: calc(var(--grow) * var(--r) + var(--grow2) * var(--r2)); /* the growth as a length, for one-off sizes */
+  --s-note: calc(0.875rem + (var(--grow) * var(--r) + var(--grow2) * var(--r2)) * 0.01094);
   --s-head: clamp(2.25rem, 1.2rem + 3.6vw, 4.5rem);
   --s-name: clamp(3.5rem, 9vw, 8.75rem);
   --margin: clamp(1rem, 2vw, 1.75rem);
@@ -84,9 +96,10 @@ button { font: inherit; color: inherit; }
 [data-ui] th, [data-ui] td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--ui-edge); white-space: nowrap; }
 [data-ui] th { font-weight: 600; }
 /* Narrow frames drop the optional columns rather than cut any */
-@container (max-width: 560px) { [data-ui] .opt { display: none; } }
-@container (max-width: 480px) { [data-ui] table { font-size: 0.8125rem; } [data-ui] th, [data-ui] td { padding: 4px 6px; } }
-@container (max-width: 400px) { [data-ui] .opt-narrow { display: none; } }
+/* In em of the frame's text, so columns drop as the text grows on wide screens */
+@container (max-width: 29.5em) { [data-ui] .opt { display: none; } }
+@container (max-width: 25.25em) { [data-ui] table { font-size: 0.8125rem; } [data-ui] th, [data-ui] td { padding: 4px 6px; } }
+@container (max-width: 21em) { [data-ui] .opt-narrow { display: none; } }
 [data-ui] ol, [data-ui] ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
 [data-ui] ul[dir='rtl'] { padding: 0 1.2em 0 0; font-family: var(--font-ar); }
 [data-ui] li span { color: var(--ui-muted); }
@@ -148,13 +161,11 @@ button { font: inherit; color: inherit; }
    its own ground (no outline), details at 16px with a label column,
    buttons last.
    Fields alternate so the boundary between projects is a change of ground. */
-/* Case content stops growing at 1280px, centred, so pictures stay a size
-   whose height the details can fill with gaps that still read as one list */
-.case { --col-gap: clamp(20px, 2.4vw, 40px); padding: clamp(56px, 7vw, 96px) max(var(--margin), calc((100% - 1280px) / 2)); container-type: inline-size; }
+.case { --col-gap: clamp(20px, 2.4vw, 40px); padding: clamp(56px, 7vw, 96px) var(--margin); container-type: inline-size; }
 .case:nth-child(odd) { background: var(--lt-surface); }
 .case-head { margin-bottom: clamp(28px, 3.4vw, 48px); }
 .case-head h3 { font-size: var(--s-head); }
-.case-head .kind { margin-top: 10px; font-size: 0.875rem; color: var(--lt-muted); }
+.case-head .kind { margin-top: 10px; font-size: var(--s-note); color: var(--lt-muted); }
 .case-head .lead { margin-top: 14px; max-width: 52ch; line-height: 1.45; }
 .c-row { display: grid; column-gap: var(--col-gap); row-gap: var(--col-gap); align-items: start; }
 .c-row + .c-row { margin-top: var(--col-gap); }
@@ -167,7 +178,7 @@ button { font: inherit; color: inherit; }
 .pic .frame > img { height: auto; } /* natural ratio */
 .pic.fixed .frame { aspect-ratio: var(--ar); } /* a pair shares one height; each picture whole inside */
 .pic.fixed .frame > img { height: 100%; }
-.case figcaption { font-size: 0.875rem; color: var(--lt-muted); max-width: 60ch; }
+.case figcaption { font-size: var(--s-note); color: var(--lt-muted); max-width: 60ch; }
 button.open { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: zoom-in; }
 button.open:focus-visible { outline: 2px solid var(--f-lt); outline-offset: 3px; }
 /* Edema: heading and details on the left, the panel beside them from the top */
@@ -175,8 +186,8 @@ button.open:focus-visible { outline: 2px solid var(--f-lt); outline-offset: 3px;
 .panel-row > .case-head { grid-column: 1; grid-row: 1; }
 .panel-row > .panel-fig { grid-column: 2; grid-row: 1 / span 2; margin: 0; display: grid; gap: 8px; min-width: 0; }
 .panel-row > .col { grid-column: 1; grid-row: 2; }
-dl.d { margin: 0; display: grid; gap: 12px; font-size: 1rem; line-height: 1.5; } /* 16px details: the one exception to the five sizes */
-dl.d > div { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); column-gap: 18px; }
+dl.d { margin: 0; display: grid; gap: 12px; font-size: var(--s-detail); line-height: 1.5; } /* 16px details, growing on wide screens */
+dl.d > div { display: grid; grid-template-columns: 6.2em minmax(0, 1fr); column-gap: 1.125em; }
 dl.d dt { color: var(--lt-muted); }
 dl.d dd { margin: 0; }
 /* Buttons: one size everywhere, half of a 5-column details column */
@@ -214,25 +225,25 @@ dl.d dd { margin: 0; }
    accent keeps its 8.49:1 (it is 1.95:1 on the light field). */
 .reveal-top { padding: 16px 18px 14px; display: grid; gap: 10px; }
 .models { border: 0; padding: 0; margin: 0; min-width: 0; }
-.models legend { padding: 0; margin-bottom: 10px; font-weight: 600; font-size: 1rem; }
+.models legend { padding: 0; margin-bottom: 10px; font-weight: 600; font-size: calc(1rem + var(--g) * 0.0125); }
 .models-row { display: flex; flex-wrap: wrap; gap: 6px; }
-.models label { position: relative; display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; background: var(--dk-surface); font-size: 0.90625rem; font-weight: 500; cursor: pointer;
+.models label { position: relative; display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; background: var(--dk-surface); font-size: calc(0.90625rem + var(--g) * 0.01133); font-weight: 500; cursor: pointer;
                 transition: background-color var(--t-hover) ease, color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
 .models label:active { transform: scale(0.98); }
 .models label.on { background: var(--bd-bg); color: var(--bd-ink); }
 .models input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .models label:has(input:focus-visible) { outline: 2px solid var(--f-dk); outline-offset: 3px; }
-.model-read { margin-top: 2px; font-size: 1rem; }
+.model-read { margin-top: 2px; font-size: calc(1rem + var(--g) * 0.0125); }
 .model-read b { font-weight: 600; font-variant-numeric: tabular-nums; }
-.model-note { font-size: 0.8125rem; color: var(--dk-muted); max-width: 62ch; }
+.model-note { font-size: calc(0.8125rem + var(--g) * 0.01016); color: var(--dk-muted); max-width: 62ch; }
 .reveal-stage { position: relative; overflow: hidden; background: #000000; }
 .reveal-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .reveal-overlay { clip-path: inset(0 calc(100% - var(--p)) 0 0); opacity: 0; transition: opacity 160ms ease; }
 .reveal-overlay.on { opacity: 1; }
 .reveal-edge { position: absolute; top: 0; bottom: 0; left: var(--p); width: 2px; margin-left: -1px; background: var(--bd-bg); }
 .reveal-bar { display: grid; grid-template-columns: auto 1fr 3.2em; align-items: center; gap: 16px; padding: 12px 18px; }
-.reveal-bar label { font-weight: 500; font-size: 0.9375rem; white-space: nowrap; }
-.reveal-bar output { font-variant-numeric: tabular-nums; font-size: 0.9375rem; text-align: right; color: var(--dk-muted); }
+.reveal-bar label { font-weight: 500; font-size: calc(0.9375rem + var(--g) * 0.01172); white-space: nowrap; }
+.reveal-bar output { font-variant-numeric: tabular-nums; font-size: calc(0.9375rem + var(--g) * 0.01172); text-align: right; color: var(--dk-muted); }
 .reveal-bar input[type='range'] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--bd-bg); cursor: ew-resize; }
 .reveal-bar input[type='range']:focus-visible { outline: 2px solid var(--f-dk); outline-offset: 2px; }
 
@@ -364,7 +375,7 @@ footer { padding: 72px var(--margin) 24px; }
   .proof .frame { aspect-ratio: 16 / 9; }
   .chain .frame { aspect-ratio: 4 / 3; }
   .names a { flex-direction: column; align-items: flex-start; }
-  dl.d > div { grid-template-columns: 5.2rem minmax(0, 1fr); column-gap: 12px; }
+  dl.d > div { grid-template-columns: 5.2em minmax(0, 1fr); column-gap: 12px; }
   .map { font-size: var(--s-small); border-spacing: 4px; margin: -4px; }
   .map thead th:first-child { width: 26%; }
   .map td { height: auto; padding: 10px 8px; }
