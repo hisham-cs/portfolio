@@ -21,7 +21,7 @@ Rules: the accent appears only on the "Hand me a problem" field, the primary but
 
 ## Type
 
-One family, Bricolage Grotesque (self-hosted variable WOFF2, `font-display: swap`). Five sizes: `--s-small` 14–15, `--s-body` 18–19, `--s-head` 36–72, `--s-name` 9vw (15vw on phones), plus 16px case details and 14px case captions. Above a 1280px window, body, small, details, captions and the Edema panel text grow with the window (`--grow`, `--r`, `--r2` in `index.css`; details 16 → about 23px at 1920, 32px at 2560, then fixed), so the case details keep pace with the pictures beside them. Below 1280 nothing changes. Headings two lines at most. Arabic text inside frames uses system Arabic faces.
+One family, Bricolage Grotesque (self-hosted variable WOFF2, `font-display: swap`). Five sizes: `--s-small` 14–15, `--s-body` 18–19, `--s-head` 36–72, `--s-name` 9vw (15vw on phones), plus 16px case details and 14px case captions. Sizes and breakpoints are in rem/em, so browser zoom and the text-size setting move along one curve. From 82.5rem (1320px at the default size), where the cases sit side by side, body, small, details, captions and the Edema panel text grow with the window (`--grow`, `--r`, `--r2` in `index.css`; details 16px there, about 22px at 1920, 31px at 2560) up to a 160rem page; past that every section's content stays 160rem wide, centred, with the bands full width. Below 82.5rem the cases read in one column. Checked at 93 widths from 320 to 3840px, at 16px and 20px default text. Headings two lines at most. Arabic text inside frames uses system Arabic faces.
 
 ## House rules (from the skill, kept)
 
