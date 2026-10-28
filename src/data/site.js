@@ -123,12 +123,3 @@ export const courses = [
     verifyUrl: 'https://learn.samai.futurex.sa/mod/customcert/verify_certificate.php?code=pi1Qthhj67&qrcode=1',
   },
 ]
-
-export const credits = [
-  {
-    what: 'Chest radiograph of a lung with Kerley B lines',
-    who: 'Mikael Häggström',
-    licence: 'CC0',
-    href: 'https://commons.wikimedia.org/wiki/File:Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg',
-  },
-]

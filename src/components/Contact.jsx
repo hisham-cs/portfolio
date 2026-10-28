@@ -1,4 +1,4 @@
-import { profile, credits } from '../data/site.js'
+import { profile } from '../data/site.js'
 
 // Contact in display rows, then the name fitted to the full width.
 export default function Contact() {
@@ -25,15 +25,7 @@ export default function Contact() {
         <svg className="wordmark" viewBox="0 0 1000 160" role="img" aria-label={profile.name}>
           <text x="0" y="122" textLength="1000" lengthAdjust="spacingAndGlyphs">{profile.first} {profile.last}</text>
         </svg>
-        <div className="foot">
-          <span>© 2026 {profile.name}</span>
-          <span>
-            Picture credit:{' '}
-            {credits.map((c) => (
-              <span key={c.href}><a href={c.href} rel="noopener">“{c.what}”</a> by {c.who}, {c.licence}, via Wikimedia Commons.</span>
-            ))}
-          </span>
-        </div>
+        <p className="foot">© 2026 {profile.name}</p>
       </footer>
     </>
   )
