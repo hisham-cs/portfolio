@@ -328,8 +328,7 @@ dl.d dd { margin: 0; }
 /* ---------- 8. Contact and footer ---------- */
 .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; min-height: 140px; padding: 0 var(--pad-x) 22px; font-size: var(--s-head); letter-spacing: -0.04em; line-height: 1; }
 .row:nth-child(even) { background: var(--dk-surface); }
-.contact > .row:first-child { min-height: 0; padding-top: var(--gap-section); justify-content: flex-start; column-gap: clamp(1.5rem, 4vw, 6rem); } /* same space above as every other heading; the note follows the heading, not the far edge */
-.contact > .row:first-child .note { text-align: left; }
+.contact > .row:first-child { min-height: 0; padding-top: var(--gap-section); } /* the heading alone, with the same space above as every other section heading */
 .row a { text-decoration: none; overflow-wrap: anywhere; transition: color var(--t-hover) ease; }
 .row a:hover { text-decoration: underline; color: var(--bd-bg); }
 .row .note { font-size: var(--s-small); letter-spacing: 0; color: var(--dk-muted); text-align: right; max-width: 30ch; line-height: 1.4; }

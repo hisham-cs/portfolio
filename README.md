@@ -8,7 +8,7 @@ Personal site of Hisham Almalki, Computer Science graduate of Umm Al-Qura Univer
 
 - **Telecom churn analysis** — Excel / Power Query cleaning, a three-page Power BI dashboard, and a logistic regression model (0.849 ROC-AUC) on IBM's public Telco sample dataset. [Repository](https://github.com/hisham-cs/telco-churn-analysis)
 - **Pulmonary edema detector** — a four-CNN soft-voting ensemble with Grad-CAM, served as a Streamlit app; research and education only. [Repository](https://github.com/hisham-cs/AI-Pulmonary-Edema-Detector) · [Live app](https://ai-pulmonary-edema-detector-n2mdhebrvfowgvbobyfo4j.streamlit.app/)
-- **Faten** — an Arabic-first AI academic assistant (graduation project) with an LLM agent, Next.js and FastAPI. [Repository](https://github.com/Saleh67676/Faten)
+- **Faten** — an Arabic-first AI academic assistant (graduation project) with an LLM agent and a Next.js app. [Repository](https://github.com/Saleh67676/Faten)
 
 ## Stack
 

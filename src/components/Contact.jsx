@@ -13,7 +13,6 @@ export default function Contact() {
       <section className="contact dark" id="contact" aria-labelledby="contact-h">
         <div className="row">
           <h2 id="contact-h">Get in touch</h2>
-          <span className="note">For data analyst and AI engineer roles. I reply from Makkah, UTC+3.</span>
         </div>
         {rows.map((r) => (
           <div className="row" key={r.href}>

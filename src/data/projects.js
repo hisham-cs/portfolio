@@ -280,18 +280,18 @@ export const projects = [
       },
       product: {
         verb: 'Shipped',
-        line: 'An Arabic-first Next.js app on a FastAPI backend.',
+        line: 'An Arabic-first Next.js app on a Python backend.',
         detail:
-          'A Next.js app with chat, GPA analytics, AI study planning, a Pomodoro timer, transcript import and indoor navigation across 89+ rooms; FastAPI backend with Firebase.',
+          'A Next.js app with chat, GPA analytics, AI study planning, a Pomodoro timer, transcript import and indoor navigation across 89+ rooms; Python backend with Firebase.',
         frame: fatenMap, // the dashboard leads the hero and the case
       },
     },
     extra: [],
     myPart:
       'Built function-calling tools for the chat agent, including academic performance analysis that finds a student’s strengths and weaknesses from their record, exam date lookup, and course information with grading breakdowns. Built the Firebase components that store and retrieve the student data the agent uses.',
-    stack: 'Next.js, React, TypeScript, FastAPI, Python, Firebase, OpenAI API',
+    stack: 'Next.js, React, TypeScript, Python, Firebase, OpenAI API',
     links: [{ label: 'Repository', href: 'https://github.com/Saleh67676/Faten' }],
-    map: { data: 'Records, regulations', model: 'LLM agent, 24 tools', product: 'Next.js and FastAPI' },
+    map: { data: 'Records, regulations', model: 'LLM agent, 24 tools', product: 'Next.js' },
     plate: {
       // The dashboard and the chat side by side, the same height. Both are
       // landscape screens, so they split 6 : 6 to stay readable.
@@ -307,5 +307,5 @@ export const projects = [
 
 // Evidence outside the three projects that a skill can point to.
 export const otherEvidence = [
-  { id: 'coop', name: 'Co-op training', label: 'Flutter app prototype, Firebase components, Power BI report' },
+  { id: 'coop', name: 'Co-op training', label: 'Mobile app prototype, Firebase components, Power BI report' },
 ]

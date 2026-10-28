@@ -5,7 +5,7 @@ export const profile = {
   first: 'Hisham',
   last: 'Almalki',
   intro:
-    'I’m a Computer Science graduate of Umm Al-Qura University. I take a problem from raw data to a model to a product people use, and I’m looking for data analyst and AI engineer roles.',
+    'I’m a Computer Science graduate of Umm Al-Qura University. I take a problem from raw data to a model to a product people use, and I’m looking for a role in tech where I can work across all three.',
   fact: 'Based in Makkah. BSc Computer Science, Umm Al-Qura University, 2026.',
   email: 'hasalmalki@outlook.com',
   linkedin: 'https://www.linkedin.com/in/hisham-a-almalki',
@@ -47,7 +47,6 @@ export const skillGroups = [
     name: 'Tools and engineering',
     skills: [
       ['Firebase', ['faten-data', 'coop']],
-      ['Flutter', ['coop']],
       ['Git and GitHub', ['*']], // every project is versioned on GitHub
       ['Jupyter', ['telco-model']],
     ],
@@ -67,13 +66,13 @@ export const about = {
   ],
   paragraphs: [
     'I studied Computer Science at Umm Al-Qura University, and the work I enjoy is the whole of a problem: getting messy data into shape, choosing and testing a model, and building the thing people actually use. So far that has meant customer records, chest X-rays, and the regulations and records behind a university’s students.',
-    'I’m looking for data analyst and AI engineer roles, where both halves of that work matter.',
+    'I’m looking for a role in tech where I can work across data, models and the products built on them.',
   ],
   experience: {
     title: 'Cooperative training, Deanship of Information Technology, Umm Al-Qura University',
     when: 'March 2025 to August 2025, Makkah',
     points: [
-      'Led a four-member trainee team prototyping a Flutter app to replace Google Forms for lab device inspections, addressing duplicate records and limited progress tracking.',
+      'Led a four-member trainee team prototyping a mobile app to replace Google Forms for lab device inspections, addressing duplicate records and limited progress tracking.',
       'Built the Firebase database components and connected them to the app: device records, lab progress and assigned tasks.',
       'Co-authored the software requirements specification and presented the prototype to Deanship leadership.',
       'Built a Power BI report on student withdrawals, identifying the colleges and nationalities with the most withdrawals.',
