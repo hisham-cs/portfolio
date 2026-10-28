@@ -18,7 +18,7 @@ React 19 and Vite 8, plain CSS with design tokens (`src/index.css`), no UI libra
 
 All content lives in two files; no component needs to change for ordinary edits.
 
-- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, short labels for the skill map, and a `plate`: the case block's layout (`zigzag`, `panel` or `pair`, as approved in `design-exploration/round-4/case-layouts.html`), its pictures with captions (each opens full size), and how many detail rows go first. Every section (hero, "Hand me a problem", work index, case blocks, skill map) renders from this list.
+- `src/data/projects.js` — the projects. **To add a project, append one entry** with the same shape: its three stages (data, model, product), each with a frame (a screenshot, a table or a list), the case text, links, short labels for the skill map, and a `plate`: the case block's layout (`zigzag`, `panel` or `pair`, as approved in `design-exploration/round-4/case-layouts.html`), its pictures with captions (each opens full size), and how many detail rows go first. Every section (hero, "Hand me a problem", case blocks, skill map) renders from this list; `proof` picks the hero picture when it should differ from the product frame.
 - `src/data/site.js` — profile, skills (each pointing at the stages that prove it), about, experience, education, certification and courses, picture credits.
 
 ### Images

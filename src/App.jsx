@@ -1,6 +1,5 @@
 import Hero from './components/Hero.jsx'
 import Range from './components/Range.jsx'
-import WorkIndex from './components/WorkIndex.jsx'
 import CaseBlock from './components/CaseBlock.jsx'
 import Skills from './components/Skills.jsx'
 import About from './components/About.jsx'
@@ -17,7 +16,6 @@ export default function App() {
       <Hero />
       <main id="main">
         <Range />
-        <WorkIndex />
         <div className="cases light">
           {projects.map((p) => <CaseBlock key={p.id} project={p} />)}
         </div>

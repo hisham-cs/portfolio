@@ -147,22 +147,15 @@ button { font: inherit; color: inherit; }
    data table and the lists the height they need */
 @container (max-width: 17em) { .chain li .frame { aspect-ratio: 1 / 1; } } /* beats the phone 4:3 rule */
 @container (max-width: 14em) { .chain li .frame { aspect-ratio: 4 / 5; } }
+.chain-frame { position: relative; }
+/* The whole frame opens full size; a button laid over it, since tables and
+   lists cannot sit inside a button */
+.chain-frame .open-over { all: unset; position: absolute; inset: 0; cursor: zoom-in; }
+.chain-frame .open-over:focus-visible { outline: 2px solid var(--f-ac); outline-offset: 3px; }
 .chain-cap { margin-top: 12px; }
 .chain-cap b { display: block; font-weight: 600; }
 .stage-tabs { display: none; }
 
-/* ---------- 3. Selected work ---------- */
-.work { padding: var(--gap-section) var(--pad-x) clamp(56px, 6vw, 96px); display: grid; grid-template-columns: fit-content(58%) minmax(0, 1fr); column-gap: clamp(2rem, 4vw, 6rem); align-items: start; } /* the list as wide as its names, the preview takes the rest */
-.work h2 { grid-column: 1 / -1; margin-bottom: 32px; }
-.names { grid-column: 1; list-style: none; margin: 0; padding: 0; }
-.names a { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 28px; padding: 14px 0; text-decoration: none; color: var(--lt-muted); transition: color 200ms ease; }
-.names .n { font-size: var(--s-head); font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
-.names .k { font-size: var(--s-small); max-width: 30ch; }
-.names a.on, .names a:hover, .names a:focus-visible { color: var(--lt-ink); }
-.pv { grid-column: 2; position: sticky; top: 12vh; aspect-ratio: 16 / 10; }
-.pv > div { position: absolute; inset: 0; opacity: 0; transition: opacity 220ms ease; }
-.pv > div.on { opacity: 1; }
-.pv .frame { height: 100%; }
 
 /* ---------- 4. Case blocks ---------- */
 /* The approved layouts (design-exploration/round-4/case-layouts.html):
@@ -173,7 +166,7 @@ button { font: inherit; color: inherit; }
 .case { --col-gap: clamp(1.25rem, 2.4vw, 2.5rem); padding: clamp(56px, 7vw, 96px) var(--pad-x); container-type: inline-size; }
 .case:nth-child(odd) { background: var(--lt-surface); }
 .case-head { margin-bottom: clamp(28px, 3.4vw, 48px); }
-.case-head h3 { font-size: var(--s-head); }
+.case-head h2 { font-size: var(--s-head); }
 .case-head .kind { margin-top: 10px; font-size: var(--s-note); color: var(--lt-muted); }
 .case-head .lead { margin-top: 14px; max-width: 52ch; line-height: 1.45; }
 .c-row { display: grid; column-gap: var(--col-gap); row-gap: var(--col-gap); align-items: start; }
@@ -327,6 +320,8 @@ dl.d dd { margin: 0; }
 .lightbox { border: 0; padding: 0; max-width: min(1280px, 94vw); background: var(--lt-bg); color: var(--lt-ink); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); } /* taste-skill-ignore: a real modal dialog floats */
 .lightbox::backdrop { background: rgba(17, 17, 17, 0.82); }
 .lightbox img { max-height: 80vh; width: auto; margin: 0 auto; }
+.lightbox .frame { width: min(56rem, 90vw); } /* a table or list fragment, at full size */
+.lightbox [data-ui].ui { height: auto; }
 .lightbox form { display: flex; justify-content: flex-end; padding: 12px; }
 .lightbox[open] { animation: rise 260ms var(--ease-out); }
 
@@ -369,7 +364,6 @@ footer { padding: 72px var(--pad-x) 24px; }
   .proof { align-self: start; margin-top: 24px; }
   .intro { grid-column: 1 / -1; grid-row: 2; max-width: 48ch; }
   .fact { display: none; }
-  .work { grid-template-columns: minmax(0, 1fr); } .names { grid-column: 1; } .pv { display: none; }
   .groups { grid-template-columns: 1fr 1fr; }
   .cert-text { grid-column: 1 / -1; margin-top: 28px; } .thumb.big { grid-column: 1 / -1; }
   .courses-h, .courses { grid-column: 1 / -1; } .courses { margin-top: 16px; }
@@ -410,7 +404,6 @@ footer { padding: 72px var(--pad-x) 24px; }
   .proof { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
   .proof .frame { aspect-ratio: 16 / 9; }
   .chain .frame { aspect-ratio: 4 / 3; }
-  .names a { flex-direction: column; align-items: flex-start; }
   dl.d > div { grid-template-columns: 5.2em minmax(0, 1fr); column-gap: 12px; }
   .map { font-size: var(--s-small); border-spacing: 4px; margin: -4px; }
   .map thead th:first-child { width: 26%; }

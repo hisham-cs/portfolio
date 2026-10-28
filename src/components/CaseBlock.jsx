@@ -52,7 +52,7 @@ export default function CaseBlock({ project }) {
   const [first, rest] = [rows.slice(0, plate.split), rows.slice(plate.split)]
   const head = (
     <header className="case-head" data-reveal>
-      <h3 id={`h-${project.id}`}>{project.name}</h3>
+      <h2 id={`h-${project.id}`}>{project.name}</h2>
       <p className="kind">{project.kind}</p>
       <p className="lead">{project.question}</p>
     </header>

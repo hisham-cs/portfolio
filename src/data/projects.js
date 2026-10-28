@@ -29,6 +29,12 @@ const telcoOverview = {
   alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
   fill: '#f2f2f0',
 }
+const telcoDrivers = {
+  kind: 'image',
+  image: screenshot('telco-churn', 2, 712 / 1275),
+  alt: 'Power BI page “What drives churn”: churn rate by contract and internet service, by payment method and contract, by number of services, and with and without tech support',
+  fill: '#f2f2f0',
+}
 const telcoActions = {
   kind: 'image',
   image: screenshot('telco-churn', 5, 711 / 1262),
@@ -42,12 +48,19 @@ const fatenDashboard = {
   alt: 'Faten dashboard in Arabic with GPA cards, a GPA trend chart and the university calendar',
   fill: '#ffffff',
 }
-// The Faten chat: a badge-free copy of the old site's faten-3 screenshot.
+// The Faten chat and indoor map: badge-free copies of the old site's
+// faten-3 and faten-4 screenshots.
 const fatenChat = {
   kind: 'image',
   image: screenshot('faten', 3, 646 / 1280),
   alt: 'Faten’s chat in Arabic: the agent answers a question about a course with its grading breakdown and final exam dates',
   fill: '#ffffff',
+}
+const fatenMap = {
+  kind: 'image',
+  image: screenshot('faten', 4, 609 / 1280),
+  alt: 'Faten’s indoor navigation: a route drawn on the ground-floor map of the faculty building, with the distance and walking time beside it',
+  fill: '#e4e6e7',
 }
 
 // The three stages every project is shown through. Sections read this list,
@@ -61,7 +74,8 @@ export const STAGES = [
 
 // ---------------------------------------------------------------------------
 // Projects. To add one, append an entry with the same shape; no section needs
-// to change. Frames are one of three kinds:
+// to change. `proof` is the picture the hero shows for the project (else its
+// product frame). Frames are one of three kinds:
 //   { kind: 'image', image: screenshot(...) | natural(...), alt, fill }
 // Images are always shown whole; `fill` is the colour of the image's own edge,
 // used wherever a frame is wider or taller than the picture.
@@ -79,6 +93,7 @@ export const projects = [
     name: 'Telecom churn',
     kind: 'Analysis, machine learning and BI. Solo project.',
     input: 'A table of 7,043 customers',
+    proof: telcoOverview,
     question:
       'Why did 1,869 of 7,043 customers leave a telecom provider, and where should retention start? A public IBM sample dataset, not a client engagement.',
     stages: {
@@ -121,7 +136,7 @@ export const projects = [
         line: 'A three-page Power BI dashboard with DAX.',
         detail:
           'A three-page Power BI dashboard with DAX measures, sizing churn losses at $139K in monthly revenue at a 26.5% churn rate.',
-        frame: telcoOverview,
+        frame: telcoDrivers, // page 2 here; page 1 leads the hero and the case
       },
     },
     extra: [
@@ -222,6 +237,7 @@ export const projects = [
     name: 'Faten',
     kind: 'LLM agent and full-stack product. Graduation project, team.',
     input: 'University rules and student records',
+    proof: fatenDashboard,
     question:
       'One place for Umm Al-Qura students to ask about the rules, plan a semester and follow their GPA, in Arabic. Piloted at the university’s College of Computers.',
     stages: {
@@ -267,7 +283,7 @@ export const projects = [
         line: 'An Arabic-first Next.js app on a FastAPI backend.',
         detail:
           'A Next.js app with chat, GPA analytics, AI study planning, a Pomodoro timer, transcript import and indoor navigation across 89+ rooms; FastAPI backend with Firebase.',
-        frame: fatenDashboard,
+        frame: fatenMap, // the dashboard leads the hero and the case
       },
     },
     extra: [],

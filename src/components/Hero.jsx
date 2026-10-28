@@ -3,7 +3,7 @@ import { projects } from '../data/projects.js'
 import Frame from './Frame.jsx'
 
 const links = [
-  ['#work', 'Work'],
+  [`#case-${projects[0].id}`, 'Work'], // the first case
   ['#skills', 'Skills'],
   ['#about', 'About'],
   ['#credentials', 'Certification'],
@@ -21,7 +21,7 @@ export default function Hero() {
       </h1>
       <nav className="hero-nav" aria-label="Sections">
         {links.map(([href, label]) => (
-          <a key={href} href={href} className={href === '#work' || href === '#contact' ? 'keep' : undefined}>{label}</a>
+          <a key={href} href={href} className={label === 'Work' || label === 'Contact' ? 'keep' : undefined}>{label}</a>
         ))}
       </nav>
       <div className="intro">
@@ -36,8 +36,8 @@ export default function Hero() {
         {projects.map((p, i) => (
           <li key={p.id} style={{ '--i': i }}>
             <a href={`#case-${p.id}`} className="proof-link">
-              <Frame frame={p.stages.product.frame} sizes="(max-width: 760px) calc(100vw - 2rem), 31vw" eager={i === 0} />
-              <span className="cap"><b>{p.stages.product.frame.caption || p.map.product}</b>, {p.name}</span>
+              <Frame frame={p.proof ?? p.stages.product.frame} sizes="(max-width: 760px) calc(100vw - 2rem), 31vw" eager={i === 0} />
+              <span className="cap"><b>{p.map.product}</b>, {p.name}</span>
             </a>
           </li>
         ))}
