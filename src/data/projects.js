@@ -141,9 +141,9 @@ export const projects = [
     ],
     map: { data: '7,043 customer rows', model: 'Logistic regression', product: 'Power BI dashboard' },
     plate: {
-      // Each picture beside the text it supports: page 1 by Data/Model/Product,
-      // page 3 by Finding to Stack. Page 2 and the ROC curve stay out; their
-      // numbers are in the text.
+      // Each picture beside the text it supports: page 1 by Data, Model,
+      // Product and Finding; page 3 by Actions to Stack. Page 2 and the ROC
+      // curve stay out; their numbers are in the text.
       layout: 'zigzag',
       figures: [
         { frame: telcoOverview, caption: 'Dashboard page 1, “Customer churn overview”' },
@@ -153,7 +153,7 @@ export const projects = [
             'Dashboard page 3, “Where to act first”. Churn Score is IBM’s pre-computed score: the dashboard uses it to describe customers; the model excludes it as target leakage.',
         },
       ],
-      split: 3, // detail rows beside the first picture
+      split: 4, // detail rows beside the first picture
     },
   },
   {
