@@ -152,14 +152,14 @@ button { font: inherit; color: inherit; }
 .stage-tabs { display: none; }
 
 /* ---------- 3. Selected work ---------- */
-.work { padding: var(--gap-section) var(--pad-x) clamp(56px, 6vw, 96px); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
+.work { padding: var(--gap-section) var(--pad-x) clamp(56px, 6vw, 96px); display: grid; grid-template-columns: fit-content(58%) minmax(0, 1fr); column-gap: clamp(2rem, 4vw, 6rem); align-items: start; } /* the list as wide as its names, the preview takes the rest */
 .work h2 { grid-column: 1 / -1; margin-bottom: 32px; }
-.names { grid-column: 1 / span 8; list-style: none; margin: 0; padding: 0; }
+.names { grid-column: 1; list-style: none; margin: 0; padding: 0; }
 .names a { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 28px; padding: 14px 0; text-decoration: none; color: var(--lt-muted); transition: color 200ms ease; }
 .names .n { font-size: var(--s-head); font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
 .names .k { font-size: var(--s-small); max-width: 30ch; }
 .names a.on, .names a:hover, .names a:focus-visible { color: var(--lt-ink); }
-.pv { grid-column: 9 / -1; position: sticky; top: 12vh; aspect-ratio: 4 / 3; }
+.pv { grid-column: 2; position: sticky; top: 12vh; aspect-ratio: 16 / 10; }
 .pv > div { position: absolute; inset: 0; opacity: 0; transition: opacity 220ms ease; }
 .pv > div.on { opacity: 1; }
 .pv .frame { height: 100%; }
@@ -228,14 +228,15 @@ dl.d dd { margin: 0; }
   .panel-row > .col { grid-row: 2; }
   .panel-row > .col::before { content: ''; flex: 1 1 0; } /* under the heading: one share, */
   .panel-row dl.d { flex-grow: 5; }                            /* like each of the 5 item gaps */
-  /* Blocks with buttons give part of the spare height to the space above
-     the buttons (Telecom row 2, with the least text: 3 shares to 1 for the
-     gaps; Edema: 2 to 5), so their lists keep the rhythm of Telecom row 1
-     and the buttons still end level */
+  /* Edema gives part of its spare height to the space above the buttons
+     (2 shares to 5 for the gaps), so its list keeps the rhythm of Telecom
+     row 1 and the buttons still end level */
   .panel-row > .col::after { content: ''; order: 2; flex: 2 1 0; }
   .panel-row .cells { order: 3; }
-  .zigzag .r57 .col::after { content: ''; order: 2; flex: 3 1 0; }
-  .zigzag .r57 .cells { order: 3; }
+  /* Telecom row 2 holds the least text: the whole block, buttons right
+     under Stack, is centred against page 3, with gaps that track Edema's */
+  .zigzag .r57 .col { justify-content: center; }
+  .zigzag .r57 dl.d { flex: none; justify-content: flex-start; gap: clamp(0.75rem, 0.75rem + (100vw - 82.5rem) * 0.034, 2.375rem); }
 }
 
 /* Edema: the Grad-CAM reveal. Controls sit on a dark bar so the ochre
@@ -253,6 +254,7 @@ dl.d dd { margin: 0; }
 .model-read { margin-top: 2px; font-size: calc(1rem + var(--g) * 0.0125); }
 .model-read b { font-weight: 600; font-variant-numeric: tabular-nums; }
 .model-note { font-size: calc(0.8125rem + var(--g) * 0.01016); color: var(--dk-muted); max-width: 62ch; }
+.reveal { background: var(--dk-bg); }
 .reveal-stage { position: relative; overflow: hidden; background: #000000; }
 .reveal-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .reveal-overlay { clip-path: inset(0 calc(100% - var(--p)) 0 0); opacity: 0; transition: opacity 160ms ease; }
@@ -367,21 +369,33 @@ footer { padding: 72px var(--pad-x) 24px; }
   .proof { align-self: start; margin-top: 24px; }
   .intro { grid-column: 1 / -1; grid-row: 2; max-width: 48ch; }
   .fact { display: none; }
-  .names { grid-column: 1 / -1; } .pv { display: none; }
+  .work { grid-template-columns: minmax(0, 1fr); } .names { grid-column: 1; } .pv { display: none; }
   .groups { grid-template-columns: 1fr 1fr; }
   .cert-text { grid-column: 1 / -1; margin-top: 28px; } .thumb.big { grid-column: 1 / -1; }
   .courses-h, .courses { grid-column: 1 / -1; } .courses { margin-top: 16px; }
 }
 /* Cases sit side by side only from 82.5rem (1320px at the default text
    size): below it a details column at 16px is taller than the picture
-   beside it, so each case reads in one column, in source order: header,
-   pictures, details, buttons, at most 45rem wide. */
+   beside it, so each case reads in source order: header, picture, details,
+   buttons. From 47.5rem the picture takes the full width and the details
+   run in two columns (Faten keeps its pair); on phones, one column. */
 @media (max-width: 82.5em) {
-  .r75, .r57, .r66, .panel-row { grid-template-columns: minmax(0, 1fr); max-width: 45rem; }
+  .r75, .r57, .panel-row { grid-template-columns: minmax(0, 1fr); }
   .r57 > .right, .r57 > .left, .panel-row > .case-head, .panel-row > .panel-fig, .panel-row > .col { grid-column: 1; grid-row: auto; }
   .panel-row { row-gap: var(--col-gap); }
   .panel-row > .case-head { margin-bottom: 0; }
   .cells { --btn: min(50cqw, 22.5rem); }
+}
+@media (min-width: 47.5625em) and (max-width: 82.5em) {
+  .zigzag dl.d, .panel-row dl.d { display: block; column-count: 2; column-gap: var(--col-gap); }
+  .zigzag dl.d > div, .panel-row dl.d > div { break-inside: avoid; margin-bottom: 12px; }
+  .cells { --btn: calc((100cqw - var(--col-gap)) * 5 / 24); }
+  /* The panel runs the full width; the film keeps its ratio, at most 65% of
+     the screen tall, centred on the dark ground */
+  .reveal-stage { width: min(100%, 65svh * var(--ar)); margin-inline: auto; }
+}
+@media (max-width: 47.5em) {
+  .r66 { grid-template-columns: minmax(0, 1fr); }
 }
 
 

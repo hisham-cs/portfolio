@@ -34,7 +34,7 @@ export default function RevealSlider({ reveal, initial = 50 }) {
           Each network looks at different regions; the ensemble averages them. Outputs on one image, not accuracy. For research and education, not diagnosis.
         </p>
       </div>
-      <div className="reveal-stage" style={{ aspectRatio: `${1 / ratio}` }}>
+      <div className="reveal-stage" style={{ aspectRatio: `${1 / ratio}`, '--ar': 1 / ratio }}>
         <img src={base.src} srcSet={base.srcSet} sizes={sizes} width={base.width} height={base.height}
           alt="Chest X-ray, the example input" loading="lazy" decoding="async" />
         {layers.map((l) => {
