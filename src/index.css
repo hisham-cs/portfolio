@@ -13,7 +13,7 @@
 
 :root {
   /* Dark field: hero, skills, contact, footer */
-  --dk-bg: #111111; --dk-surface: #1c1c1c; --dk-ink: #f0f0ed; --dk-muted: #a3a39e;
+  --dk-bg: #111111; --dk-surface: #1c1c1c; --dk-raise: #262626; --dk-line: #333331; --dk-ink: #f0f0ed; --dk-muted: #a3a39e;
   /* Light field: work, cases, about, credentials */
   --lt-bg: #f0f0ed; --lt-surface: #e3e3df; --lt-ink: #111111; --lt-muted: #5a5a56;
   /* The one accent field ("Hand me a problem") */
@@ -123,12 +123,84 @@ button { font: inherit; color: inherit; }
 .intro .acts { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 .intro .acts a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; }
 .fact { grid-column: 1 / span 5; grid-row: 2; align-self: end; font-size: var(--s-small); color: var(--dk-muted); max-width: 34ch; }
-.proof { grid-column: 1 / -1; grid-row: 3; align-self: center; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
-.proof-link { display: block; text-decoration: none; }
-.proof .frame { aspect-ratio: 16 / 9; }
-.proof .cap { display: block; font-size: var(--s-small); margin-top: 8px; color: var(--dk-muted); }
-.proof .cap b { color: var(--dk-ink); font-weight: 500; }
-.proof-link:hover .cap b { text-decoration: underline; }
+/* The three live data cards: the side cards lean in like a fanned hand and
+   straighten on hover and focus; the centre card is ochre, taller and on top.
+   Fixed sizes, the mockup's at the default text size (rem, so the reader's
+   text setting still applies), never the page's fluid curve: the row is at
+   most 1300px wide and centred, inset 1rem so the tilt (about 13px at a
+   card's corner) stays inside the page margins. */
+.hc { grid-column: 1 / -1; grid-row: 3; align-self: center; justify-self: center; width: min(100% - 2rem, 81.25rem);
+      list-style: none; margin: 0; padding: 0; display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1fr); column-gap: clamp(0.875rem, 1.6vw, 1.5rem); align-items: end; }
+.hc > li { grid-row: 1; container-type: inline-size; }
+.hc-telco { grid-column: 1; } .hc-edema { grid-column: 2; position: relative; z-index: 1; } .hc-faten { grid-column: 3; }
+.hc-card { display: flex; flex-direction: column; gap: 12px; padding: clamp(1rem, 1.6vw, 1.5rem);
+           border-radius: 6px; background: var(--dk-surface); color: var(--dk-ink); text-decoration: none;
+           transition: transform 250ms var(--ease-out), background-color var(--t-hover) ease; }
+.hc-card:hover { background: var(--dk-raise); }
+.hc-card.hl { background: var(--ac-bg); color: var(--ac-ink); gap: 10px; }
+.hc-card.hl:hover { background: var(--bd-hover); }
+.hc-telco .hc-card { transform: rotate(-2.5deg) translateY(10px); transform-origin: bottom right; }
+.hc-faten .hc-card { transform: rotate(2.5deg) translateY(10px); transform-origin: bottom left; }
+.hc .hc-card:hover, .hc .hc-card:focus-visible { transform: none; }
+.hc-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.hc-h b { font-weight: 600; font-size: 1rem; }
+.hc-h span { font-size: 0.8125rem; color: var(--dk-muted); }
+.hc-f { margin-top: auto; display: flex; justify-content: space-between; gap: 10px; font-size: 0.84375rem; color: var(--dk-muted); }
+.hc-card.hl .hc-h span, .hc-card.hl .hc-f { color: var(--ac-muted); }
+.hc-f i { font-style: normal; white-space: nowrap; }
+.hc-big { display: flex; align-items: baseline; gap: 10px; }
+.hc-big b { font-weight: 600; font-size: clamp(3rem, 3.6vw, 3.375rem); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.hc-big span { font-size: 0.875rem; color: var(--dk-muted); line-height: 1.3; }
+.hc svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* Churn by tenure */
+.hc-line .ln { fill: none; stroke: var(--ac-bg); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 100; }
+.hc-line .ar { fill: var(--ac-bg); opacity: 0.14; }
+.hc-line .gl { stroke: var(--dk-line); stroke-width: 1; }
+.hc-line circle { fill: var(--dk-bg); stroke: var(--ac-bg); stroke-width: 2; }
+.hc-line text { fill: var(--dk-muted); font: 11px var(--font); }
+.hc-line text.v { fill: var(--dk-ink); font-size: 12px; font-weight: 600; }
+/* The ensemble gauge: the number sits on the arc's wrapper */
+.hc-gauge .g { position: relative; width: min(100%, 16.25rem); margin: 0 auto; }
+.hc-gauge .tr, .hc-gauge .arc { fill: none; stroke-width: 14; stroke-linecap: round; }
+.hc-gauge .tr { stroke: rgb(17 17 17 / 0.16); }
+.hc-gauge .arc { stroke: var(--ac-ink); stroke-dasharray: 100; }
+.hc-gauge .val { position: absolute; inset: auto 0 4% 0; text-align: center; font-weight: 600; font-size: clamp(2.75rem, 4.4vw, 4rem);
+                 letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.hc-gauge .val small { font-size: 0.42em; font-weight: 500; letter-spacing: 0; }
+.hc-sub { text-align: center; font-size: 0.875rem; }
+.hc-votes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center; font-size: 0.75rem; }
+.hc-votes li { background: rgb(17 17 17 / 0.1); padding: 5px 2px; border-radius: 3px; min-width: 0; }
+.hc-votes b { display: block; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+/* The agent and its tools */
+.hc-hub .nd { fill: var(--lt-muted); }
+.hc-hub .nk { fill: var(--ac-bg); }
+.hc-hub .sp { stroke: var(--ac-bg); stroke-width: 1.6; stroke-dasharray: 100; }
+.hc-hub .hc-c { fill: var(--dk-raise); stroke: var(--dk-ink); stroke-width: 1.5; }
+.hc-hub .ht { fill: var(--dk-ink); font: 600 11px var(--font); }
+.hc-hub .tl { fill: var(--dk-muted); font: 11px ui-monospace, Consolas, monospace; }
+/* Side by side: fixed heights (sides 290px, the centre 320px), bottom-aligned,
+   each chart filling what its card has left; the row keeps clear of the name
+   below, which the tilt brings each outer corner about 28px towards */
+@media (min-width: 68.8125em) {
+  .hc { margin-bottom: 1.5rem; }
+  .hc-card { height: 18.125rem; }
+  .hc-card.hl { height: 20rem; }
+  .hc-card > svg, .hc-gauge { flex: 1 1 0; min-height: 0; }
+  .hc-card > svg { height: 100%; }
+  .hc-gauge .g { width: auto; max-width: 100%; height: 100%; aspect-ratio: 200 / 112; }
+  .hc-gauge .g svg { height: 100%; }
+}
+/* A card stacked full width (tablet): the chart sits beside its number
+   rather than growing with the card */
+@media (max-width: 68.75em) {
+  @container (min-width: 36rem) {
+    .hc-card:not(.hl) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); grid-template-rows: auto 1fr auto; gap: 14px 32px; }
+    .hc-card:not(.hl) > .hc-h, .hc-card:not(.hl) > .hc-f { grid-column: 1 / -1; }
+    .hc-card:not(.hl) > .hc-big { flex-direction: column; align-items: flex-start; align-self: start; }
+    .hc-card:not(.hl) > svg { grid-column: 2; grid-row: 2; max-width: 26rem; justify-self: end; }
+  }
+}
 
 /* ---------- 2. Hand me a problem ---------- */
 .range { padding: var(--gap-section) var(--pad-x); }
@@ -343,7 +415,12 @@ footer { padding: 72px var(--pad-x) 24px; }
 @keyframes lift { from { transform: translateY(105%); } to { transform: none; } }
 .motion .hero-name .a, .motion .hero-name .b { animation: lift 900ms var(--ease-expo) both; }
 .motion .hero-name .b { animation-delay: 120ms; }
-.motion .proof li { animation: rise 700ms var(--ease-out) both; animation-delay: calc(240ms + var(--i, 0) * 80ms); }
+.motion .hc > li { animation: rise 700ms var(--ease-out) both; animation-delay: calc(240ms + var(--i, 0) * 80ms); }
+/* The cards draw in once, from the final values already in the markup */
+@keyframes draw { from { stroke-dashoffset: 100; } }
+.motion .hc-line .ln { animation: draw 1400ms var(--ease-out) 300ms both; }
+.motion .hc-gauge .arc { animation: draw 1200ms var(--ease-out) 300ms both; }
+.motion .hc-hub .sp { animation: draw 700ms var(--ease-out) var(--d, 0ms) both; }
 .motion .intro { animation: rise 700ms var(--ease-out) 160ms both; }
 .motion [data-reveal] { transition: transform var(--t-reveal) var(--ease-expo); transition-delay: calc(var(--i, 0) * 80ms); }
 .motion [data-reveal]:not(.in) { transform: translateY(24px); }
@@ -360,7 +437,10 @@ footer { padding: 72px var(--pad-x) 24px; }
   .stage-tabs { max-width: 45rem; }
   .chain li:not(.on) { display: none; }
   .hero { min-height: auto; }
-  .proof { align-self: start; margin-top: 24px; }
+  /* The cards stack, the ochre lead first, and stand straight */
+  .hc { align-self: start; justify-self: stretch; width: auto; margin-top: 24px; grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
+  .hc > li, .hc-telco, .hc-edema, .hc-faten { grid-column: 1; grid-row: auto; }
+  .hc .hc-card { transform: none; min-height: 0; }
   .intro { grid-column: 1 / -1; grid-row: 2; max-width: 48ch; }
   .fact { display: none; }
   .groups { grid-template-columns: 1fr 1fr; }
@@ -400,8 +480,6 @@ footer { padding: 72px var(--pad-x) 24px; }
   .hero-nav { grid-column: 9 / -1; gap: 4px 14px; }
   .hero-nav a:not(.keep) { display: none; }
   .hero-name .b-wrap { bottom: 18px; }
-  .proof { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
-  .proof .frame { aspect-ratio: 16 / 9; }
   .chain .frame { aspect-ratio: 4 / 3; }
   dl.d > div { grid-template-columns: 5.2em minmax(0, 1fr); column-gap: 12px; }
   .map { font-size: var(--s-small); border-spacing: 4px; margin: -4px; }

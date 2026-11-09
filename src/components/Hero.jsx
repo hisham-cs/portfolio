@@ -1,6 +1,6 @@
 import { profile } from '../data/site.js'
 import { projects } from '../data/projects.js'
-import Frame from './Frame.jsx'
+import HeroCards from './HeroCards.jsx'
 
 const links = [
   [`#case-${projects[0].id}`, 'Work'], // the first case
@@ -10,8 +10,8 @@ const links = [
   ['#contact', 'Contact'],
 ]
 
-// The name split to two corners; the proof (one product from each project)
-// fills the band between them.
+// The name split to two corners; one live data card from each project fills
+// the band between them.
 export default function Hero() {
   return (
     <header className="hero dark">
@@ -32,16 +32,7 @@ export default function Hero() {
         </div>
       </div>
       <p className="fact">{profile.fact}</p>
-      <ul className="proof" aria-label="One product from each project">
-        {projects.map((p, i) => (
-          <li key={p.id} style={{ '--i': i }}>
-            <a href={`#case-${p.id}`} className="proof-link">
-              <Frame frame={p.proof ?? p.stages.product.frame} sizes="(max-width: 760px) calc(100vw - 2rem), 31vw" eager={i === 0} />
-              <span className="cap"><b>{p.map.product}</b>, {p.name}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <HeroCards />
     </header>
   )
 }

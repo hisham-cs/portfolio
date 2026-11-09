@@ -74,8 +74,9 @@ export const STAGES = [
 
 // ---------------------------------------------------------------------------
 // Projects. To add one, append an entry with the same shape; no section needs
-// to change. `proof` is the picture the hero shows for the project (else its
-// product frame). Frames are one of three kinds:
+// to change. `card` is the project's live data card in the hero: a big
+// number with its note, one chart drawn from published figures (`line`,
+// `gauge` or `hub`) and a footer. Frames are one of three kinds:
 //   { kind: 'image', image: screenshot(...) | natural(...), alt, fill }
 // Images are always shown whole; `fill` is the colour of the image's own edge,
 // used wherever a frame is wider or taller than the picture.
@@ -93,7 +94,18 @@ export const projects = [
     name: 'Telecom churn',
     kind: 'Analysis, machine learning and BI. Solo project.',
     input: 'A table of 7,043 customers',
-    proof: telcoOverview,
+    card: {
+      tag: 'Power BI · ML',
+      big: '26.5%',
+      note: ['of 7,043 customers left;', 'highest in the first year'],
+      // churn rate by tenure bucket (months), dashboard page 1 and the README
+      chart: {
+        kind: 'line',
+        unit: 'months',
+        points: [['0–12', 47.4], ['13–24', 28.7], ['25–36', 21.6], ['37–48', 19.0], ['49–60', 14.4], ['60+', 6.6]],
+      },
+      foot: 'Churn by tenure · IBM sample data',
+    },
     question:
       'Why did 1,869 of 7,043 customers leave a telecom provider, and where should retention start? A public IBM sample dataset, not a client engagement.',
     stages: {
@@ -176,6 +188,13 @@ export const projects = [
     id: 'edema',
     name: 'Edema detector',
     kind: 'Deep learning and a Streamlit app. Team of three.',
+    card: {
+      tag: 'example X-ray',
+      // the app's readout for the example X-ray, as in the case's slider
+      chart: { kind: 'gauge', models: edemaCams.map(({ id, label, probability }) => ({ id, label, probability })) },
+      sub: 'Ensemble edema probability, four CNNs',
+      foot: '0.974–0.979 ROC-AUC, held-out test',
+    },
     input: 'Chest X-rays',
     question:
       'Can a set of networks flag pulmonary edema on a chest X-ray, and show where they looked? Built for research and education, never for diagnosis.',
@@ -242,7 +261,15 @@ export const projects = [
     name: 'Faten',
     kind: 'LLM agent and full-stack product. Graduation project, team.',
     input: 'University rules and student records',
-    proof: fatenDashboard,
+    card: {
+      tag: 'LLM agent · Next.js',
+      big: '24',
+      note: ['function-calling tools,', 'one Arabic-first agent'],
+      // a diagram of the agent and its tools, not a map of them; the three
+      // named tools are the ones in the case's tool list
+      chart: { kind: 'hub', tools: 24, named: ['get_upcoming_exams', 'analyze_transcript', 'get_course_info'] },
+      foot: 'OpenAI API · Firebase',
+    },
     question:
       'One place for Umm Al-Qura students to ask about the rules, plan a semester and follow their GPA, in Arabic. Piloted at the university’s College of Computers.',
     stages: {
