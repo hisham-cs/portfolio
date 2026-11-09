@@ -127,9 +127,9 @@ button { font: inherit; color: inherit; }
    straighten on hover and focus; the centre card is ochre, taller and on top.
    Fixed sizes, the mockup's at the default text size (rem, so the reader's
    text setting still applies), never the page's fluid curve: the row is at
-   most 1300px wide and centred, inset 1rem so the tilt (about 13px at a
+   most 1440px wide and centred, inset 1rem so the tilt (about 14px at a
    card's corner) stays inside the page margins. */
-.hc { grid-column: 1 / -1; grid-row: 3; align-self: center; justify-self: center; width: min(100% - 2rem, 81.25rem);
+.hc { grid-column: 1 / -1; grid-row: 3; align-self: center; justify-self: center; width: min(100% - 2rem, 90rem);
       list-style: none; margin: 0; padding: 0; display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1fr); column-gap: clamp(0.875rem, 1.6vw, 1.5rem); align-items: end; }
 .hc > li { grid-row: 1; container-type: inline-size; }
@@ -149,17 +149,24 @@ button { font: inherit; color: inherit; }
 .hc-f { margin-top: auto; display: flex; justify-content: space-between; gap: 10px; font-size: 0.84375rem; color: var(--dk-muted); }
 .hc-card.hl .hc-h span, .hc-card.hl .hc-f { color: var(--ac-muted); }
 .hc-f i { font-style: normal; white-space: nowrap; }
-.hc-big { display: flex; align-items: baseline; gap: 10px; }
+.hc-big { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; } /* the note drops under the number when there is no room beside it */
 .hc-big b { font-weight: 600; font-size: clamp(3rem, 3.6vw, 3.375rem); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .hc-big span { font-size: 0.875rem; color: var(--dk-muted); line-height: 1.3; }
 .hc svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* Charts: the SVG draws, the words are HTML over it at fixed sizes (12px and
+   up); .g keeps the drawing's ratio, so the words' percentages land on it */
+.hc-fig .g { position: relative; width: 100%; aspect-ratio: var(--hc-r); }
+.hc-fig svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hc-fig .g > span > * { position: absolute; line-height: 1.25; white-space: nowrap; }
 /* Churn by tenure */
 .hc-line .ln { fill: none; stroke: var(--ac-bg); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 100; }
 .hc-line .ar { fill: var(--ac-bg); opacity: 0.14; }
 .hc-line .gl { stroke: var(--dk-line); stroke-width: 1; }
 .hc-line circle { fill: var(--dk-bg); stroke: var(--ac-bg); stroke-width: 2; }
-.hc-line text { fill: var(--dk-muted); font: 11px var(--font); }
-.hc-line text.v { fill: var(--dk-ink); font-size: 12px; font-weight: 600; }
+.hc-line .v { font-size: 0.8125rem; font-weight: 600; color: var(--dk-ink); transform: translate(8px, calc(-100% - 2px)); }
+.hc-line .v.end { transform: translateY(calc(-100% - 8px)); }
+.hc-line .ax { font-size: 0.8125rem; color: var(--dk-muted); transform: translate(-50%, 4px); }
+.hc-line .ax.end { transform: translateY(4px); }
 /* The ensemble gauge: the number sits on the arc's wrapper */
 .hc-gauge .g { position: relative; width: min(100%, 16.25rem); margin: 0 auto; }
 .hc-gauge .tr, .hc-gauge .arc { fill: none; stroke-width: 14; stroke-linecap: round; }
@@ -169,25 +176,31 @@ button { font: inherit; color: inherit; }
                  letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .hc-gauge .val small { font-size: 0.42em; font-weight: 500; letter-spacing: 0; }
 .hc-sub { text-align: center; font-size: 0.875rem; }
-.hc-votes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center; font-size: 0.75rem; }
+.hc-votes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center; font-size: 0.8125rem; }
 .hc-votes li { background: rgb(17 17 17 / 0.1); padding: 5px 2px; border-radius: 3px; min-width: 0; }
 .hc-votes b { display: block; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 /* The agent and its tools */
 .hc-hub .nd { fill: var(--lt-muted); }
 .hc-hub .nk { fill: var(--ac-bg); }
 .hc-hub .sp { stroke: var(--ac-bg); stroke-width: 1.6; stroke-dasharray: 100; }
-.hc-hub .hc-c { fill: var(--dk-raise); stroke: var(--dk-ink); stroke-width: 1.5; }
-.hc-hub .ht { fill: var(--dk-ink); font: 600 11px var(--font); }
-.hc-hub .tl { fill: var(--dk-muted); font: 11px ui-monospace, Consolas, monospace; }
-/* Side by side: fixed heights (sides 290px, the centre 320px), bottom-aligned,
-   each chart filling what its card has left; the row keeps clear of the name
-   below, which the tilt brings each outer corner about 28px towards */
+.hc-hub .agent { width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; transform: translate(-50%, -50%);
+                 background: var(--dk-raise); border: 1.5px solid var(--dk-ink); color: var(--dk-ink); font-size: 0.8125rem; font-weight: 600; }
+.hc-hub .tl { font: 0.8125rem/1.25 ui-monospace, Consolas, monospace; color: var(--dk-muted); white-space: normal; overflow-wrap: anywhere; transform: translateY(-50%); }
+.hc-hub .tl.right { right: 0; } .hc-hub .tl.left { left: 0; text-align: right; } .hc-hub .tl.below { text-align: center; transform: none; }
+/* Side by side: the mockup's heights at a 1300px row (sides 290px, the centre
+   320px), growing with the row to 321 and 354px at its 1440px cap;
+   bottom-aligned, each chart filling what its card has left. The row is
+   centred between the intro and the name, kept clear of the name, which the
+   tilt brings each outer corner about 30px towards. */
 @media (min-width: 68.8125em) {
-  .hc { margin-bottom: 1.5rem; }
-  .hc-card { height: 18.125rem; }
-  .hc-card.hl { height: 20rem; }
-  .hc-card > svg, .hc-gauge { flex: 1 1 0; min-height: 0; }
-  .hc-card > svg { height: 100%; }
+  .hc { --row: min(100vw - 2 * var(--margin) - 2rem, 90rem); margin-bottom: 1.75rem; }
+  .hc-card { height: max(18.125rem, var(--row) * 0.2231); }
+  .hc-card.hl { height: max(20rem, var(--row) * 0.2462); }
+  .hc-fig, .hc-gauge { flex: 1 1 0; min-height: 0; }
+  .hc-fig { container-type: size; }
+  .hc-fig .g { width: min(100cqw, 100cqh * var(--hc-r)); margin-inline: auto; }
+  /* the tool names may use the chart area's full width, beyond the drawing */
+  .hc-hub .tl.right { right: calc((100% - 100cqw) / 2); } .hc-hub .tl.left { left: calc((100% - 100cqw) / 2); }
   .hc-gauge .g { width: auto; max-width: 100%; height: 100%; aspect-ratio: 200 / 112; }
   .hc-gauge .g svg { height: 100%; }
 }
@@ -198,7 +211,7 @@ button { font: inherit; color: inherit; }
     .hc-card:not(.hl) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); grid-template-rows: auto 1fr auto; gap: 14px 32px; }
     .hc-card:not(.hl) > .hc-h, .hc-card:not(.hl) > .hc-f { grid-column: 1 / -1; }
     .hc-card:not(.hl) > .hc-big { flex-direction: column; align-items: flex-start; align-self: start; }
-    .hc-card:not(.hl) > svg { grid-column: 2; grid-row: 2; max-width: 26rem; justify-self: end; }
+    .hc-card:not(.hl) > .hc-fig { grid-column: 2; grid-row: 2; width: 100%; max-width: 26rem; justify-self: end; }
   }
 }
 
@@ -266,7 +279,7 @@ dl.d dt { color: var(--lt-muted); }
 dl.d dd { margin: 0; }
 /* Buttons: one size everywhere, half of a 5-column details column */
 .cells { --btn: calc((100cqw - var(--col-gap)) * 5 / 24); display: flex; margin-top: 28px; }
-.cells a { flex: 0 0 var(--btn); min-height: 64px; display: flex; align-items: center; padding: 0 22px; text-decoration: none; font-weight: 500; transition: background-color var(--t-hover) ease; }
+.cells a { flex: 0 1 var(--btn); min-width: 0; min-height: 64px; display: flex; align-items: center; padding: 0 22px; text-decoration: none; font-weight: 500; transition: background-color var(--t-hover) ease; }
 .cells a:first-child { background: var(--bl-bg); color: var(--bl-ink); }
 .cells a:first-child:hover { background: var(--bl-hover); }
 .cells a:first-child:focus-visible { outline-color: var(--f-lt); }
@@ -319,7 +332,7 @@ dl.d dd { margin: 0; }
 .model-read { margin-top: 2px; font-size: calc(1rem + var(--g) * 0.0125); }
 .model-read b { font-weight: 600; font-variant-numeric: tabular-nums; }
 .model-note { font-size: calc(0.8125rem + var(--g) * 0.01016); color: var(--dk-muted); max-width: 62ch; }
-.reveal { background: var(--dk-bg); }
+.reveal { background: var(--dk-bg); container-type: inline-size; } /* its contents never widen the column */
 .reveal-stage { position: relative; overflow: hidden; background: #000000; }
 .reveal-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .reveal-overlay { clip-path: inset(0 calc(100% - var(--p)) 0 0); opacity: 0; transition: opacity 160ms ease; }
@@ -330,6 +343,12 @@ dl.d dd { margin: 0; }
 .reveal-bar output { font-variant-numeric: tabular-nums; font-size: calc(0.9375rem + var(--g) * 0.01172); text-align: right; color: var(--dk-muted); }
 .reveal-bar input[type='range'] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--bd-bg); cursor: ew-resize; }
 .reveal-bar input[type='range']:focus-visible { outline: 2px solid var(--f-dk); outline-offset: 2px; }
+/* Narrow (a phone with large text): label and reading on one row, the range across the next */
+@container (max-width: 24em) {
+  .reveal-bar { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; }
+  .reveal-bar label { white-space: normal; }
+  .reveal-bar input[type='range'] { grid-column: 1 / -1; grid-row: 2; }
+}
 
 /* ---------- 5. Skills ---------- */
 .skills { padding: var(--gap-section) var(--pad-x); }
@@ -441,6 +460,9 @@ footer { padding: 72px var(--pad-x) 24px; }
   .hc { align-self: start; justify-self: stretch; width: auto; margin-top: 24px; grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
   .hc > li, .hc-telco, .hc-edema, .hc-faten { grid-column: 1; grid-row: auto; }
   .hc .hc-card { transform: none; min-height: 0; }
+  /* the five links on one line: the nav takes columns 6 to 12, closer together */
+  .hero-name { grid-column: 1 / span 5; }
+  .hero-nav { grid-column: 6 / -1; flex-wrap: nowrap; gap: 4px 16px; }
   .intro { grid-column: 1 / -1; grid-row: 2; max-width: 48ch; }
   .fact { display: none; }
   .groups { grid-template-columns: 1fr 1fr; }
@@ -485,6 +507,7 @@ footer { padding: 72px var(--pad-x) 24px; }
   .map { font-size: var(--s-small); border-spacing: 4px; margin: -4px; }
   .map thead th:first-child { width: 26%; }
   .map td { height: auto; padding: 10px 8px; }
+  .map td, .map th { hyphens: auto; overflow-wrap: anywhere; } /* a long word in a narrow column (large text) breaks rather than widen the page */
   .groups { grid-template-columns: 1fr; }
   .group ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
   .group button { grid-template-columns: 1fr; align-content: start; } .group button .w { text-align: left; }

@@ -10,30 +10,44 @@ import { projects } from '../data/projects.js'
 
 const pct = (s) => parseFloat(s)
 
+// Charts are drawn in SVG; their words are HTML laid over them at fixed sizes
+// (12px and up), so they stay readable however small the chart is drawn. The
+// .g box keeps the SVG's own ratio, so a percentage of it is a point in the
+// drawing. The SVG carries every value in its label; the words are hidden from
+// screen readers, which would otherwise hear them twice.
+const at = (x, w) => `${((x / w) * 100).toFixed(2)}%`
+
 // Churn by tenure: points on 20…280, the 0–50% scale over 70 units above the
 // baseline at 84 (the mockup's chart, flattened to fit the card's height).
 function Line({ chart }) {
   const { points, unit } = chart
+  const [W, H, BASE] = [300, 110, 84]
   const max = Math.ceil(Math.max(...points.map(([, v]) => v)) / 10) * 10
-  const xy = points.map(([, v], i) => [20 + (i * 260) / (points.length - 1), +(84 - (v / max) * 70).toFixed(1)])
+  const xy = points.map(([, v], i) => [20 + (i * 260) / (points.length - 1), +(BASE - (v / max) * 70).toFixed(1)])
   const d = xy.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
   const [first, last] = [xy[0], xy[xy.length - 1]]
   const mid = Math.floor((points.length - 1) / 2)
   const fmt = (v) => `${v.toFixed(1)}%`
   const label = `Churn rate by tenure in ${unit}: ${points.map(([k, v]) => `${k} ${fmt(v)}`).join(', ')}`
   return (
-    <svg className="hc-line" viewBox="0 0 300 100" role="img" aria-label={label}>
-      <line className="gl" x1="10" y1="84" x2="290" y2="84" />
-      <path className="ar" d={`${d} L${last[0]} 84 L${first[0]} 84 Z`} />
-      <path className="ln" pathLength="100" d={d} />
-      <circle cx={first[0]} cy={first[1]} r="4" />
-      <circle cx={last[0]} cy={last[1]} r="4" />
-      <text className="v" x={first[0] + 10} y={first[1] - 3.5}>{fmt(points[0][1])}</text>
-      <text className="v" x={last[0]} y={last[1] - 10} textAnchor="end">{fmt(points[points.length - 1][1])}</text>
-      <text x={first[0]} y="98" textAnchor="middle">{points[0][0]}</text>
-      <text x={xy[mid][0]} y="98" textAnchor="middle">{points[mid][0]}</text>
-      <text x={last[0]} y="98" textAnchor="middle">{points[points.length - 1][0]} mo</text>
-    </svg>
+    <div className="hc-fig hc-line">
+      <div className="g" style={{ '--hc-r': W / H }}>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label}>
+          <line className="gl" x1="10" y1={BASE} x2="290" y2={BASE} />
+          <path className="ar" d={`${d} L${last[0]} ${BASE} L${first[0]} ${BASE} Z`} />
+          <path className="ln" pathLength="100" d={d} />
+          <circle cx={first[0]} cy={first[1]} r="4" />
+          <circle cx={last[0]} cy={last[1]} r="4" />
+        </svg>
+        <span aria-hidden="true">
+          <span className="v" style={{ left: at(first[0], W), top: at(first[1], H) }}>{fmt(points[0][1])}</span>
+          <span className="v end" style={{ right: at(W - last[0], W), top: at(last[1], H) }}>{fmt(points.at(-1)[1])}</span>
+          <span className="ax" style={{ left: at(first[0], W), top: at(BASE, H) }}>{points[0][0]}</span>
+          <span className="ax" style={{ left: at(xy[mid][0], W), top: at(BASE, H) }}>{points[mid][0]}</span>
+          <span className="ax end" style={{ right: 0, top: at(BASE, H) }}>{points.at(-1)[0]} mo</span>
+        </span>
+      </div>
+    </div>
   )
 }
 
@@ -89,35 +103,46 @@ const SLOTS = [4, 12, 20]
 const DELAYS = [850, 500, 1200] // bottom, then right, then left, as in the mockup
 function Hub({ chart }) {
   const { tools, named } = chart
-  const at = (i) => {
+  const [W, H, CX, CY, R] = [330, 120, 165, 48, 40]
+  const pos = (i) => {
     const a = (i / tools) * 2 * Math.PI
-    return [+(165 + 40 * Math.sin(a)).toFixed(1), +(48 - 40 * Math.cos(a)).toFixed(1), Math.sin(a)]
+    return [+(CX + R * Math.sin(a)).toFixed(1), +(CY - R * Math.cos(a)).toFixed(1), Math.sin(a)]
   }
+  // identifiers may break after an underscore when the card is narrow
+  const breakable = (s) => s.split('_').flatMap((part, i, all) => (i < all.length - 1 ? [part, '_', <wbr key={i} />] : [part]))
   const label = `Diagram, not a map of the real system: the Faten agent connected to ${tools} function-calling tools, three of them named: ${named.join(', ')}`
   return (
-    <svg className="hc-hub" viewBox="0 0 330 110" role="img" aria-label={label}>
-      {Array.from({ length: tools }, (_, i) => {
-        const [x, y] = at(i)
-        return SLOTS.includes(i) ? null : <circle key={i} className="nd" cx={x} cy={y} r="3" />
-      })}
-      {SLOTS.map((s, k) => {
-        const [x, y] = at(s)
-        return (
-          <g key={s}>
-            <line className="sp" pathLength="100" x1="165" y1="48" x2={x} y2={y} style={{ '--d': `${DELAYS[k]}ms` }} />
-            <circle className="nk" cx={x} cy={y} r="5" />
-          </g>
-        )
-      })}
-      <circle className="hc-c" cx="165" cy="48" r="19" />
-      <text className="ht" x="165" y="52" textAnchor="middle">agent</text>
-      {SLOTS.map((s, k) => {
-        const [x, y, sin] = at(s)
-        const side = sin > 0.3 ? 'start' : sin < -0.3 ? 'end' : 'middle'
-        const [tx, ty] = side === 'middle' ? [x, y + 18] : [x + (side === 'start' ? 9 : -9), y + 3.5]
-        return <text key={s} className="tl" x={tx} y={ty} textAnchor={side}>{named[k]}</text>
-      })}
-    </svg>
+    <div className="hc-fig hc-hub">
+      <div className="g" style={{ '--hc-r': W / H }}>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label}>
+          {Array.from({ length: tools }, (_, i) => {
+            const [x, y] = pos(i)
+            return SLOTS.includes(i) ? null : <circle key={i} className="nd" cx={x} cy={y} r="3" />
+          })}
+          {SLOTS.map((s, k) => {
+            const [x, y] = pos(s)
+            return (
+              <g key={s}>
+                <line className="sp" pathLength="100" x1={CX} y1={CY} x2={x} y2={y} style={{ '--d': `${DELAYS[k]}ms` }} />
+                <circle className="nk" cx={x} cy={y} r="5" />
+              </g>
+            )
+          })}
+        </svg>
+        <span aria-hidden="true">
+          <span className="agent" style={{ left: at(CX, W), top: at(CY, H) }}>agent</span>
+          {SLOTS.map((s, k) => {
+            const [x, y, sin] = pos(s)
+            const side = sin > 0.3 ? 'right' : sin < -0.3 ? 'left' : 'below'
+            // the outer edge of each side label is set in CSS (the chart area's edge)
+            const style = side === 'right' ? { left: `calc(${at(x, W)} + 10px)`, top: at(y, H) }
+              : side === 'left' ? { right: `calc(${at(W - x, W)} + 10px)`, top: at(y, H) }
+                : { left: 0, right: 0, top: `calc(${at(y, H)} + 8px)` }
+            return <code key={s} className={`tl ${side}`} style={style}>{breakable(named[k])}</code>
+          })}
+        </span>
+      </div>
+    </div>
   )
 }
 
