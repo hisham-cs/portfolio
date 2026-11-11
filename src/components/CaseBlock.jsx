@@ -105,15 +105,16 @@ export default function CaseBlock({ project }) {
     // pair: each frame keeps its picture's ratio and the widths follow the
     // ratios, so the two share one height and each picture fills its frame
     const ratioOf = (f) => f.frame.image.width / f.frame.image.height
+    const [r1, r2] = plate.figures.map(ratioOf)
     body = (
       <>
         {head}
         <div className="c-row r66 pair-figs">
           {plate.figures.map((f) => <Pic key={f.caption} {...f} show={show} ratio={ratioOf(f)} sizes={`${wide}, 52vw`} className="fixed" />)}
         </div>
-        <div className="c-row r66">
-          <div className="col" data-reveal><Details rows={first} /></div>
-          <div className="col" data-reveal><Details rows={rest} />{cells}</div>
+        <div className="c-row r66 pair-figs">
+          <div className="col" data-reveal style={{ '--fr': r1 }}><Details rows={first} /></div>
+          <div className="col" data-reveal style={{ '--fr': r2 }}><Details rows={rest} />{cells}</div>
         </div>
       </>
     )

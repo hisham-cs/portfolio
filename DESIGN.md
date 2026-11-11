@@ -27,6 +27,10 @@ One family, Bricolage Grotesque (self-hosted variable WOFF2, `font-display: swap
 
 No eyebrow labels, no monospace outside real code, no 01/02/03 numbering, no hairline dividers, no gradients, no shadows on resting elements, no pills or card grids, square corners. One approved exception: the hero's three data cards (6px corners, each titled with its project's name; the shorter side cards tilted ±2.5° on their inner bottom corners, lower than the centre card and straightening on hover and focus; the row inset 1rem so the tilt stays inside the margins; stacked, upright and lead-first below 68.75em). Real interface fragments carry `data-ui` and may use their own table rules and monospace identifiers.
 
+## Order and navigation
+
+Hero, "Hand me a problem", the three cases, About (experience and education), Skills, Certificates, Contact: the evidence first, then the co-op and degree, so the skills map's rows all point to something already shown. The hero nav has five links in that order, each named like its section: Work (to "Hand me a problem"), About, Skills, Certificates, Contact. It is not fixed and marks no current section. Below 47.5em, where the five no longer fit on one line, a "Menu" text button opens them in a full-screen native dialog (Escape and Close shut it; focus returns to Menu).
+
 ## Pictures in frames
 
 Every picture is shown whole and fills its frame: screenshots lose only their empty margins in the image pipeline, and a frame takes its picture's own ratio. Where frames sit side by side ("Hand me a problem", the Faten pair) their widths follow the ratios, so a row shares one height; a table or list frame has its own `ratio` in the data. A check measures that no picture leaves more than 4% of its frame empty.

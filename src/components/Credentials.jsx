@@ -14,7 +14,7 @@ export default function Credentials() {
 
   return (
     <section className="creds light" id="credentials" aria-labelledby="creds-h">
-      <h2 id="creds-h" data-reveal>Certification and courses</h2>
+      <h2 id="creds-h" data-reveal>Certificates</h2>
 
       <div className="cert">
         <button type="button" className="thumb big" onClick={() => show(certification.image, certification.alt)} data-reveal>

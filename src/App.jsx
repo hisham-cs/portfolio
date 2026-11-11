@@ -19,8 +19,8 @@ export default function App() {
         <div className="cases light">
           {projects.map((p) => <CaseBlock key={p.id} project={p} />)}
         </div>
-        <Skills />
         <About />
+        <Skills />
         <Credentials />
         <Contact />
       </main>
