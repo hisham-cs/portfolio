@@ -35,7 +35,7 @@ function Caption({ text, link }) {
 
 function Pic({ frame, caption, show, sizes, ratio, className = '' }) {
   return (
-    <figure className={`pic ${className}`} data-reveal>
+    <figure className={`pic ${className}`} data-reveal style={ratio ? { '--fr': ratio } : undefined}>
       <button type="button" className="open" onClick={() => show(frame.image, frame.alt)}
         style={ratio ? { '--ar': ratio } : undefined}>
         <Frame frame={frame} sizes={sizes} />
@@ -102,13 +102,14 @@ export default function CaseBlock({ project }) {
       </div>
     )
   } else {
-    // pair: both frames take the taller picture's ratio, so they share a height
-    const ratio = Math.min(...plate.figures.map((f) => f.frame.image.width / f.frame.image.height))
+    // pair: each frame keeps its picture's ratio and the widths follow the
+    // ratios, so the two share one height and each picture fills its frame
+    const ratioOf = (f) => f.frame.image.width / f.frame.image.height
     body = (
       <>
         {head}
-        <div className="c-row r66">
-          {plate.figures.map((f) => <Pic key={f.caption} {...f} show={show} ratio={ratio} sizes={`${wide}, 48vw`} className="fixed" />)}
+        <div className="c-row r66 pair-figs">
+          {plate.figures.map((f) => <Pic key={f.caption} {...f} show={show} ratio={ratioOf(f)} sizes={`${wide}, 52vw`} className="fixed" />)}
         </div>
         <div className="c-row r66">
           <div className="col" data-reveal><Details rows={first} /></div>

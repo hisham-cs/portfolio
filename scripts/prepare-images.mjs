@@ -6,7 +6,7 @@
 //
 // Usage: npm run images   (or: node scripts/prepare-images.mjs)
 
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -44,9 +44,40 @@ const QUALITY = 85
 // edema report screen loses the app's sidebar (0-293px), whose "Final
 // diagnosis" label the site never shows; the X-ray starts at 373px.
 const TRIM_LEFT = { 'pulmonary-edema-1-app.png': 300 }
+// Then each edge loses its empty margin: whole rows or columns in which every
+// pixel is the background (the most common border colour, within EMPTY_TOL per
+// channel). Trimming stops at the first row or column holding anything else,
+// so no content is ever cut; EDGE_KEEP pixels of each trimmed margin stay, so
+// text never touches the frame.
+const EMPTY_TOL = 10
+const EDGE_KEEP = 6
+
+// The box left once the empty margins are gone, inside `left` (TRIM_LEFT).
+async function contentBox(srcPath, left) {
+  const { data, info } = await sharp(srcPath).rotate().removeAlpha().raw().toBuffer({ resolveWithObject: true })
+  const { width: W, height: H, channels: C } = info
+  const at = (x, y) => (y * W + x) * C
+  const counts = new Map()
+  const tally = (x, y) => { const i = at(x, y); const k = `${data[i]},${data[i + 1]},${data[i + 2]}`; counts.set(k, (counts.get(k) || 0) + 1) }
+  for (let x = left; x < W; x++) { tally(x, 0); tally(x, H - 1) }
+  for (let y = 0; y < H; y++) { tally(left, y); tally(W - 1, y) }
+  const bg = [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0].split(',').map(Number)
+  const empty = (x, y) => { const i = at(x, y); return Math.abs(data[i] - bg[0]) <= EMPTY_TOL && Math.abs(data[i + 1] - bg[1]) <= EMPTY_TOL && Math.abs(data[i + 2] - bg[2]) <= EMPTY_TOL }
+  const rowEmpty = (y, l, r) => { for (let x = l; x < r; x++) if (!empty(x, y)) return false; return true }
+  const colEmpty = (x, t, b) => { for (let y = t; y < b; y++) if (!empty(x, y)) return false; return true }
+  let [l, t, r, b] = [left, 0, W, H]
+  while (t < b - 1 && rowEmpty(t, l, r)) t++
+  while (b > t + 1 && rowEmpty(b - 1, l, r)) b--
+  while (l < r - 1 && colEmpty(l, t, b)) l++
+  while (r > l + 1 && colEmpty(r - 1, t, b)) r--
+  // give back up to EDGE_KEEP of each margin that was trimmed (never past TRIM_LEFT)
+  ;[l, t, r, b] = [Math.max(left, l - EDGE_KEEP), Math.max(0, t - EDGE_KEEP), Math.min(W, r + EDGE_KEEP), Math.min(H, b + EDGE_KEEP)]
+  return { left: l, top: t, width: r - l, height: b - t, full: { width: W, height: H }, bg }
+}
 
 const results = []
 const warnings = []
+const crops = []
 
 function listRaw(dir) {
   if (!existsSync(dir)) return []
@@ -86,18 +117,23 @@ async function processProjectMosaics() {
     if (!existsSync(slugDir)) mkdirSync(slugDir, { recursive: true })
 
     for (const [order, srcPath] of Object.entries(orders)) {
-      const trim = TRIM_LEFT[basename(srcPath)] ?? 0
-      const meta = await sharp(srcPath).metadata()
+      const box = await contentBox(srcPath, TRIM_LEFT[basename(srcPath)] ?? 0)
+      const { full } = box
+      crops.push(`${basename(srcPath).padEnd(32)} ${full.width}x${full.height} -> crop left ${box.left} top ${box.top}, ${box.width}x${box.height}` +
+        ` (cut L${box.left} T${box.top} R${full.width - box.left - box.width} B${full.height - box.top - box.height}; ratio ${(full.width / full.height).toFixed(3)} -> ${(box.width / box.height).toFixed(3)}; height/width ${box.height} / ${box.width})`)
+      // Old outputs go first: names carry the width, so a new crop would
+      // otherwise leave stale files that the site's glob still picks up.
+      for (const f of readdirSync(slugDir)) if (f.startsWith(`${order}-`) && f.endsWith('w.webp')) unlinkSync(join(slugDir, f))
       // Only the tiers the source can fill, plus one file at its own width
       // (capped at the top tier), so every name states the file's real width.
-      const srcWidth = meta.width - trim
+      const srcWidth = box.width
       const top = Math.min(srcWidth, SCREENSHOT_WIDTHS.at(-1))
       const widths = [...new Set([...SCREENSHOT_WIDTHS.filter((w) => w < top), top])]
       for (const width of widths) {
         const outName = `${order}-${width}w.webp`
         const outPath = join(slugDir, outName)
-        let img = sharp(srcPath).rotate() // auto-orient per EXIF, then strip the tag
-        if (trim) img = img.extract({ left: trim, top: 0, width: meta.width - trim, height: meta.height })
+        const img = sharp(srcPath).rotate() // auto-orient per EXIF, then strip the tag
+          .extract({ left: box.left, top: box.top, width: box.width, height: box.height })
         const { data: buffer, info } = await img
           .resize({ width })
           .webp({ quality: QUALITY })
@@ -168,3 +204,4 @@ for (const r of results) {
   console.log(`${r.src.padEnd(srcW)}  ->  ${r.out.padEnd(outW)}  ${r.dims.padEnd(10)}  ${r.size}`)
 }
 console.log(`\n${results.length} file(s) written.`)
+if (crops.length) console.log(`\nScreenshot crops (empty margins only):\n${crops.join('\n')}`)

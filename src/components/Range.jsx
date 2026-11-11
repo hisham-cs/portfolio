@@ -13,6 +13,10 @@ export default function Range() {
   const project = projects.find((p) => p.id === id)
   const label = (f) => (f.kind === 'image' ? f.alt : f.label || f.title)
   const open = (f) => (f.kind === 'image' ? show(f.image, f.alt) : show(null, label(f), <Frame frame={f} />))
+  // Each frame takes its picture's own ratio (a table or list, its `ratio`);
+  // side by side, widths follow the ratios, so the three share one height and
+  // every picture fills its frame.
+  const ratioOf = (f) => (f.kind === 'image' ? f.image.width / f.image.height : f.ratio ?? 1.5)
 
   return (
     <section className="range accent" id="range" aria-labelledby="range-h">
@@ -36,9 +40,10 @@ export default function Range() {
       </div>
       <ol className="chain" key={id} aria-label={`${project.name}: data, model and product`}>
         {STAGES.map((s, i) => (
-          <li key={s.id} style={{ '--i': i }} className={s.id === stage ? 'on' : undefined}>
+          <li key={s.id} style={{ '--i': i, '--fr': ratioOf(project.stages[s.id].frame) }} className={s.id === stage ? 'on' : undefined}>
             <div className="chain-frame">
-              <Frame frame={project.stages[s.id].frame} sizes="(max-width: 68.75em) min(calc(100vw - 2rem), 45rem), 31vw" />
+              <Frame frame={project.stages[s.id].frame} sizes="(max-width: 68.75em) min(calc(100vw - 2rem), 45rem), 40vw"
+                className={project.stages[s.id].frame.kind === 'image' ? 'is-pic' : 'is-ui'} />
               <button type="button" className="open-over" onClick={() => open(project.stages[s.id].frame)}
                 aria-label={`Open full size: ${label(project.stages[s.id].frame)}`} />
             </div>

@@ -22,6 +22,10 @@ Produces `src/assets/projects/telco-churn/{order}-{480,800,1280}w.webp` — one
 subfolder per project, up to three width tiers (480w, 800w for phones at
 2x, 1280w everything else), never enlarged: a source narrower than a tier
 stops at its own width (a 448px chart gives only `6-448w.webp`), at the
-source's natural ratio. Nothing is cropped; the site shows every screenshot
-whole. The one exception is TRIM_LEFT in the script, which cuts the app's
-sidebar from the edema report screen on purpose.
+source's natural ratio. No content is cropped; the site shows every
+screenshot whole. Each screenshot first loses its empty margins: edge rows and
+columns in which every pixel is the background colour (6px of each is kept),
+so the picture fills its frame; the script prints each crop box. The one cut
+into content is TRIM_LEFT in the script, which removes the app's sidebar from
+the edema report screen on purpose. Pass the new ratio (height / width, as
+printed) to `screenshot()` in `src/data/projects.js`.

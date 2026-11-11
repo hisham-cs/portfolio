@@ -27,6 +27,10 @@ One family, Bricolage Grotesque (self-hosted variable WOFF2, `font-display: swap
 
 No eyebrow labels, no monospace outside real code, no 01/02/03 numbering, no hairline dividers, no gradients, no shadows on resting elements, no pills or card grids, square corners. One approved exception: the hero's three data cards (6px corners, each titled with its project's name; the shorter side cards tilted ±2.5° on their inner bottom corners, lower than the centre card and straightening on hover and focus; the row inset 1rem so the tilt stays inside the margins; stacked, upright and lead-first below 68.75em). Real interface fragments carry `data-ui` and may use their own table rules and monospace identifiers.
 
+## Pictures in frames
+
+Every picture is shown whole and fills its frame: screenshots lose only their empty margins in the image pipeline, and a frame takes its picture's own ratio. Where frames sit side by side ("Hand me a problem", the Faten pair) their widths follow the ratios, so a row shares one height; a table or list frame has its own `ratio` in the data. A check measures that no picture leaves more than 4% of its frame empty.
+
 ## Motion
 
 Name halves rise out of a mask on load (900 ms, expo out); section parts enter in reading order (80 ms stagger, 24 px rise, once). Pictures never scale or move inside their frames, so nothing is ever cropped, even mid-animation. Transform and opacity only, except the hero cards: once on load the churn line and the agent's spokes draw in and the gauge fills (`stroke-dashoffset`), and the gauge's number reads the arc as it fills. Every final value is in the markup; the animation starts from it. `prefers-reduced-motion: reduce` removes all animation and shows everything in place; content is never hidden unless script runs (`.motion` class).

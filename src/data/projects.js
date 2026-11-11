@@ -14,8 +14,8 @@ const edemaCams = [
   { id: 'resnet50', label: 'ResNet50', probability: '100.0%' },
   { id: 'convnext-tiny', label: 'ConvNeXt-Tiny', probability: '89.5%' },
 ].map((m) => ({ ...m, image: natural(`edema-cam-${m.id}`, EDEMA_RATIO) }))
-const edemaReport = screenshot('pulmonary-edema', 1, 882 / 1589) // sidebar trimmed by the pipeline
-const edemaVotes = screenshot('pulmonary-edema', 2, 883 / 1897)
+const edemaReport = screenshot('pulmonary-edema', 1, 854 / 1514) // sidebar and empty margins trimmed by the pipeline
+const edemaVotes = screenshot('pulmonary-edema', 2, 883 / 1881)
 const edemaVotesFrame = {
   kind: 'image',
   image: edemaVotes,
@@ -25,19 +25,19 @@ const edemaVotesFrame = {
 
 const telcoOverview = {
   kind: 'image',
-  image: screenshot('telco-churn', 1, 708 / 1270),
+  image: screenshot('telco-churn', 1, 684 / 1252),
   alt: 'Power BI overview page: 26.5% churn rate, 1,869 customers lost, $139K monthly revenue lost',
   fill: '#f2f2f0',
 }
 const telcoDrivers = {
   kind: 'image',
-  image: screenshot('telco-churn', 2, 712 / 1275),
+  image: screenshot('telco-churn', 2, 694 / 1254),
   alt: 'Power BI page “What drives churn”: churn rate by contract and internet service, by payment method and contract, by number of services, and with and without tech support',
   fill: '#f2f2f0',
 }
 const telcoActions = {
   kind: 'image',
-  image: screenshot('telco-churn', 5, 711 / 1262),
+  image: screenshot('telco-churn', 5, 693 / 1253),
   fill: '#f2f2f0',
   alt: 'Power BI page “Where to act first”: lost value by contract and internet service, churners by churn-score band, 88.9% of lost value marked as actionable, lost value by payment method, and the three actions in priority order',
 }
@@ -52,7 +52,7 @@ const fatenDashboard = {
 // faten-3 and faten-4 screenshots.
 const fatenChat = {
   kind: 'image',
-  image: screenshot('faten', 3, 646 / 1280),
+  image: screenshot('faten', 3, 646 / 1072),
   alt: 'Faten’s chat in Arabic: the agent answers a question about a course with its grading breakdown and final exam dates',
   fill: '#ffffff',
 }
@@ -80,8 +80,10 @@ export const STAGES = [
 //   { kind: 'image', image: screenshot(...) | natural(...), alt, fill }
 // Images are always shown whole; `fill` is the colour of the image's own edge,
 // used wherever a frame is wider or taller than the picture.
-//   { kind: 'table', columns: [...], optional?, optionalNarrow?, optionalTiny?, rows: [[...], ...], foot }
-//   { kind: 'list', title, items: [...], foot, code?, rtl? }
+//   { kind: 'table', columns: [...], optional?, optionalNarrow?, optionalTiny?, rows: [[...], ...], foot, ratio? }
+//   { kind: 'list', title, items: [...], foot, code?, rtl?, ratio? }
+// `ratio` (width / height, default 1.5) is a table's or list's frame shape in
+// "Hand me a problem", where a picture's frame takes the picture's own.
 // `map` holds the short labels for the skill table; `plate` sets the case
 // block: `layout` 'zigzag' (each figure beside part of the details),
 // 'panel' (the `reveal` slider beside the details) or 'pair' (two figures
@@ -116,6 +118,7 @@ export const projects = [
           'Cleaned 7,043 customer records in Excel and Power Query. Three target-leakage columns (churn score, churn reason, churn label) were removed, and CLTV was tested in and out of the model and dropped.',
         frame: {
           kind: 'table',
+          ratio: 1.35, // tall enough for its five rows beside the two charts
           label: 'First rows of the customer table',
           columns: ['CustomerID', 'Tenure', 'Contract', 'Internet', 'Payment', 'Monthly', 'Churn'],
           optional: ['CustomerID', 'Payment'], // dropped when the frame is narrow, never cut
@@ -138,7 +141,7 @@ export const projects = [
           'Logistic regression with class weighting on a stratified 80/20 split: 0.849 ROC-AUC, 0.645 AUC-PR, 78% recall on churners (291 of 374) and 51% precision. Its coefficients confirmed the drivers found in the dashboard.',
         frame: {
           kind: 'image',
-          image: screenshot('telco-churn', 4, 1080 / 1920),
+          image: screenshot('telco-churn', 4, 1039 / 1887),
           alt: 'Logistic regression coefficients ranked by their effect on churn',
           fill: '#ffffff',
         },
@@ -280,6 +283,7 @@ export const projects = [
           'Student academic records stored in Firebase, the university’s regulations as searchable text, transcripts parsed from PDF, and the Hijri academic calendar.',
         frame: {
           kind: 'list',
+          ratio: 1.35, // tall enough for its items beside the map
           title: 'backend/knowledge/regulations',
           rtl: true,
           items: [
@@ -297,6 +301,7 @@ export const projects = [
           'An LLM chat agent with 24 function-calling tools that runs on the OpenAI API (Gemini is supported as an alternative provider).',
         frame: {
           kind: 'list',
+          ratio: 1.35, // tall enough for its items beside the map
           title: 'Agent tools · 24',
           code: true,
           items: [
@@ -325,8 +330,8 @@ export const projects = [
     links: [{ label: 'Repository', href: 'https://github.com/Saleh67676/Faten' }],
     map: { data: 'Records, regulations', model: 'LLM agent, 24 tools', product: 'Next.js' },
     plate: {
-      // The dashboard and the chat side by side, the same height. Both are
-      // landscape screens, so they split 6 : 6 to stay readable.
+      // The dashboard and the chat side by side, the same height; their widths
+      // follow the two pictures' ratios, so each fills its frame.
       layout: 'pair',
       figures: [
         { frame: fatenDashboard, caption: 'Faten dashboard: GPA, progress and the university calendar' },

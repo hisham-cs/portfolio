@@ -105,6 +105,8 @@ button { font: inherit; color: inherit; }
 @container (max-width: 21em) { [data-ui] .opt-narrow { display: none; } }
 @container (max-width: 17.5em) { [data-ui] .opt-tiny { display: none; } [data-ui] table { font-size: 0.75rem; } [data-ui] th, [data-ui] td { padding: 3px 5px; } }
 [data-ui] ol, [data-ui] ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+/* a narrow list frame sets closer, so its items fit the row's height */
+@container (max-width: 19em) { [data-ui].ui { padding: 12px 14px; gap: 6px; font-size: 0.8125rem; } [data-ui] ol, [data-ui] ul { gap: 2px; } }
 [data-ui] ul[dir='rtl'] { padding: 0 1.2em 0 0; font-family: var(--font-ar); }
 [data-ui] li span { color: var(--ui-muted); }
 [data-ui] code { font-family: ui-monospace, Consolas, monospace; } /* real identifiers are code */
@@ -225,13 +227,21 @@ button { font: inherit; color: inherit; }
 .pick label.on { background: var(--ac-sel-bg); color: var(--ac-sel-ink); }
 .pick input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .pick label:has(input:focus-visible) { outline: 2px solid var(--f-ac); outline-offset: 3px; }
-.chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
-.chain .frame { aspect-ratio: 3 / 2; }
+/* Side by side, each stage's width follows its frame's ratio (--fr: the
+   picture's own, or a table's or list's), so the three share one height and
+   every picture fills its frame */
+.chain { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-start; gap: var(--gutter); }
+.chain > li { flex: var(--fr, 1.5) 1 0; min-width: 0; }
+.chain .frame { aspect-ratio: var(--fr, 1.5); }
 .chain li { container-type: inline-size; }
 /* Very narrow (or large text on a small phone): square frames give the
    data table and the lists the height they need */
-@container (max-width: 17em) { .chain li .frame { aspect-ratio: 1 / 1; } } /* beats the phone 4:3 rule */
-@container (max-width: 14em) { .chain li .frame { aspect-ratio: 4 / 5; } }
+/* one stage at a time in a small container (large text on a phone): a table or
+   list frame grows taller; side by side, the frames keep the row's one height */
+@media (max-width: 68.75em) {
+  @container (max-width: 17em) { .chain li .frame.is-ui { aspect-ratio: 1 / 1; } } /* beats the phone 4:3 rule */
+  @container (max-width: 14em) { .chain li .frame.is-ui { aspect-ratio: 4 / 5; } }
+}
 .chain-frame { position: relative; }
 /* The whole frame opens full size; a button laid over it, since tables and
    lists cannot sit inside a button */
@@ -244,7 +254,7 @@ button { font: inherit; color: inherit; }
 
 /* ---------- 4. Case blocks ---------- */
 /* The approved layouts:
-   rows of 7 : 5, 5 : 7 or 6 : 6 on one column gap, each picture whole on
+   rows of 7 : 5, 5 : 7 or 6 : 6 (the Faten pictures: by their ratios) on one column gap, each picture whole on
    its own ground (no outline), details at 16px with a label column,
    buttons last.
    Fields alternate so the boundary between projects is a change of ground. */
@@ -263,8 +273,13 @@ button { font: inherit; color: inherit; }
 .r57 > .left { grid-column: 1; grid-row: 1; }
 .pic { margin: 0; display: grid; gap: 8px; min-width: 0; }
 .pic .frame > img { height: auto; } /* natural ratio */
-.pic.fixed .frame { aspect-ratio: var(--ar); } /* a pair shares one height; each picture whole inside */
+.pic.fixed .frame { aspect-ratio: var(--ar); } /* each picture at its own ratio, filling its frame */
 .pic.fixed .frame > img { height: 100%; }
+/* a pair side by side: widths follow the two ratios, so the pictures share one height */
+@media (min-width: 47.5625em) {
+  .c-row.pair-figs { display: flex; }
+  .pair-figs > .pic { flex: var(--fr) 1 0; }
+}
 .case figcaption { font-size: var(--s-note); color: var(--lt-muted); max-width: 60ch; }
 button.open { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: zoom-in; }
 button.open:focus-visible { outline: 2px solid var(--f-lt); outline-offset: 3px; }
@@ -452,7 +467,8 @@ footer { padding: 72px var(--pad-x) 24px; }
   .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 12px; }
   .stage-tabs button { min-height: 48px; border: 0; background: var(--ac-tint); color: var(--ac-ink); font-weight: 500; cursor: pointer; }
   .stage-tabs button[aria-pressed='true'] { background: var(--ac-sel-bg); color: var(--ac-sel-ink); }
-  .chain { grid-template-columns: minmax(0, 1fr); max-width: 45rem; }
+  .chain { display: block; max-width: 45rem; } /* one stage at a time: a picture keeps its own ratio */
+  .chain .frame.is-ui { aspect-ratio: 3 / 2; }
   .stage-tabs { max-width: 45rem; }
   .chain li:not(.on) { display: none; }
   .hero { min-height: auto; }
@@ -502,7 +518,7 @@ footer { padding: 72px var(--pad-x) 24px; }
   .hero-nav { grid-column: 9 / -1; gap: 4px 14px; }
   .hero-nav a:not(.keep) { display: none; }
   .hero-name .b-wrap { bottom: 18px; }
-  .chain .frame { aspect-ratio: 4 / 3; }
+  .chain .frame.is-ui { aspect-ratio: 4 / 3; }
   dl.d > div { grid-template-columns: 5.2em minmax(0, 1fr); column-gap: 12px; }
   .map { font-size: var(--s-small); border-spacing: 4px; margin: -4px; }
   .map thead th:first-child { width: 26%; }
